@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyBot.Application", "Source\ComfyBot.Application\ComfyBot.Application.csproj", "{D18A55FB-8F90-478C-AA1F-DB2508847EEA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{00D98460-BEAB-48B2-B9BA-5C4E895D97B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{AD40F514-EC5A-48E0-8511-B00FE36078B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D18A55FB-8F90-478C-AA1F-DB2508847EEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D18A55FB-8F90-478C-AA1F-DB2508847EEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D18A55FB-8F90-478C-AA1F-DB2508847EEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D18A55FB-8F90-478C-AA1F-DB2508847EEA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D18A55FB-8F90-478C-AA1F-DB2508847EEA} = {00D98460-BEAB-48B2-B9BA-5C4E895D97B8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9092E7F8-89E4-485C-9219-FA8555C665D4}
+	EndGlobalSection
+EndGlobal
