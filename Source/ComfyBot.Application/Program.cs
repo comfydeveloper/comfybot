@@ -15,7 +15,10 @@
 
             IServiceCollection services = new ServiceCollection();
             services.Add(new ServiceDescriptor(typeof(IConfiguration), provider => configuration, ServiceLifetime.Singleton));
-            ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+
+
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
 
             Console.ReadLine();
         }
