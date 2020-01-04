@@ -2,6 +2,11 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.CompilerServices;
+
+    using ComfyBot.Application.Bot;
+    using ComfyBot.Application.Bot.Commands;
+    using ComfyBot.Application.Bot.Initialization;
 
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -13,14 +18,23 @@
         {
             IConfiguration configuration = SetupConfiguration();
 
-            IServiceCollection services = new ServiceCollection();
-            services.Add(new ServiceDescriptor(typeof(IConfiguration), provider => configuration, ServiceLifetime.Singleton));
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.Add(new ServiceDescriptor(typeof(IConfiguration), provider => configuration, ServiceLifetime.Singleton));
+            RegisterServices(serviceCollection);
 
+            IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
+            IComfyBot comfyBot = serviceProvider.GetService<IComfyBot>();
+            comfyBot.Run();
 
             Console.ReadLine();
+        }
+
+        private static void RegisterServices(IServiceCollection collection)
+        {
+            collection.AddTransient<IComfyBot, ComfyBot>();
+            collection.AddTransient<ITwitchClientFactory, TwitchClientFactory>();
+            collection.AddTransient<ICommandHandler, TestCommandHandler>();
         }
 
         private static IConfiguration SetupConfiguration()

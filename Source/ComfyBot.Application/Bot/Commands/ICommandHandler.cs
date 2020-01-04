@@ -1,10 +1,11 @@
 ﻿namespace ComfyBot.Application.Bot.Commands
 {
+    using global::ComfyBot.Application.Bot.Wrappers;
+
     using TwitchLib.Client.Interfaces;
-    using TwitchLib.Client.Models;
 
     public interface ICommandHandler
     {
-        void Handle(ITwitchClient client, ChatCommand command);
+        void Handle(ITwitchClient client, IChatCommand command);
     }
 }

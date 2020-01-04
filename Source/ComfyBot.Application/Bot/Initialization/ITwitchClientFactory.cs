@@ -4,6 +4,6 @@
 
     public interface ITwitchClientFactory
     {
-        ITwitchClient Create(string userName, string password);
+        ITwitchClient Create(string userName, string password, string channel);
     }
 }
