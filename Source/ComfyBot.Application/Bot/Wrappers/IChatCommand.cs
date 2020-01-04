@@ -10,7 +10,7 @@
 
         string ArgumentsAsString { get; }
 
-        ChatMessage ChatMessage { get; }
+        IChatMessage ChatMessage { get; }
 
         string CommandText { get; }
     }

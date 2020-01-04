@@ -2,11 +2,13 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.CompilerServices;
 
     using ComfyBot.Application.Bot;
     using ComfyBot.Application.Bot.Commands;
     using ComfyBot.Application.Bot.Initialization;
+    using ComfyBot.Application.Data;
+    using ComfyBot.Application.Data.Models;
+    using ComfyBot.Application.Data.Repositories;
 
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +37,9 @@
             collection.AddTransient<IComfyBot, ComfyBot>();
             collection.AddTransient<ITwitchClientFactory, TwitchClientFactory>();
             collection.AddTransient<ICommandHandler, TestCommandHandler>();
+            collection.AddTransient<ICommandHandler, ShoutoutCommandHandler>();
+            collection.AddTransient<IDatabaseFactory, DatabaseFactory>();
+            collection.AddTransient<IRepository<Shoutout>, ShoutoutRepository>();
         }
 
         private static IConfiguration SetupConfiguration()

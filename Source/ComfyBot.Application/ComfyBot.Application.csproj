@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LiteDB" Version="4.1.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
@@ -21,6 +22,10 @@
 
   <ItemGroup>
     <Folder Include="Bot\Messages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComfyBot.Common\ComfyBot.Common.csproj" />
   </ItemGroup>
 
 </Project>

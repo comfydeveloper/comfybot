@@ -27,7 +27,7 @@
 
         protected abstract void HandleInternal(ITwitchClient client, IChatCommand command);
 
-        public void SendMessage(ITwitchClient client, string message)
+        protected void SendMessage(ITwitchClient client, string message)
         {
             client.SendMessage(this.configuration["channel"], message);
         }

@@ -19,7 +19,7 @@
 
         public string ArgumentsAsString { get => this.command.ArgumentsAsString; }
 
-        public ChatMessage ChatMessage { get => this.command.ChatMessage; }
+        public IChatMessage ChatMessage { get => new ChatMessageWrapper(this.command.ChatMessage); }
 
         public string CommandText { get => this.command.CommandText; }
     }

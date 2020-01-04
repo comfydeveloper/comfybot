@@ -6,7 +6,7 @@
 
     using TwitchLib.Client.Interfaces;
 
-    public class TestCommandHandler : CommandHandler, ICommandHandler
+    public class TestCommandHandler : CommandHandler
     {
         public TestCommandHandler(IConfiguration configuration) : base(configuration)
         { }
