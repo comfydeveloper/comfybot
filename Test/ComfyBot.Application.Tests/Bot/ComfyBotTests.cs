@@ -20,6 +20,7 @@
     [TestFixture]
     public class ComfyBotTests
     {
+        private Mock<IConfigurationSection> credentialSection;
         private Mock<IConfiguration> configuration;
         private Mock<ITwitchClientFactory> clientFactory;
         private Mock<ITwitchClient> client;
@@ -32,10 +33,12 @@
         [SetUp]
         public void Setup()
         {
+            this.credentialSection = new Mock<IConfigurationSection>();
             this.configuration = new Mock<IConfiguration>();
             this.clientFactory = new Mock<ITwitchClientFactory>();
             this.client = new Mock<ITwitchClient>();
             this.clientFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(this.client.Object);
+            this.configuration.Setup(c => c.GetSection("credentials")).Returns(this.credentialSection.Object);
 
             this.commandHandler1 = new Mock<ICommandHandler>();
             this.commandHandler2 = new Mock<ICommandHandler>();
@@ -48,8 +51,8 @@
         [TestCase("user2", "password2", "channel2")]
         public void RunShouldInitializeClient(string username, string password, string channel)
         {
-            this.configuration.Setup(c => c["user"]).Returns(username);
-            this.configuration.Setup(c => c["password"]).Returns(password);
+            this.credentialSection.Setup(c => c["user"]).Returns(username);
+            this.credentialSection.Setup(c => c["password"]).Returns(password);
             this.configuration.Setup(c => c["channel"]).Returns(channel);
 
             this.comfyBot.Run();

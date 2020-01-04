@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using global::ComfyBot.Application.Bot.Commands;
     using global::ComfyBot.Application.Bot.Extensions;
@@ -54,8 +55,8 @@
 
         private void Logon()
         {
-            this.twitchClient = this.twitchClientFactory.Create(this.configuration["user"],
-                                                                this.configuration["password"],
+            this.twitchClient = this.twitchClientFactory.Create(this.configuration.GetSection("credentials")["user"],
+                                                                this.configuration.GetSection("credentials")["password"],
                                                                 this.configuration["channel"]);
         }
 
@@ -67,7 +68,7 @@
             }
         }
 
-
+        [ExcludeFromCodeCoverage]
         private void OnLog(object sender, OnLogArgs e)
         {
             Console.WriteLine($"{e.DateTime}: {e.BotUsername} - {e.Data}");
