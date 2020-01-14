@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <StartupObject>ComfyBot.Application.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComfyBot.Bot\ComfyBot.Bot.csproj" />
+    <ProjectReference Include="..\ComfyBot.Data\ComfyBot.Data.csproj" />
+    <ProjectReference Include="..\ComfyBot.Settings\ComfyBot.Settings.csproj" />
+  </ItemGroup>
+
+</Project>
