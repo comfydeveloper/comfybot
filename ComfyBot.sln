@@ -1,51 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.271
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Application", "Source\ComfyBot.Application\ComfyBot.Application.csproj", "{D18A55FB-8F90-478C-AA1F-DB2508847EEA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{00D98460-BEAB-48B2-B9BA-5C4E895D97B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{AD40F514-EC5A-48E0-8511-B00FE36078B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Application.Tests", "Test\ComfyBot.Application.Tests\ComfyBot.Application.Tests.csproj", "{09FD3AB6-1987-4D7E-9356-D7D768CF5A49}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyBot.Common", "Source\ComfyBot.Common\ComfyBot.Common.csproj", "{F57AFD0D-55B6-43BD-B370-49D223B08EA7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyBot.Common.Tests", "Test\ComfyBot.Common.Tests\ComfyBot.Common.Tests.csproj", "{38D7F3C6-7787-4BF7-B177-66002380414E}"
-EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D18A55FB-8F90-478C-AA1F-DB2508847EEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D18A55FB-8F90-478C-AA1F-DB2508847EEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D18A55FB-8F90-478C-AA1F-DB2508847EEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D18A55FB-8F90-478C-AA1F-DB2508847EEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{09FD3AB6-1987-4D7E-9356-D7D768CF5A49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{09FD3AB6-1987-4D7E-9356-D7D768CF5A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{09FD3AB6-1987-4D7E-9356-D7D768CF5A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{09FD3AB6-1987-4D7E-9356-D7D768CF5A49}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F57AFD0D-55B6-43BD-B370-49D223B08EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F57AFD0D-55B6-43BD-B370-49D223B08EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F57AFD0D-55B6-43BD-B370-49D223B08EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F57AFD0D-55B6-43BD-B370-49D223B08EA7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38D7F3C6-7787-4BF7-B177-66002380414E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38D7F3C6-7787-4BF7-B177-66002380414E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38D7F3C6-7787-4BF7-B177-66002380414E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38D7F3C6-7787-4BF7-B177-66002380414E}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{D18A55FB-8F90-478C-AA1F-DB2508847EEA} = {00D98460-BEAB-48B2-B9BA-5C4E895D97B8}
-		{09FD3AB6-1987-4D7E-9356-D7D768CF5A49} = {AD40F514-EC5A-48E0-8511-B00FE36078B6}
-		{F57AFD0D-55B6-43BD-B370-49D223B08EA7} = {00D98460-BEAB-48B2-B9BA-5C4E895D97B8}
-		{38D7F3C6-7787-4BF7-B177-66002380414E} = {AD40F514-EC5A-48E0-8511-B00FE36078B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9092E7F8-89E4-485C-9219-FA8555C665D4}
