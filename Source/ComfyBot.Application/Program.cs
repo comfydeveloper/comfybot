@@ -15,7 +15,7 @@
     public class Program
     {
         [STAThread]
-        public static void Main(string[] args)
+        public static void Main()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
             RegisterServices(serviceCollection);

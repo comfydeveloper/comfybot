@@ -38,7 +38,7 @@
             Shoutout entity = new Shoutout { Id = id };
             this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<Shoutout, bool>>>())).Returns(entity);
 
-            Shoutout shoutout = this.repository.Get(id);
+            Shoutout shoutout = this.repository.Get(s => s.Id == id);
 
             Assert.AreEqual(entity, shoutout);
         }
@@ -60,14 +60,23 @@
         public void AddOrUpdateShouldUpdateElement(string id, string shoutoutText)
         {
             Shoutout entity = new Shoutout();
-            Shoutout model = new Shoutout { Text = shoutoutText };
+            Shoutout model = new Shoutout { Message = shoutoutText };
             this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<Shoutout, bool>>>())).Returns(entity);
 
             this.repository.AddOrUpdate(model);
 
             this.entities.Verify(e => e.Insert(model), Times.Never);
             this.entities.Verify(e => e.Update(entity));
-            Assert.AreEqual(shoutoutText, entity.Text);
+            Assert.AreEqual(shoutoutText, entity.Message);
+        }
+
+        [TestCase("key1")]
+        [TestCase("key2")]
+        public void RemoveShouldRemoveElement(string key)
+        {
+            this.repository.Remove(key);
+
+            this.entities.Verify(e => e.Remove(It.IsAny<Expression<Func<Shoutout, bool>>>()));
         }
     }
 }

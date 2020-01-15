@@ -2,6 +2,8 @@
 {
     public class Shoutout : Entity
     {
-        public string Text { get; set; }
+        public string Command { get; set; }
+
+        public string Message { get; set; }
     }
 }

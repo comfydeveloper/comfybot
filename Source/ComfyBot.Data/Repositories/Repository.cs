@@ -1,5 +1,9 @@
 ﻿namespace ComfyBot.Data.Repositories
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+
     using ComfyBot.Data.Database;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Wrappers;
@@ -16,12 +20,12 @@
             this.table = table;
         }
 
-        public T Get(string key)
+        public T Get(Expression<Func<T, bool>> predicate)
         {
             using IDatabase database = this.databaseFactory.Create();
 
             ILiteCollection<T> collection = database.GetCollection<T>(this.table);
-            T model = collection.FindOne(x => x.Id == key);
+            T model = collection.FindOne(predicate);
 
             return model;
         }
@@ -42,6 +46,22 @@
                 this.Update(model, entity);
                 collection.Update(entity);
             }
+        }
+
+        public void Remove(string id)
+        {
+            using IDatabase database = this.databaseFactory.Create();
+
+            ILiteCollection<T> collection = database.GetCollection<T>(this.table);
+            collection.Remove(t => t.Id == id);
+        }
+
+        public IEnumerable<T> GetAll()
+        {
+            using IDatabase database = this.databaseFactory.Create();
+
+            ILiteCollection<T> collection = database.GetCollection<T>(this.table);
+            return collection.FindAll();
         }
 
         protected abstract void Update(T source, T target);

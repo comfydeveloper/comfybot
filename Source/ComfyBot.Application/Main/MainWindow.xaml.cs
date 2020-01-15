@@ -5,6 +5,7 @@ namespace ComfyBot.Application
     using System;
     using System.Diagnostics.CodeAnalysis;
 
+    using ComfyBot.Application.Main;
     using ComfyBot.Application.Output;
 
     /// <summary>
@@ -13,8 +14,10 @@ namespace ComfyBot.Application
     [ExcludeFromCodeCoverage]
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(MainWindowViewModel viewModel)
         {
+            this.DataContext = viewModel;
+
             InitializeComponent();
             ConsoleOutputWriter writer = new ConsoleOutputWriter(this.ConsoleTextBox);
             Console.SetOut(writer);

@@ -1,5 +1,7 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Commands
 {
+    using System.Linq;
+
     using global::ComfyBot.Bot.ChatBot.Wrappers;
     using global::ComfyBot.Data.Models;
     using global::ComfyBot.Data.Repositories;
@@ -22,12 +24,12 @@
 
         protected override void HandleInternal(ITwitchClient client, IChatCommand command)
         {
-            Shoutout model = this.repository.Get(command.ArgumentsAsList[0]);
+            Shoutout model = this.repository.Get(s => s.Command == command.ArgumentsAsList.FirstOrDefault());
 
             if (model != null)
             {
                 this.SendMessage(client, $@"▬▬☆✼★▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬★✼☆▬▬
-                                                {model.Text}      
+                                                {model.Message}      
                                                 ▬▬☆✼★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★✼☆▬▬");
             }
         }

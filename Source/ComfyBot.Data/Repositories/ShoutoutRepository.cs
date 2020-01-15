@@ -10,7 +10,8 @@
 
         protected override void Update(Shoutout source, Shoutout target)
         {
-            target.Text = source.Text;
+            target.Command = source.Command;
+            target.Message = source.Message;
         }
     }
 }

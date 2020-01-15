@@ -1,6 +1,7 @@
 ﻿namespace ComfyBot.Data.Wrappers
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
@@ -29,6 +30,16 @@
         public void Insert(T entity)
         {
             this.collection.Insert(entity);
+        }
+
+        public void Remove(Expression<Func<T, bool>> predicate)
+        {
+            this.collection.Delete(predicate);
+        }
+
+        public IEnumerable<T> FindAll()
+        {
+            return this.collection.FindAll();
         }
     }
 }

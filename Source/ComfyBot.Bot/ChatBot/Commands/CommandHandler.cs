@@ -1,7 +1,7 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Commands
 {
-    using global::ComfyBot.Bot.ChatBot.Wrappers;
-    using global::ComfyBot.Settings;
+    using ComfyBot.Bot.ChatBot.Wrappers;
+    using ComfyBot.Settings;
 
     using TwitchLib.Client.Interfaces;
 
