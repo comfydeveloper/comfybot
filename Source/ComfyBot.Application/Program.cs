@@ -2,13 +2,12 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Reflection;
 
     using ComfyBot.Bot.ChatBot;
     using ComfyBot.Bot.ChatBot.Commands;
-    using ComfyBot.Bot.Initialization;
     using ComfyBot.Data.Database;
-    using ComfyBot.Data.Models;
-    using ComfyBot.Data.Repositories;
 
     using Microsoft.Extensions.DependencyInjection;
 
@@ -29,19 +28,53 @@
 
             App app = new App();
             app.Run(mainWindow);
-
-
-            Console.ReadLine();
         }
 
         private static void RegisterServices(IServiceCollection collection)
         {
-            collection.AddTransient<IComfyBot, ComfyBot>();
-            collection.AddTransient<ITwitchClientFactory, TwitchClientFactory>();
-            collection.AddTransient<MainWindow>();
-            collection.AddTransient<ICommandHandler, ShoutoutCommandHandler>();
-            collection.AddTransient<IDatabaseFactory, DatabaseFactory>();
-            collection.AddTransient<IRepository<Shoutout>, ShoutoutRepository>();
+            Assembly[] assemblies = {
+                                        typeof(Program).Assembly,
+                                        typeof(ICommandHandler).Assembly,
+                                        typeof(IDatabaseFactory).Assembly
+                                    };
+
+
+            foreach (Assembly assembly in assemblies)
+            {
+                RegisterImplementations(collection, assembly);
+                RegisterImplementationsWithoutInterfaces(collection, assembly);
+            }
+        }
+
+        private static void RegisterImplementationsWithoutInterfaces(IServiceCollection collection, Assembly assembly)
+        {
+            Type[] registrations = assembly.GetExportedTypes()
+                                           .Where(type => type.Namespace.StartsWith("ComfyBot")
+                                                          && !type.IsAbstract
+                                                          && !type.GetInterfaces().Any())
+                                           .ToArray();
+
+            foreach (var registration in registrations)
+            {
+                collection.AddTransient(registration);
+            }
+
+            collection.AddTransient(typeof(MainWindow));
+        }
+
+        private static void RegisterImplementations(IServiceCollection collection, Assembly assembly)
+        {
+            var registrations = from type in assembly.GetExportedTypes()
+                                where type.Namespace.StartsWith("ComfyBot")
+                                      && !type.IsAbstract
+                                      && (!type.Name.Contains("Wrapper") || type.GetConstructor(Type.EmptyTypes) != null)
+                                from service in type.GetInterfaces()
+                                select new {service, implementation = type};
+
+            foreach (var registration in registrations)
+            {
+                collection.AddTransient(registration.service, registration.implementation);
+            }
         }
     }
 }

@@ -4,22 +4,22 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    using global::ComfyBot.Bot.ChatBot.Commands;
-    using global::ComfyBot.Bot.Extensions;
-    using global::ComfyBot.Bot.Initialization;
-    using global::ComfyBot.Settings;
+    using ComfyBot.Bot.ChatBot.Commands;
+    using ComfyBot.Bot.Extensions;
+    using ComfyBot.Bot.Initialization;
+    using ComfyBot.Settings;
 
     using TwitchLib.Client.Events;
     using TwitchLib.Client.Interfaces;
 
-    public class ComfyBot : IComfyBot
+    public class ChatBot : IComfyBot
     {
         private readonly ITwitchClientFactory twitchClientFactory;
         private readonly IEnumerable<ICommandHandler> commandHandlers;
 
         private ITwitchClient twitchClient;
 
-        public ComfyBot(ITwitchClientFactory twitchClientFactory,
+        public ChatBot(ITwitchClientFactory twitchClientFactory,
                         IEnumerable<ICommandHandler> commandHandlers)
         {
             this.twitchClientFactory = twitchClientFactory;

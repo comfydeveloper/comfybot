@@ -14,7 +14,7 @@
     using TwitchLib.Client.Interfaces;
 
     [TestFixture]
-    public class ComfyBotTests
+    public class ChatBotTests
     {
         private Mock<ITwitchClientFactory> clientFactory;
         private Mock<ITwitchClient> client;
@@ -22,7 +22,7 @@
         private Mock<ICommandHandler> commandHandler1;
         private Mock<ICommandHandler> commandHandler2;
 
-        private ComfyBot comfyBot;
+        private ChatBot chatBot;
 
         [SetUp]
         public void Setup()
@@ -35,7 +35,7 @@
             this.commandHandler2 = new Mock<ICommandHandler>();
             ICommandHandler[] commandHandlers = { this.commandHandler1.Object, this.commandHandler2.Object };
 
-            this.comfyBot = new ComfyBot(this.clientFactory.Object, commandHandlers);
+            this.chatBot = new ChatBot(this.clientFactory.Object, commandHandlers);
         }
 
         [TestCase("user1", "password1", "channel1")]
@@ -46,7 +46,7 @@
             ApplicationSettings.Default.Password = password;
             ApplicationSettings.Default.Channel = channel;
 
-            this.comfyBot.Run();
+            this.chatBot.Run();
 
             this.clientFactory.Verify(f => f.Create(username, password, channel));
             this.client.Verify(c => c.Connect());
@@ -55,7 +55,7 @@
         [Test]
         public void RunShouldRegisterCommandHandlers()
         {
-            this.comfyBot.Run();
+            this.chatBot.Run();
             OnChatCommandReceivedArgs args = new OnChatCommandReceivedArgs();
 
             this.client.Raise(mock => mock.OnChatCommandReceived += null, args);

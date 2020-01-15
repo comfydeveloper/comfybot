@@ -18,4 +18,8 @@
     <ProjectReference Include="..\ComfyBot.Settings\ComfyBot.Settings.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Shoutouts\" />
+  </ItemGroup>
+
 </Project>
