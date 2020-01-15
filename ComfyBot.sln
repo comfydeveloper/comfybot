@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Bot.Tests", "Test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Settings", "Source\ComfyBot.Settings\ComfyBot.Settings.csproj", "{EA894A5F-91F4-426E-BBC5-516471AB7E40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyBot.Data.Tests", "Test\ComfyBot.Data.Tests\ComfyBot.Data.Tests.csproj", "{53509EFA-D51D-44A6-BF86-B4FB4316DC55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{EA894A5F-91F4-426E-BBC5-516471AB7E40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA894A5F-91F4-426E-BBC5-516471AB7E40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA894A5F-91F4-426E-BBC5-516471AB7E40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53509EFA-D51D-44A6-BF86-B4FB4316DC55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53509EFA-D51D-44A6-BF86-B4FB4316DC55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53509EFA-D51D-44A6-BF86-B4FB4316DC55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53509EFA-D51D-44A6-BF86-B4FB4316DC55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 		{AC670CDB-F9C7-4C1C-98D1-42D676851939} = {00D98460-BEAB-48B2-B9BA-5C4E895D97B8}
 		{1DECA2E9-6939-45C8-B9CF-E0D3E716949C} = {AD40F514-EC5A-48E0-8511-B00FE36078B6}
 		{EA894A5F-91F4-426E-BBC5-516471AB7E40} = {00D98460-BEAB-48B2-B9BA-5C4E895D97B8}
+		{53509EFA-D51D-44A6-BF86-B4FB4316DC55} = {AD40F514-EC5A-48E0-8511-B00FE36078B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9092E7F8-89E4-485C-9219-FA8555C665D4}

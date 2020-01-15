@@ -43,9 +43,9 @@
         private void RegisterHandlers()
         {
             this.twitchClient.OnChatCommandReceived += this.OnCommandReceived;
-            this.twitchClient.OnLog += this.OnLog;
-            this.twitchClient.OnConnected += this.OnConnected;
-            this.twitchClient.OnJoinedChannel += this.OnJoinedChannel;
+            this.twitchClient.OnLog += OnLog;
+            this.twitchClient.OnConnected += OnConnected;
+            this.twitchClient.OnJoinedChannel += OnJoinedChannel;
         }
 
         private void Connect()
@@ -62,26 +62,26 @@
 
         private void OnCommandReceived(object sender, OnChatCommandReceivedArgs e)
         {
-            Log($"Received command {e.Command.CommandText} from user {e.Command.ChatMessage.Username}");
-
             foreach (ICommandHandler handler in commandHandlers)
             {
                 handler.Handle(this.twitchClient, e.Command.Wrap());
             }
         }
 
-        private void OnConnected(object sender, OnConnectedArgs e)
+        [ExcludeFromCodeCoverage]
+        private static void OnConnected(object sender, OnConnectedArgs e)
         {
             Log($"Successfully connected!");
         }
 
-        private void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
+        [ExcludeFromCodeCoverage]
+        private static void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
         {
             Log($"Successfully joined channel {e.Channel}.");
         }
 
         [ExcludeFromCodeCoverage]
-        private void OnLog(object sender, OnLogArgs e)
+        private static void OnLog(object sender, OnLogArgs e)
         {
             Log($"{e.BotUsername} - {e.Data}");
         }
