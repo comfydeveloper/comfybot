@@ -13,8 +13,4 @@
     <ProjectReference Include="..\ComfyBot.Settings\ComfyBot.Settings.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ChatBot\Messages\" />
-  </ItemGroup>
-
 </Project>

@@ -13,5 +13,10 @@
         {
             return new ChatCommandWrapper(command);
         }
+
+        public static IChatMessage Wrap(this ChatMessage message)
+        {
+            return new ChatMessageWrapper(message);
+        }
     }
 }

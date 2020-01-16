@@ -213,7 +213,7 @@
                                                         <materialDesign:PackIcon Style="{StaticResource AddIcon}" />
                                                     </Border>
                                                 </DockPanel>
-                                                <ItemsControl ItemsSource="{Binding Replies}">
+                                                <ItemsControl ItemsSource="{Binding Replies}" Margin="0 2">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel />

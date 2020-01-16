@@ -17,5 +17,9 @@
         public bool IsBroadcaster { get => this.message.IsBroadcaster; }
 
         public bool IsModerator { get => this.message.IsModerator; }
+
+        public string UserName { get => this.message.Username; }
+
+        public string Text { get => this.message.Message; }
     }
 }

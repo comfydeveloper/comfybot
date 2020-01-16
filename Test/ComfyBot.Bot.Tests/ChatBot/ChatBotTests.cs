@@ -2,6 +2,7 @@
 {
     using ComfyBot.Bot.ChatBot;
     using ComfyBot.Bot.ChatBot.Commands;
+    using ComfyBot.Bot.ChatBot.Messages;
     using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Bot.Initialization;
     using ComfyBot.Settings;
@@ -21,6 +22,8 @@
 
         private Mock<ICommandHandler> commandHandler1;
         private Mock<ICommandHandler> commandHandler2;
+        private Mock<IMessageHandler> messageHandler1;
+        private Mock<IMessageHandler> messageHandler2;
 
         private ChatBot chatBot;
 
@@ -35,7 +38,11 @@
             this.commandHandler2 = new Mock<ICommandHandler>();
             ICommandHandler[] commandHandlers = { this.commandHandler1.Object, this.commandHandler2.Object };
 
-            this.chatBot = new ChatBot(this.clientFactory.Object, commandHandlers);
+            this.messageHandler1 = new Mock<IMessageHandler>();
+            this.messageHandler2 = new Mock<IMessageHandler>();
+            IMessageHandler[] messageHandlers = { this.messageHandler1.Object, this.messageHandler2.Object };
+
+            this.chatBot = new ChatBot(this.clientFactory.Object, commandHandlers, messageHandlers);
         }
 
         [TestCase("user1", "password1", "channel1")]
@@ -62,6 +69,18 @@
 
             this.commandHandler1.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatCommand>()));
             this.commandHandler2.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatCommand>()));
+        }
+
+        [Test]
+        public void RunShouldRegisterMessageHandlers()
+        {
+            this.chatBot.Run();
+            OnMessageReceivedArgs args = new OnMessageReceivedArgs();
+
+            this.client.Raise(mock => mock.OnMessageReceived += null, args);
+
+            this.messageHandler1.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatMessage>()));
+            this.messageHandler2.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatMessage>()));
         }
     }
 }

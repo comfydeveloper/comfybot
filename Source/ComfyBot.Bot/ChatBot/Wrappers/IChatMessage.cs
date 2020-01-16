@@ -5,5 +5,9 @@
         bool IsBroadcaster { get; }
 
         bool IsModerator { get; }
+
+        string UserName { get; }
+
+        string Text { get; }
     }
 }

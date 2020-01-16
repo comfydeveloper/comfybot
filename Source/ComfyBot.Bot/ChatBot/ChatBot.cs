@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     using ComfyBot.Bot.ChatBot.Commands;
+    using ComfyBot.Bot.ChatBot.Messages;
     using ComfyBot.Bot.Extensions;
     using ComfyBot.Bot.Initialization;
     using ComfyBot.Settings;
@@ -16,14 +17,17 @@
     {
         private readonly ITwitchClientFactory twitchClientFactory;
         private readonly IEnumerable<ICommandHandler> commandHandlers;
+        private readonly IEnumerable<IMessageHandler> messageHandlers;
 
         private ITwitchClient twitchClient;
 
         public ChatBot(ITwitchClientFactory twitchClientFactory,
-                        IEnumerable<ICommandHandler> commandHandlers)
+                       IEnumerable<ICommandHandler> commandHandlers,
+                       IEnumerable<IMessageHandler> messageHandlers)
         {
             this.twitchClientFactory = twitchClientFactory;
             this.commandHandlers = commandHandlers;
+            this.messageHandlers = messageHandlers;
         }
 
         public void Run()
@@ -43,6 +47,7 @@
         private void RegisterHandlers()
         {
             this.twitchClient.OnChatCommandReceived += this.OnCommandReceived;
+            this.twitchClient.OnMessageReceived += this.OnMessageReceived;
             this.twitchClient.OnLog += OnLog;
             this.twitchClient.OnConnected += OnConnected;
             this.twitchClient.OnJoinedChannel += OnJoinedChannel;
@@ -65,6 +70,14 @@
             foreach (ICommandHandler handler in commandHandlers)
             {
                 handler.Handle(this.twitchClient, e.Command.Wrap());
+            }
+        }
+
+        private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
+        {
+            foreach (IMessageHandler handler in this.messageHandlers)
+            {
+                handler.Handle(this.twitchClient, e.ChatMessage.Wrap());
             }
         }
 
