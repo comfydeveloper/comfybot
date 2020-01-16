@@ -6,6 +6,7 @@
     using System.ComponentModel;
 
     using ComfyBot.Application.Shared;
+    using ComfyBot.Application.Shared.Contracts;
     using ComfyBot.Application.Shared.Extensions;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Repositories;
@@ -13,10 +14,13 @@
     public class ShoutoutTabViewModel : InitializableTab
     {
         private readonly IRepository<Shoutout> repository;
+        private readonly IMapper<Shoutout, ShoutoutModel> mapper;
 
-        public ShoutoutTabViewModel(IRepository<Shoutout> repository)
+        public ShoutoutTabViewModel(IRepository<Shoutout> repository,
+                                    IMapper<Shoutout, ShoutoutModel> mapper)
         {
             this.repository = repository;
+            this.mapper = mapper;
 
             this.AddShoutoutCommand = new DelegateCommand(this.AddShoutout);
             this.RemoveShoutoutCommand = new ParameterCommand(this.RemoveShoutout);
@@ -30,20 +34,16 @@
 
         protected override void Initialize()
         {
-            this.Shoutouts.Clear();
             IEnumerable<Shoutout> allShoutouts = this.repository.GetAll();
 
             foreach (Shoutout shoutout in allShoutouts)
             {
-                this.Shoutouts.Add(new ShoutoutModel { Id = shoutout.Id, Command = shoutout.Command, Message = shoutout.Message });
+                ShoutoutModel model = new ShoutoutModel();
+                this.mapper.MapToModel(shoutout, model);
+                this.Shoutouts.Add(model);
             }
 
             this.Shoutouts.RegisterCollectionItemChanged(this.OnShoutoutChanged);
-
-            foreach (ShoutoutModel shoutout in this.Shoutouts)
-            {
-                shoutout.PropertyChanged += this.OnShoutoutChanged;
-            }
         }
 
         private void OnShoutoutChanged(object sender, PropertyChangedEventArgs e)
@@ -55,12 +55,8 @@
                 return;
             }
 
-            Shoutout shoutout = new Shoutout
-                                {
-                                    Id = model.Id,
-                                    Command = model.Command,
-                                    Message = model.Message
-                                };
+            Shoutout shoutout = new Shoutout();
+            this.mapper.MapToEntity(model, shoutout);
 
             this.repository.AddOrUpdate(shoutout);
         }

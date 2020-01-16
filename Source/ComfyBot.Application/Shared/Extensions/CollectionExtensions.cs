@@ -20,8 +20,9 @@
         }
 
         /// <summary>
-        /// Registers the specified <paramref name="action"/> to be invoked on each element that is added to the <paramref name="collection"/>.
-        /// Automatically removes the action from the element when it is removed from the collection.
+        /// Registers the specified <paramref name="action"/> to be invoked on each element
+        /// that is added to the <paramref name="collection"/> or already exists in it.
+        /// Automatically removes the action from an element when it is removed from the collection.
         /// </summary>
         public static void RegisterCollectionItemChanged<T>(this ObservableCollection<T> collection,
                                                             Action<object, PropertyChangedEventArgs> action)

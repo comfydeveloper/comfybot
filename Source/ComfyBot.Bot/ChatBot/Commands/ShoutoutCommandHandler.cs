@@ -2,9 +2,9 @@
 {
     using System.Linq;
 
-    using global::ComfyBot.Bot.ChatBot.Wrappers;
-    using global::ComfyBot.Data.Models;
-    using global::ComfyBot.Data.Repositories;
+    using ComfyBot.Bot.ChatBot.Wrappers;
+    using ComfyBot.Data.Models;
+    using ComfyBot.Data.Repositories;
 
     using TwitchLib.Client.Interfaces;
 

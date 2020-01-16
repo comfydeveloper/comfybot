@@ -1,6 +1,8 @@
 ﻿namespace ComfyBot.Bot.Tests.ChatBot.Commands
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
 
     using ComfyBot.Bot.ChatBot.Commands;
     using ComfyBot.Bot.ChatBot.Wrappers;
@@ -42,7 +44,7 @@
             this.command.Setup(c => c.ArgumentsAsList).Returns(new List<string> {id});
             this.command.Setup(c => c.CommandText).Returns("so");
             Shoutout model = new Shoutout { Message = shoutoutText };
-            this.repository.Setup(r => r.Get(id)).Returns(model);
+            this.repository.Setup(r => r.Get(It.IsAny<Expression<Func<Shoutout, bool>>>())).Returns(model);
             string callback = null;
             this.client.Setup(c => c.SendMessage(It.IsAny<string>(), It.IsAny<string>(), false)).Callback<string, string, bool>((a, b, c) => callback = b);
 
