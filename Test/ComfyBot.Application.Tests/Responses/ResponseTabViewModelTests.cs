@@ -1,5 +1,6 @@
 ﻿namespace ComfyBot.Application.Tests.Responses
 {
+    using System.ComponentModel;
     using System.Linq;
     using System.Threading;
 
@@ -63,6 +64,19 @@
 
             Assert.AreEqual(count, this.viewModel.Responses.Count);
             this.mapper.Verify(m => m.MapToModel(It.IsAny<MessageResponse>(), It.IsAny<MessageResponseModel>()), () => Times.Exactly(count));
+        }
+
+        [Test]
+        public void UpdatingATextModelShouldUpdateEntity()
+        {
+            MessageResponseModel model = new MessageResponseModel();
+            this.viewModel.Responses.Add(model);
+            this.viewModel.IsSelected = true;
+
+            model.Timeout = 1;
+
+            this.repository.Verify(r => r.AddOrUpdate(It.IsAny<MessageResponse>()));
+            this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponse>()));
         }
     }
 }

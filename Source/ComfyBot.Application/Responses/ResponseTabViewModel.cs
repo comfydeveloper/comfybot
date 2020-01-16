@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Linq;
-    using System.Reflection.Metadata;
 
     using ComfyBot.Application.Shared;
     using ComfyBot.Application.Shared.Contracts;
@@ -64,23 +62,11 @@
 
         private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
         {
-            MessageResponseModel messageResponse = (MessageResponseModel)sender;
-            this.repository.AddOrUpdate(ToResponse(messageResponse));
-        }
+            MessageResponseModel model = (MessageResponseModel)sender;
+            MessageResponse entity = new MessageResponse();
+            this.mapper.MapToEntity(model, entity);
 
-        private MessageResponse ToResponse(MessageResponseModel model)
-        {
-            MessageResponse response = new MessageResponse
-                                       {
-                                           Id = model.Id,
-                                           TimeoutInSeconds = model.Timeout,
-                                           Users = model.Users.Select(k => k.Text).ToList(),
-                                           AllKeywords = model.AllKeywords.Select(k => k.Text).ToList(),
-                                           LooseKeywords = model.LooseKeywords.Select(k => k.Text).ToList(),
-                                           ExactKeywords = model.ExactKeywords.Select(k => k.Text).ToList(),
-                                           Replies = model.Replies.Select(k => k.Text).ToList(),
-                                       };
-            return response;
+            this.repository.AddOrUpdate(entity);
         }
     }
 }
