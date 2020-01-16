@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
     using System.ComponentModel;
 
     using ComfyBot.Application.Shared;
+    using ComfyBot.Application.Shared.Extensions;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Repositories;
 
@@ -38,30 +38,11 @@
                 this.Shoutouts.Add(new ShoutoutModel { Id = shoutout.Id, Command = shoutout.Command, Message = shoutout.Message });
             }
 
-            this.Shoutouts.CollectionChanged += this.OnCollectionChanged;
+            this.Shoutouts.RegisterCollectionItemChanged(this.OnShoutoutChanged);
 
             foreach (ShoutoutModel shoutout in this.Shoutouts)
             {
                 shoutout.PropertyChanged += this.OnShoutoutChanged;
-            }
-        }
-
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null)
-            {
-                foreach (ShoutoutModel newItem in e.NewItems)
-                {
-                    newItem.PropertyChanged += this.OnShoutoutChanged;
-                }
-            }
-
-            if (e.OldItems != null)
-            {
-                foreach (ShoutoutModel oldItem in e.OldItems)
-                {
-                    oldItem.PropertyChanged -= this.OnShoutoutChanged;
-                }
             }
         }
 

@@ -23,8 +23,8 @@
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
             MainWindow mainWindow = serviceProvider.GetService<MainWindow>();
-            IComfyBot comfyBot = serviceProvider.GetService<IComfyBot>();
-            comfyBot.Run();
+            //IComfyBot comfyBot = serviceProvider.GetService<IComfyBot>();
+            //comfyBot.Run();
 
             App app = new App();
             app.Run(mainWindow);
