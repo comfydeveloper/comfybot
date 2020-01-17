@@ -58,6 +58,7 @@
 
             Assert.AreEqual(count, this.viewModel.Shoutouts.Count);
             this.mapper.Verify(m => m.MapToModel(It.IsAny<Shoutout>(), It.IsAny<ShoutoutModel>()), () => Times.Exactly(count));
+            Assert.AreEqual(true, this.viewModel.IsSelected);
         }
 
         [TestCase(null, false)]

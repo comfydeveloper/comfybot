@@ -7,8 +7,6 @@
     using System.ComponentModel;
     using System.Linq;
 
-    using ComfyBot.Application.Responses;
-
     public static class CollectionExtensions
     {
         public static void AddRange<T>(this ObservableCollection<T> collection, IEnumerable<T> values)

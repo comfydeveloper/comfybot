@@ -1,11 +1,13 @@
 ﻿namespace ComfyBot.Application.Output
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Windows.Controls;
 
+    [ExcludeFromCodeCoverage]
     public class ConsoleOutputWriter : TextWriter
     {
         private readonly List<string> lastOutput = new List<string>();

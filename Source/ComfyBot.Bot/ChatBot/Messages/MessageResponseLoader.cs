@@ -4,6 +4,7 @@
     using System.Linq;
 
     using ComfyBot.Bot.ChatBot.Wrappers;
+    using ComfyBot.Bot.Extensions;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Repositories;
 
@@ -33,7 +34,7 @@
             if (MatchesLooseKeyword(response, message) || MatchesAllKeywords(response, message) || MatchesExactKeyword(response, message))
             {
                 this.UpdateLastUsageDate(response);
-                responseText = GetReply(response);
+                responseText = response.Replies.GetRandom();
                 responseText = responseText.Replace("{{user}}", message.UserName);
                 return true;
             }
@@ -44,19 +45,6 @@
         {
             response.LastUsed = DateTime.Now;
             this.repository.AddOrUpdate(response);
-        }
-
-        private string GetReply(MessageResponse messageResponse)
-        {
-            if (messageResponse.Replies.Count == 1)
-            {
-                return messageResponse.Replies.First();
-            }
-
-            Random random = new Random();
-            int index = random.Next(0, messageResponse.Replies.Count);
-
-            return messageResponse.Replies[index];
         }
 
         private static bool HasOngoingTimeout(MessageResponse response)
