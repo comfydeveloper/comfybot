@@ -7,11 +7,10 @@
     using System.Runtime.CompilerServices;
 
     using ComfyBot.Application.Annotations;
-    using ComfyBot.Application.Responses;
+    using ComfyBot.Application.Shared;
     using ComfyBot.Application.Shared.Extensions;
 
     using NUnit.Framework;
-    using NUnit.Framework.Internal;
 
     [TestFixture]
     public class CollectionExtensionsTests

@@ -3,6 +3,7 @@
     using System.ComponentModel;
 
     using ComfyBot.Application.Responses;
+    using ComfyBot.Application.Shared;
 
     using NUnit.Framework;
 

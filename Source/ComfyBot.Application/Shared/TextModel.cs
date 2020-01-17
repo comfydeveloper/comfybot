@@ -1,7 +1,5 @@
-﻿namespace ComfyBot.Application.Responses
+﻿namespace ComfyBot.Application.Shared
 {
-    using ComfyBot.Application.Shared;
-
     public class TextModel : NotifyingModel
     {
         private string text;

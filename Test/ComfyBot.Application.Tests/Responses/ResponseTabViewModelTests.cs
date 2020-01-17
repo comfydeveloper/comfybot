@@ -1,12 +1,9 @@
 ﻿namespace ComfyBot.Application.Tests.Responses
 {
-    using System.ComponentModel;
     using System.Linq;
-    using System.Threading;
 
     using ComfyBot.Application.Responses;
     using ComfyBot.Application.Shared.Contracts;
-    using ComfyBot.Data.Database;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Repositories;
 
