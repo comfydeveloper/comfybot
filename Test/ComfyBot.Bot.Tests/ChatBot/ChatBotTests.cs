@@ -50,7 +50,7 @@
         public void RunShouldInitializeClient(string username, string password, string channel)
         {
             ApplicationSettings.Default.User = username;
-            ApplicationSettings.Default.Password = password;
+            ApplicationSettings.Default.AuthKey = password;
             ApplicationSettings.Default.Channel = channel;
 
             this.chatBot.Run();
@@ -81,6 +81,18 @@
 
             this.messageHandler1.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatMessage>()));
             this.messageHandler2.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatMessage>()));
+        }
+
+        [Test]
+        public void RunShouldExitWhenSettingsAreNotReady()
+        {
+            ApplicationSettings.Default.Channel = string.Empty;
+            ApplicationSettings.Default.AuthKey = string.Empty;
+            ApplicationSettings.Default.User = string.Empty;
+
+            this.chatBot.Run();
+
+            this.clientFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
     }
 }

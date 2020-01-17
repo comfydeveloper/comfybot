@@ -326,13 +326,33 @@
                     </Grid>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <!-- Configuration -->
+            <TabItem DataContext="{Binding Tabs.Configuration}">
                 <TabItem.Header>
                     <DockPanel LastChildFill="False">
                         <materialDesign:PackIcon Kind="Cog"/>
-                        <TextBlock Text="Settings " Margin="5 0 0 0"/>
+                        <TextBlock Text="Configuration" Margin="5 0 0 0"/>
                     </DockPanel>
                 </TabItem.Header>
+                <StackPanel>
+                    <DockPanel LastChildFill="False" Margin="0 2">
+                        <Label Content="User Name" Width="80" />
+                        <TextBox VerticalContentAlignment="Center" Text="{Binding UserName}" Width="500" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="False" Margin="0 2" >
+                        <Label Content="OAuthKey" Width="80"  />
+                        <PasswordBox x:Name="StreamKey" VerticalContentAlignment="Center" Width="500" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="False" Margin="0 2" >
+                        <Label Content="Channel" Width="80"  />
+                        <TextBox VerticalContentAlignment="Center" Text="{Binding Channel}" Width="500" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="False" Margin="0 2" >
+                        <Label Content="Data Storage" Width="80"  />
+                        <TextBox VerticalContentAlignment="Center" Text="{Binding DatabasePath}" Width="500" />
+                    </DockPanel>
+                    <Button Content="Update" Command="{Binding UpdateConfigurationCommand}" CommandParameter="{Binding ElementName=StreamKey}" Margin="5 0" Width="100" HorizontalAlignment="Left" />
+                </StackPanel>
             </TabItem>
         </TabControl>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />

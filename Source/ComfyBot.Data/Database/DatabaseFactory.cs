@@ -1,6 +1,8 @@
 ﻿namespace ComfyBot.Data.Database
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
 
     using ComfyBot.Data.Wrappers;
     using ComfyBot.Settings;
@@ -12,7 +14,15 @@
     {
         public IDatabase Create()
         {
-            return new DatabaseWrapper(new LiteDatabase(ApplicationSettings.Default.DatabasePath));
+            string databasePath = GetDatabasePath();
+            Directory.CreateDirectory(Path.GetDirectoryName(databasePath));
+
+            return new DatabaseWrapper(new LiteDatabase(databasePath));
+        }
+
+        private static string GetDatabasePath()
+        {
+            return Environment.ExpandEnvironmentVariables(ApplicationSettings.Default.DatabasePath);
         }
     }
 }

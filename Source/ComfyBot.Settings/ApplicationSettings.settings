@@ -3,16 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="User" Type="System.String" Scope="User">
-      <Value Profile="(Default)">comfydevbot</Value>
+      <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Password" Type="System.String" Scope="User">
+    <Setting Name="AuthKey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Channel" Type="System.String" Scope="User">
-      <Value Profile="(Default)">comfydeveloper</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DatabasePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">%USERPROFILE%\Documents\ComfyDev\ComfyBot.comfy</Value>
     </Setting>
   </Settings>
 </SettingsFile>

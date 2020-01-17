@@ -25,7 +25,7 @@ namespace ComfyBot.Settings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("comfydevbot")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string User {
             get {
                 return ((string)(this["User"]));
@@ -38,18 +38,18 @@ namespace ComfyBot.Settings {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Password {
+        public string AuthKey {
             get {
-                return ((string)(this["Password"]));
+                return ((string)(this["AuthKey"]));
             }
             set {
-                this["Password"] = value;
+                this["AuthKey"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("comfydeveloper")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string Channel {
             get {
                 return ((string)(this["Channel"]));
@@ -61,7 +61,7 @@ namespace ComfyBot.Settings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("%USERPROFILE%\\Documents\\ComfyDev\\ComfyBot.comfy")]
         public string DatabasePath {
             get {
                 return ((string)(this["DatabasePath"]));

@@ -32,9 +32,22 @@
 
         public void Run()
         {
-            this.InitializeClient();
+            if (this.IsBotReady())
+            {
+                this.InitializeClient();
+            }
+            else
+            {
+                Log("Could not initialize bot. Please make sure to set your configuration in the configuration tab and restart the bot.");
+            }
+        }
 
-            Log("Bot initialized.");
+        private bool IsBotReady()
+        {
+            ApplicationSettings applicationSettings = ApplicationSettings.Default;
+            return !string.IsNullOrEmpty(applicationSettings.Channel)
+                   && !string.IsNullOrEmpty(applicationSettings.AuthKey)
+                   && !string.IsNullOrEmpty(applicationSettings.User);
         }
 
         private void InitializeClient()
@@ -42,6 +55,7 @@
             this.Logon();
             this.RegisterHandlers();
             this.Connect();
+            Log("Bot initialized.");
         }
 
         private void RegisterHandlers()
@@ -61,7 +75,7 @@
         private void Logon()
         {
             this.twitchClient = this.twitchClientFactory.Create(ApplicationSettings.Default.User,
-                                                                ApplicationSettings.Default.Password,
+                                                                ApplicationSettings.Default.AuthKey,
                                                                 ApplicationSettings.Default.Channel);
         }
 

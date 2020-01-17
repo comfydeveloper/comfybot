@@ -7,6 +7,7 @@ namespace ComfyBot.Application
 
     using ComfyBot.Application.Main;
     using ComfyBot.Application.Output;
+    using ComfyBot.Settings;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -21,6 +22,8 @@ namespace ComfyBot.Application
             InitializeComponent();
             ConsoleOutputWriter writer = new ConsoleOutputWriter(this.ConsoleTextBox);
             Console.SetOut(writer);
+
+            this.StreamKey.Password = ApplicationSettings.Default.AuthKey;
         }
     }
 }
