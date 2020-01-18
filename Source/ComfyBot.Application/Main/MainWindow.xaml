@@ -104,7 +104,11 @@
                                                         <DataTemplate>
                                                             <Border Style="{StaticResource Tag}">
                                                                 <DockPanel LastChildFill="False">
-                                                                    <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" />
+                                                                    <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" >
+                                                                        <TextBox.InputBindings>
+                                                                            <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveReplyCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
+                                                                        </TextBox.InputBindings>
+                                                                    </TextBox>
                                                                     <Border Background="Transparent" Cursor="Hand">
                                                                         <Border.InputBindings>
                                                                             <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveReplyCommand}" CommandParameter="{Binding}"/>
@@ -188,7 +192,11 @@
                                                     <DataTemplate>
                                                         <Border Style="{StaticResource Tag}">
                                                             <DockPanel LastChildFill="False">
-                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" />
+                                                                    <TextBox Text="{Binding Text}" Style="{StaticResource TagText}">
+                                                                        <TextBox.InputBindings>
+                                                                            <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveUserCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
+                                                                        </TextBox.InputBindings>
+                                                                    </TextBox>
                                                                 <Border Background="Transparent" Cursor="Hand">
                                                                     <Border.InputBindings>
                                                                         <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveUserCommand}" CommandParameter="{Binding}"/>
@@ -224,8 +232,12 @@
                                                     <DataTemplate>
                                                         <Border Style="{StaticResource Tag}">
                                                             <DockPanel LastChildFill="False">
-                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}"  />
-                                                                <Border Background="Transparent" Cursor="Hand">
+                                                                    <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" >
+                                                                        <TextBox.InputBindings>
+                                                                            <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveLooseKeywordCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
+                                                                        </TextBox.InputBindings>
+                                                                    </TextBox>
+                                                                        <Border Background="Transparent" Cursor="Hand">
                                                                     <Border.InputBindings>
                                                                         <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveLooseKeywordCommand}" CommandParameter="{Binding}"/>
                                                                     </Border.InputBindings>
@@ -256,7 +268,11 @@
                                                     <DataTemplate>
                                                         <Border Style="{StaticResource Tag}">
                                                             <DockPanel LastChildFill="False">
-                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}"  />
+                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" >
+                                                                    <TextBox.InputBindings>
+                                                                        <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveAllKeywordCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
+                                                                    </TextBox.InputBindings>
+                                                                </TextBox>
                                                                 <Border Background="Transparent" Cursor="Hand">
                                                                     <Border.InputBindings>
                                                                         <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveAllKeywordCommand}" CommandParameter="{Binding}"/>
@@ -288,7 +304,11 @@
                                                     <DataTemplate>
                                                         <Border Style="{StaticResource Tag}">
                                                             <DockPanel LastChildFill="False">
-                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}"  />
+                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" >
+                                                                    <TextBox.InputBindings>
+                                                                        <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveExactKeywordCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
+                                                                    </TextBox.InputBindings>
+                                                                </TextBox>
                                                                 <Border Background="Transparent" Cursor="Hand">
                                                                     <Border.InputBindings>
                                                                         <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveExactKeywordCommand}" CommandParameter="{Binding}"/>
@@ -325,7 +345,11 @@
                                                     <DataTemplate>
                                                         <Border Style="{StaticResource Tag}">
                                                             <DockPanel LastChildFill="False">
-                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" />
+                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}">
+                                                                    <TextBox.InputBindings>
+                                                                            <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveReplyCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
+                                                                    </TextBox.InputBindings>
+                                                                </TextBox>
                                                                 <Border Background="Transparent" Cursor="Hand">
                                                                     <Border.InputBindings>
                                                                         <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveReplyCommand}" CommandParameter="{Binding}"/>
