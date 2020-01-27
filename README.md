@@ -1,6 +1,6 @@
 # Comfybot
 A comfy twitch bot.
-This is a small learning project. If you look for a place to learn, feel free to check out my code!
+This is a small learning project. If you look for a place to learn or to find ideas for your own first bot, feel free to check out my code!
 
 ## Features
 The bot currently has three simple main features: 
