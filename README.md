@@ -27,3 +27,5 @@ The message "border" will be made configurable later.
 - WPF
 - TwitchLib
 - LiteDB
+- NUnit
+- Moq
