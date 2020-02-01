@@ -3,6 +3,7 @@
     <AllowParallelTestExecution>True</AllowParallelTestExecution>
     <MetricsExclusionList>
       <Value>Source\ComfyBot.Settings\ComfyBot.Settings.csproj</Value>
+      <Value>Annotations.cs:Source\ComfyBot.Application\ComfyBot.Application.csproj</Value>
     </MetricsExclusionList>
     <SolutionConfigured>True</SolutionConfigured>
   </Settings>

@@ -1,6 +1,7 @@
 ﻿namespace ComfyBot.Bot.Tests.ChatBot.Commands
 {
     using System;
+    using System.Collections.Generic;
 
     using ComfyBot.Bot.ChatBot.Commands;
     using ComfyBot.Bot.ChatBot.Wrappers;
@@ -37,6 +38,7 @@
         [TestCase("command2", "CoMMaND2", "reply2")]
         public void TryGetReplyShouldReturnReplyForMatchingCommand(string command, string textCommandText, string replyText)
         {
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>());
             this.chatCommand.Setup(c => c.CommandText).Returns(command);
             this.textCommand.Command = textCommandText;
             this.textCommand.Replies.Add(replyText);
@@ -51,6 +53,7 @@
         [TestCase("message2 {{user}}", "userName2", "message2 userName2")]
         public void TryGetReplyShouldReplaceUser(string replyText, string userName, string expectedReply)
         {
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>());
             this.chatCommand.Setup(c => c.CommandText).Returns("command");
             this.chatCommand.Setup(c => c.ChatMessage.UserName).Returns(userName);
             this.textCommand.Command = "command";
@@ -60,6 +63,79 @@
 
             Assert.IsTrue(result);
             Assert.AreEqual(expectedReply, resultText);
+        }
+
+        [TestCase("parameters1", "text with {{parameters}}", "text with parameters1")]
+        [TestCase("parameters2", "other text {{parameters}}", "other text parameters2")]
+        public void TryGetReplyShouldReplaceParameterList(string parametersAsString, string commandText, string expected)
+        {
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "parameters" });
+            this.chatCommand.Setup(c => c.ArgumentsAsString).Returns(parametersAsString);
+            this.chatCommand.Setup(c => c.CommandText).Returns("command");
+            this.textCommand.Replies.Add(commandText);
+            this.textCommand.Command = "command";
+
+            this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+
+            Assert.AreEqual(expected, resultText);
+        }
+
+        [Test]
+        public void TryGetReplyShouldPriorizeRepliesWithParameters()
+        {
+            this.chatCommand.Setup(c => c.ArgumentsAsString).Returns("parameters");
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> {"parameter" });
+            this.chatCommand.Setup(c => c.CommandText).Returns("command");
+            this.textCommand.Replies.Add("reply");
+            this.textCommand.Replies.Add("reply with {{parameters}}");
+            this.textCommand.Command = "command";
+
+            this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+
+            Assert.AreEqual("reply with parameters", resultText);
+        }
+
+        [Test]
+        public void TryGetReplyShouldIgnoreRepliesWithMorePlaceholdersThanActualParameters()
+        {
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "parameter" });
+            this.chatCommand.Setup(c => c.CommandText).Returns("command");
+            this.textCommand.Replies.Add("reply with {{parameter2}}");
+            this.textCommand.Replies.Add("reply with {{parameter3}}");
+            this.textCommand.Replies.Add("reply");
+            this.textCommand.Command = "command";
+
+            this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+
+            Assert.AreEqual("reply", resultText);
+        }
+
+        [Test]
+        public void TryGetReplyShouldReturnRegularReplyIfNoReplyContainsParameters()
+        {
+            this.chatCommand.Setup(c => c.ArgumentsAsString).Returns("parameters");
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "parameter" });
+            this.chatCommand.Setup(c => c.CommandText).Returns("command");
+            this.textCommand.Replies.Add("reply");
+            this.textCommand.Command = "command";
+
+            this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+
+            Assert.AreEqual("reply", resultText);
+        }
+
+        [TestCase("text with {{parameter2}} {{parameter1}}", "parameter", "parameter", "text with parameter parameter")]
+        [TestCase("text with just one {{parameter2}}", "parameter1", "parameter2", "text with just one parameter2")]
+        public void TryGetReplyShouldReplaceAllParameters(string replyText, string parameter1, string parameter2, string expected)
+        {
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { parameter1, parameter2 });
+            this.chatCommand.Setup(c => c.CommandText).Returns("command");
+            this.textCommand.Replies.Add(replyText);
+            this.textCommand.Command = "command";
+
+            this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+
+            Assert.AreEqual(expected, resultText);
         }
 
         [TestCase("command1", "command2")]
@@ -78,6 +154,7 @@
         [Test]
         public void TryGetResponseShouldSetLastUsageDateIfMatchWasFound()
         {
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>());
             this.chatCommand.Setup(m => m.CommandText).Returns("command");
             this.textCommand.Command = "command";
             this.textCommand.Replies.Add("response");

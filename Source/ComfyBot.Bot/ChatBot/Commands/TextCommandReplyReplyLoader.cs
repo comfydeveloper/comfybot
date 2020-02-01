@@ -1,6 +1,8 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Commands
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Bot.Extensions;
@@ -21,11 +23,31 @@
             if (!HasOngoingTimeout(textCommand) && CommandMatches(textCommand, command))
             {
                 this.UpdateLastUsageDate(textCommand);
-                reply = textCommand.Replies.GetRandom();
+
+                if (command.ArgumentsAsList.Any())
+                {
+                    string[] repliesWithParameters = textCommand.Replies.Where(r => r.Contains("{{parameters}}")
+                                                                                    || r.Contains("{{parameter") && r.CanHandleParameters(command.ArgumentsAsList.Count)).ToArray();
+
+                    if (repliesWithParameters.Any())
+                    {
+                        reply = repliesWithParameters.GetRandom();
+                        reply = reply.Replace("{{user}}", command.ChatMessage.UserName);
+                        reply = reply.Replace("{{parameters}}", command.ArgumentsAsString);
+
+                        var parametersWithIndexes = command.ArgumentsAsList.Select((s, i) => new { Text = s, Index = i });
+
+                        foreach (var parameter in parametersWithIndexes)
+                        {
+                            reply = reply.Replace($"{{{{parameter{parameter.Index + 1}}}}}", parameter.Text);
+                        }
+                        return true;
+                    }
+                }
+                reply = textCommand.Replies.Where(r => r.CanHandleParameters(0)).GetRandom();
                 reply = reply.Replace("{{user}}", command.ChatMessage.UserName);
                 return true;
             }
-
             reply = null;
             return false;
         }

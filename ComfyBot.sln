@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Settings", "Source
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Data.Tests", "Test\ComfyBot.Data.Tests\ComfyBot.Data.Tests.csproj", "{53509EFA-D51D-44A6-BF86-B4FB4316DC55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyBot.Application.Tests", "Test\ComfyBot.Application.Tests\ComfyBot.Application.Tests.csproj", "{3A959438-13B2-426C-BF14-CFFFCA627611}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Application.Tests", "Test\ComfyBot.Application.Tests\ComfyBot.Application.Tests.csproj", "{3A959438-13B2-426C-BF14-CFFFCA627611}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
