@@ -4,7 +4,7 @@
 
     public static class StringExtensions
     {
-        private const string RegularExpression = "parameter(.+?)}}";
+        private const string RegularExpression = @"parameter(\d+)}}";
 
         public static bool CanHandleParameters(this string reply, int parameterCount)
         {

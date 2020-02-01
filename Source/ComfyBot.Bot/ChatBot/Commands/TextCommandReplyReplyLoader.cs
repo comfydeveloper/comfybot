@@ -29,6 +29,7 @@
                     string[] repliesWithParameters = textCommand.Replies.Where(r => r.Contains("{{parameters}}")
                                                                                     || r.Contains("{{parameter") && r.CanHandleParameters(command.ArgumentsAsList.Count)).ToArray();
 
+                    //[TODO] try to match commands with *exactly* n parameters first
                     if (repliesWithParameters.Any())
                     {
                         reply = repliesWithParameters.GetRandom();
@@ -44,7 +45,7 @@
                         return true;
                     }
                 }
-                reply = textCommand.Replies.Where(r => r.CanHandleParameters(0)).GetRandom();
+                reply = textCommand.Replies.Where(r => !r.Contains("{{parameter")).GetRandom();
                 reply = reply.Replace("{{user}}", command.ChatMessage.UserName);
                 return true;
             }
