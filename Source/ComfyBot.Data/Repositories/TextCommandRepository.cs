@@ -13,7 +13,7 @@
         {
             target.Command = source.Command;
             target.TimeoutInSeconds = source.TimeoutInSeconds;
-            target.LastUsed = source.LastUsed;
+            target.LastUsed = source.LastUsed ?? target.LastUsed;
             target.Replies.Clear();
             target.Replies.AddRange(source.Replies);
         }

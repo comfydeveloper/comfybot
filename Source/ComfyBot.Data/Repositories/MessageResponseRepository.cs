@@ -27,7 +27,7 @@
         private void UpdateInternal(MessageResponse source, MessageResponse target)
         {
             target.TimeoutInSeconds = source.TimeoutInSeconds;
-            target.LastUsed = source.LastUsed;
+            target.LastUsed = source.LastUsed ?? target.LastUsed;
             target.Users.AddRange(source.Users);
             target.ExactKeywords.AddRange(source.ExactKeywords);
             target.AllKeywords.AddRange(source.AllKeywords);
