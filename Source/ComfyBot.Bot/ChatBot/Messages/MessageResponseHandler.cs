@@ -23,6 +23,11 @@
 
         public void Handle(ITwitchClient client, IChatMessage message)
         {
+            if (IsCommand(message))
+            {
+                return;
+            }
+
             IEnumerable<MessageResponse> messageResponses = this.repository.GetAll();
 
             foreach (MessageResponse messageResponse in messageResponses)
@@ -33,6 +38,11 @@
                     return;
                 }
             }
+        }
+
+        private static bool IsCommand(IChatMessage message)
+        {
+            return message.Text.StartsWith("!");
         }
     }
 }

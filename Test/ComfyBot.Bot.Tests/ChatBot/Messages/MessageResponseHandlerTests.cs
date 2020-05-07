@@ -40,6 +40,7 @@
             ApplicationSettings.Default.Channel = channel;
             MessageResponse messageResponse1 = new MessageResponse();
             MessageResponse messageResponse2 = new MessageResponse();
+            this.chatMessage.Setup(m => m.Text).Returns("message");
             this.repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2, messageResponse2 });
             this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response)).Returns(false);
             this.responseLoader.Setup(r => r.TryGetResponse(messageResponse2, this.chatMessage.Object, out response)).Returns(true);
@@ -49,6 +50,18 @@
             this.responseLoader.Verify(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response));
             this.responseLoader.Verify(r => r.TryGetResponse(messageResponse2, this.chatMessage.Object, out response));
             this.twitchClient.Verify(c => c.SendMessage(channel, response, false), Times.Once);
+        }
+
+        [TestCase("!")]
+        [TestCase("!test")]
+        [TestCase("! test")]
+        public void HandleShouldNotSendResponseWhenMessageIsCommand(string commandMessage)
+        {
+            this.chatMessage.Setup(m => m.Text).Returns(commandMessage);
+
+            this.handler.Handle(this.twitchClient.Object, this.chatMessage.Object);
+
+            this.repository.Verify(r => r.GetAll(), Times.Never);
         }
     }
 }
