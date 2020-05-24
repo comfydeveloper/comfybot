@@ -66,7 +66,7 @@
 
         private static bool CommandMatches(TextCommand textCommand, IChatCommand command)
         {
-            return string.Equals(command.CommandText, textCommand.Command, StringComparison.CurrentCultureIgnoreCase);
+            return textCommand.Commands.Any(c => c.Equals(command.CommandText, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

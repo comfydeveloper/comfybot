@@ -5,9 +5,9 @@
 
     public class TextCommand : Entity
     {
-        public string Command { get; set; }
-
         public List<string> Replies { get; set; } = new List<string>();
+
+        public List<string> Commands { get; set; } = new List<string>();
 
         public DateTime? LastUsed { get; set; }
 

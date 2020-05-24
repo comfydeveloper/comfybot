@@ -40,7 +40,7 @@
         {
             this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>());
             this.chatCommand.Setup(c => c.CommandText).Returns(command);
-            this.textCommand.Command = textCommandText;
+            this.textCommand.Commands.Add(textCommandText);
             this.textCommand.Replies.Add(replyText);
 
             bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
@@ -56,7 +56,7 @@
             this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>());
             this.chatCommand.Setup(c => c.CommandText).Returns("command");
             this.chatCommand.Setup(c => c.ChatMessage.UserName).Returns(userName);
-            this.textCommand.Command = "command";
+            this.textCommand.Commands.Add("command");
             this.textCommand.Replies.Add(replyText);
 
             bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
@@ -73,7 +73,7 @@
             this.chatCommand.Setup(c => c.ArgumentsAsString).Returns(parametersAsString);
             this.chatCommand.Setup(c => c.CommandText).Returns("command");
             this.textCommand.Replies.Add(commandText);
-            this.textCommand.Command = "command";
+            this.textCommand.Commands.Add("command");
 
             this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
 
@@ -88,7 +88,7 @@
             this.chatCommand.Setup(c => c.CommandText).Returns("command");
             this.textCommand.Replies.Add("reply");
             this.textCommand.Replies.Add("reply with {{parameters}}");
-            this.textCommand.Command = "command";
+            this.textCommand.Commands.Add("command");
 
             this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
 
@@ -103,7 +103,7 @@
             this.textCommand.Replies.Add("reply with {{parameter2}}");
             this.textCommand.Replies.Add("reply with {{parameter3}}");
             this.textCommand.Replies.Add("reply");
-            this.textCommand.Command = "command";
+            this.textCommand.Commands.Add("command");
 
             this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
 
@@ -117,7 +117,7 @@
             this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "parameter" });
             this.chatCommand.Setup(c => c.CommandText).Returns("command");
             this.textCommand.Replies.Add("reply");
-            this.textCommand.Command = "command";
+            this.textCommand.Commands.Add("command");
 
             this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
 
@@ -131,7 +131,7 @@
             this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { parameter1, parameter2 });
             this.chatCommand.Setup(c => c.CommandText).Returns("command");
             this.textCommand.Replies.Add(replyText);
-            this.textCommand.Command = "command";
+            this.textCommand.Commands.Add("command");
 
             this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
 
@@ -143,7 +143,7 @@
         public void TryGetReplyShouldReturnFalseWhenMismatchingCommand(string command, string textCommandText)
         {
             this.chatCommand.Setup(c => c.CommandText).Returns(command);
-            this.textCommand.Command = textCommandText;
+            this.textCommand.Commands.Add(textCommandText);
 
             bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
 
@@ -156,7 +156,7 @@
         {
             this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>());
             this.chatCommand.Setup(m => m.CommandText).Returns("command");
-            this.textCommand.Command = "command";
+            this.textCommand.Commands.Add("command");
             this.textCommand.Replies.Add("response");
 
             this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string response);

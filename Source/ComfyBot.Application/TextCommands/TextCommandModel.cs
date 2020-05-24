@@ -8,26 +8,24 @@
 
     public class TextCommandModel : NotifyingModel
     {
-        private string command;
         private int timeout = 30;
 
         public TextCommandModel()
         {
+            this.AddTextCommand = new DelegateCommand(this.AddText);
             this.AddReplyCommand = new DelegateCommand(this.AddReply);
+            this.RemoveTextCommand = new ParameterCommand(this.RemoveText);
             this.RemoveReplyCommand = new ParameterCommand(this.RemoveReply);
 
             this.Replies.RegisterCollectionItemChanged(this.OnReplyUpdate);
+            this.Commands.RegisterCollectionItemChanged(this.OnReplyUpdate);
         }
 
         public string Id { get; set; }
 
-        public string Command
-        {
-            get => this.command;
-            set { this.command = value; this.OnPropertyChanged(); }
-        }
-
         public ObservableCollection<TextModel> Replies { get; set; } = new ObservableCollection<TextModel>();
+
+        public ObservableCollection<TextModel> Commands { get; set; } = new ObservableCollection<TextModel>();
 
         public int Timeout
         {
@@ -38,6 +36,21 @@
         public DelegateCommand AddReplyCommand { get; }
 
         public ParameterCommand RemoveReplyCommand { get; }
+
+        public DelegateCommand AddTextCommand { get; }
+
+        public ParameterCommand RemoveTextCommand { get; }
+
+        private void AddText()
+        {
+            this.Commands.Add(new TextModel());
+        }
+
+        private void RemoveText(object parameter)
+        {
+            this.Commands.Remove((TextModel)parameter);
+            this.OnPropertyChanged();
+        }
 
         private void AddReply()
         {

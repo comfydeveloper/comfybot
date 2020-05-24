@@ -5,7 +5,6 @@
     using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Repositories;
-    using ComfyBot.Settings;
 
     using TwitchLib.Client.Interfaces;
 

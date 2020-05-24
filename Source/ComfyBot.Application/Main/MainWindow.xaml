@@ -72,14 +72,47 @@
                                     <Border Style="{StaticResource Card}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="150" />
+                                                <ColumnDefinition Width="190" />
                                                 <ColumnDefinition Width="2" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="30" />
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0" Margin="5">
-                                                <Label Content="Use this command" VerticalAlignment="Center" FontWeight="Bold" />
-                                                <TextBox Text="{Binding Command}" Style="{StaticResource UnderscoreTextBox}" Margin="5 0 5 5"/>
+                                                <DockPanel LastChildFill="False">
+                                                    <Label Content="Use this command" FontWeight="Bold" />
+                                                    <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
+                                                        <Border.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding AddTextCommand}"/>
+                                                        </Border.InputBindings>
+                                                        <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
+                                                    </Border>
+                                                </DockPanel>
+                                                <ItemsControl ItemsSource="{Binding Commands}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource Tag}">
+                                                                <DockPanel LastChildFill="False">
+                                                                    <TextBox Text="{Binding Text}" Style="{StaticResource TagText}">
+                                                                        <TextBox.InputBindings>
+                                                                            <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveTextCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
+                                                                        </TextBox.InputBindings>
+                                                                    </TextBox>
+                                                                    <Border Background="Transparent" Cursor="Hand">
+                                                                        <Border.InputBindings>
+                                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveTextCommand}" CommandParameter="{Binding}"/>
+                                                                        </Border.InputBindings>
+                                                                        <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}" />
+                                                                    </Border>
+                                                                </DockPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
                                             </StackPanel>
                                             <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 5" />
                                             <StackPanel Grid.Column="2" Margin="5">

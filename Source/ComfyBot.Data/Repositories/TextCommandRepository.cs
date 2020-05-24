@@ -11,9 +11,10 @@
 
         protected override void Update(TextCommand source, TextCommand target)
         {
-            target.Command = source.Command;
             target.TimeoutInSeconds = source.TimeoutInSeconds;
             target.LastUsed = source.LastUsed ?? target.LastUsed;
+            target.Commands.Clear();
+            target.Commands.AddRange(source.Commands);
             target.Replies.Clear();
             target.Replies.AddRange(source.Replies);
         }

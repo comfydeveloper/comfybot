@@ -56,6 +56,44 @@
             Assert.AreEqual(expected, result);
         }
 
+        [Test]
+        public void AddTextCommandShouldAddReply()
+        {
+            this.model.AddTextCommand.Execute();
+
+            Assert.AreEqual(1, this.model.Commands.Count);
+        }
+
+        [Test]
+        public void RemoveTextShouldRemoveItem()
+        {
+            TextModel textModel = new TextModel();
+            this.model.Commands.Add(textModel);
+
+            this.model.RemoveTextCommand.Execute(textModel);
+
+            Assert.AreEqual(0, this.model.Commands.Count);
+        }
+
+        [TestCase(null, false)]
+        [TestCase("", false)]
+        [TestCase("a", true)]
+        public void ChangeToAddedTextElementShouldInvokePropertyChangeEvent(string text, bool expected)
+        {
+            bool result = false;
+            void TestMethod(object sender, PropertyChangedEventArgs e)
+            {
+                result = true;
+            }
+            this.model.PropertyChanged += TestMethod;
+            TextModel textModel = new TextModel();
+            this.model.Commands.Add(textModel);
+
+            textModel.Text = text;
+
+            Assert.AreEqual(expected, result);
+        }
+
         [TestCase(1)]
         [TestCase(2)]
         public void TimeoutSetterShouldSetValue(int timeout)
@@ -76,30 +114,6 @@
             this.model.PropertyChanged += TestMethod;
 
             this.model.Timeout = 1;
-
-            Assert.IsTrue(result);
-        }
-
-        [TestCase("command1")]
-        [TestCase("command2")]
-        public void CommandSetterShouldSetValue(string command)
-        {
-            this.model.Command = command;
-
-            Assert.AreEqual(command, this.model.Command);
-        }
-
-        [Test]
-        public void CommandSetterShouldNotifyPropertyChange()
-        {
-            bool result = false;
-            void TestMethod(object sender, PropertyChangedEventArgs e)
-            {
-                result = true;
-            }
-            this.model.PropertyChanged += TestMethod;
-
-            this.model.Command = "test";
 
             Assert.IsTrue(result);
         }

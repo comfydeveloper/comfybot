@@ -72,19 +72,26 @@
             Assert.AreEqual(timeOutInSeconds, entity.TimeoutInSeconds);
         }
 
-        [TestCase("command1")]
-        [TestCase("command2")]
-        public void AddOrUpdateShouldUpdateCommand(string command)
+        [TestCase("value1")]
+        [TestCase("value2")]
+        public void AddOrUpdateShouldUpdateCommandsCollection(string value)
         {
-            TextCommand entity = new TextCommand();
-            TextCommand model = new TextCommand { Command = command };
+            TextCommand entity = new TextCommand
+                                 {
+                                     Commands = new List<string> { "otherValue", value }
+                                 };
+            TextCommand model = new TextCommand
+                                {
+                                    Commands = new List<string> { value }
+                                };
             this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
             this.repository.AddOrUpdate(model);
 
             this.entities.Verify(e => e.Insert(model), Times.Never);
             this.entities.Verify(e => e.Update(entity));
-            Assert.AreEqual(command, entity.Command);
+            Assert.AreEqual(1, entity.Commands.Count);
+            Assert.AreEqual(value, entity.Commands.First());
         }
 
         [TestCase("2020-01-01")]

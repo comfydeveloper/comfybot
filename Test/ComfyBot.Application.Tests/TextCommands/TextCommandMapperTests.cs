@@ -2,7 +2,6 @@
 {
     using System.Linq;
 
-    using ComfyBot.Application.Responses;
     using ComfyBot.Application.Shared;
     using ComfyBot.Application.TextCommands;
     using ComfyBot.Data.Models;
@@ -37,17 +36,6 @@
             Assert.AreEqual(id, this.entity.Id);
         }
 
-        [TestCase("command1")]
-        [TestCase("command2")]
-        public void MapToEntityShouldMapCommand(string command)
-        {
-            this.model.Command = command;
-
-            this.mapper.MapToEntity(this.model, this.entity);
-
-            Assert.AreEqual(command, this.entity.Command);
-        }
-
         [TestCase(1)]
         [TestCase(2)]
         public void MapToEntityShouldMapTimeout(int timeout)
@@ -71,6 +59,18 @@
             Assert.AreEqual(reply, this.entity.Replies.First());
         }
 
+        [TestCase("reply1")]
+        [TestCase("reply2")]
+        public void MapToEntityShouldMapCommands(string reply)
+        {
+            this.model.Commands.Add(new TextModel { Text = reply });
+
+            this.mapper.MapToEntity(this.model, this.entity);
+
+            Assert.AreEqual(1, this.entity.Commands.Count);
+            Assert.AreEqual(reply, this.entity.Commands.First());
+        }
+
         [TestCase("00000000-0000-0000-0000-000000000000")]
         [TestCase("00000000-0000-0000-0000-000000000001")]
         public void MapToModelShouldMapId(string id)
@@ -80,17 +80,6 @@
             this.mapper.MapToModel(this.entity, this.model);
 
             Assert.AreEqual(id, this.model.Id);
-        }
-
-        [TestCase("command1")]
-        [TestCase("command2")]
-        public void MapToModelShouldMapCommand(string command)
-        {
-            this.entity.Command = command;
-
-            this.mapper.MapToModel(this.entity, this.model);
-
-            Assert.AreEqual(command, this.model.Command);
         }
 
         [TestCase(1)]
@@ -114,6 +103,18 @@
 
             Assert.AreEqual(1, this.model.Replies.Count);
             Assert.AreEqual(reply, this.model.Replies.First().Text);
+        }
+
+        [TestCase("reply1")]
+        [TestCase("reply2")]
+        public void MapToModelShouldMapCommands(string reply)
+        {
+            this.entity.Commands.Add(reply);
+
+            this.mapper.MapToModel(this.entity, this.model);
+
+            Assert.AreEqual(1, this.model.Commands.Count);
+            Assert.AreEqual(reply, this.model.Commands.First().Text);
         }
     }
 }
