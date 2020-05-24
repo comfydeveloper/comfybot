@@ -146,6 +146,18 @@
             this.repository.Verify(r => r.AddOrUpdate(this.messageResponse));
         }
 
+        [Test]
+        public void TryGetResponseShouldSetUseCountIfMatchWasFound()
+        {
+            this.chatMessage.Setup(m => m.Text).Returns("keyword");
+            this.messageResponse.ExactKeywords.Add("keyword");
+            this.messageResponse.Replies.Add("response");
+
+            this.loader.TryGetResponse(this.messageResponse, this.chatMessage.Object, out string response);
+
+            Assert.AreEqual(1, this.messageResponse.UseCount);
+        }
+
         [TestCase("response1 {{user}}", "username1", "response1 username1")]
         [TestCase("response2 {{user}}", "username2", "response2 username2")]
         public void TryGetResponseShouldSetReplaceUser(string responseText, string userName, string expected)

@@ -1,7 +1,6 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Commands
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     using ComfyBot.Bot.ChatBot.Wrappers;
@@ -22,7 +21,7 @@
         {
             if (!HasOngoingTimeout(textCommand) && CommandMatches(textCommand, command))
             {
-                this.UpdateLastUsageDate(textCommand);
+                this.UpdateCommandUsageInfo(textCommand);
 
                 if (command.ArgumentsAsList.Any())
                 {
@@ -58,8 +57,9 @@
             return textCommand.LastUsed.HasValue && textCommand.LastUsed > DateTime.Now.AddSeconds(-textCommand.TimeoutInSeconds);
         }
 
-        private void UpdateLastUsageDate(TextCommand textCommand)
+        private void UpdateCommandUsageInfo(TextCommand textCommand)
         {
+            textCommand.UseCount++;
             textCommand.LastUsed = DateTime.Now;
             this.repository.AddOrUpdate(textCommand);
         }

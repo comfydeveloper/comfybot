@@ -71,6 +71,19 @@
             Assert.AreEqual(timeOutInSeconds, entity.TimeoutInSeconds);
         }
 
+        [TestCase(1, 2, 2)]
+        [TestCase(4, 3, 4)]
+        public void AddOrUpdateShouldUpdateUseCount(int newCount, int oldCount, int expected)
+        {
+            MessageResponse entity = new MessageResponse { UseCount = oldCount };
+            MessageResponse model = new MessageResponse { UseCount = newCount };
+            this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
+
+            this.repository.AddOrUpdate(model);
+
+            Assert.AreEqual(expected, entity.UseCount);
+        }
+
         [TestCase("value1")]
         [TestCase("value2")]
         public void AddOrUpdateShouldUpdateCollections(string value)

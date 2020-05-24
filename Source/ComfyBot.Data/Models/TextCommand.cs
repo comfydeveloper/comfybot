@@ -11,6 +11,8 @@
 
         public DateTime? LastUsed { get; set; }
 
+        public int UseCount { get; set; }
+
         public int TimeoutInSeconds { get; set; }
     }
 }

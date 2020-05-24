@@ -1,5 +1,7 @@
 ﻿namespace ComfyBot.Data.Repositories
 {
+    using System;
+
     using ComfyBot.Data.Database;
     using ComfyBot.Data.Models;
 
@@ -12,6 +14,7 @@
         protected override void Update(TextCommand source, TextCommand target)
         {
             target.TimeoutInSeconds = source.TimeoutInSeconds;
+            target.UseCount = Math.Max(source.UseCount, target.UseCount);
             target.LastUsed = source.LastUsed ?? target.LastUsed;
             target.Commands.Clear();
             target.Commands.AddRange(source.Commands);

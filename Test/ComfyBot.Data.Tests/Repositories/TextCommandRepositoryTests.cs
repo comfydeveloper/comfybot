@@ -109,6 +109,19 @@
             Assert.AreEqual(lastUsedTime, entity.LastUsed);
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        public void AddOrUpdateShouldUpdateUseCount(int count)
+        {
+            TextCommand entity = new TextCommand();
+            TextCommand model = new TextCommand { UseCount = count };
+            this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+
+            this.repository.AddOrUpdate(model);
+
+            Assert.AreEqual(count, entity.UseCount);
+        }
+
         [TestCase("value1")]
         [TestCase("value2")]
         public void AddOrUpdateShouldUpdateCollection(string value)

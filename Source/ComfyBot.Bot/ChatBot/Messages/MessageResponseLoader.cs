@@ -33,7 +33,7 @@
 
             if (MatchesLooseKeyword(response, message) || MatchesAllKeywords(response, message) || MatchesExactKeyword(response, message))
             {
-                this.UpdateLastUsageDate(response);
+                this.UpdateUsageInfo(response);
                 responseText = response.Replies.GetRandom();
                 responseText = responseText.Replace("{{user}}", message.UserName);
                 return true;
@@ -41,8 +41,9 @@
             return false;
         }
 
-        private void UpdateLastUsageDate(MessageResponse response)
+        private void UpdateUsageInfo(MessageResponse response)
         {
+            response.UseCount++;
             response.LastUsed = DateTime.Now;
             this.repository.AddOrUpdate(response);
         }

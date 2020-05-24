@@ -165,6 +165,19 @@
             this.repository.Verify(r => r.AddOrUpdate(this.textCommand));
         }
 
+        [Test]
+        public void TryGetResponseShouldIncreaseUseCount()
+        {
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>());
+            this.chatCommand.Setup(m => m.CommandText).Returns("command");
+            this.textCommand.Commands.Add("command");
+            this.textCommand.Replies.Add("response");
+
+            this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string response);
+
+            Assert.AreEqual(1, this.textCommand.UseCount);
+        }
+
         [TestCase(10)]
         [TestCase(20)]
         public void TryGetResponseShouldReturnFalseWhenTheResponseTimeoutHasNotRunOutYet(int timeout)

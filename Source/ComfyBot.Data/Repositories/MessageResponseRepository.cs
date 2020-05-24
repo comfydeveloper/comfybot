@@ -1,5 +1,7 @@
 ﻿namespace ComfyBot.Data.Repositories
 {
+    using System;
+
     using ComfyBot.Data.Database;
     using ComfyBot.Data.Models;
 
@@ -26,6 +28,7 @@
 
         private void UpdateInternal(MessageResponse source, MessageResponse target)
         {
+            target.UseCount = Math.Max(source.UseCount, target.UseCount);
             target.TimeoutInSeconds = source.TimeoutInSeconds;
             target.LastUsed = source.LastUsed ?? target.LastUsed;
             target.Users.AddRange(source.Users);
