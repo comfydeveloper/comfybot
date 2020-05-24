@@ -39,6 +39,7 @@
 
             if (entity == null)
             {
+                model.DateOfCreation = DateTime.Now;
                 collection.Insert(model);
             }
             else
