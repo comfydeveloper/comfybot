@@ -12,8 +12,8 @@
         {
             model.Id = entity.Id;
             model.Timeout = entity.TimeoutInSeconds;
-            model.Replies.AddRange(entity.Replies.ToTextModels());
-            model.Commands.AddRange(entity.Commands.ToTextModels());
+            model.Replies.AddRange(entity.Replies.ToTextModels().OrderBy(m => m.Text));
+            model.Commands.AddRange(entity.Commands.ToTextModels().OrderBy(m => m.Text));
         }
 
         public void MapToEntity(TextCommandModel model, TextCommand entity)

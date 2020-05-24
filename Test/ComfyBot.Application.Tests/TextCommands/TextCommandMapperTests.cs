@@ -105,6 +105,36 @@
             Assert.AreEqual(reply, this.model.Replies.First().Text);
         }
 
+        [Test]
+        public void MapToModelShouldOrderReplies()
+        {
+            this.entity.Replies.Add("B");
+            this.entity.Replies.Add("C");
+            this.entity.Replies.Add("A");
+
+            this.mapper.MapToModel(this.entity, this.model);
+
+            string[] replies = this.model.Replies.Select(r => r.Text).ToArray();
+            Assert.AreEqual("A", replies[0]);
+            Assert.AreEqual("B", replies[1]);
+            Assert.AreEqual("C", replies[2]);
+        }
+
+        [Test]
+        public void MapToModelShouldOrderCommands()
+        {
+            this.entity.Commands.Add("B");
+            this.entity.Commands.Add("C");
+            this.entity.Commands.Add("A");
+
+            this.mapper.MapToModel(this.entity, this.model);
+
+            string[] commands = this.model.Commands.Select(r => r.Text).ToArray();
+            Assert.AreEqual("A", commands[0]);
+            Assert.AreEqual("B", commands[1]);
+            Assert.AreEqual("C", commands[2]);
+        }
+
         [TestCase("reply1")]
         [TestCase("reply2")]
         public void MapToModelShouldMapCommands(string reply)

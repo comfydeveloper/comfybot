@@ -188,5 +188,65 @@
             Assert.AreEqual(1, this.model.Replies.Count);
             Assert.AreEqual(reply, this.model.Replies.First().Text);
         }
+
+        [Test]
+        public void MapToModelShouldOrderReplies()
+        {
+            this.entity.Replies.Add("B");
+            this.entity.Replies.Add("C");
+            this.entity.Replies.Add("A");
+
+            this.mapper.MapToModel(this.entity, this.model);
+
+            string[] replies = this.model.Replies.Select(r => r.Text).ToArray();
+            Assert.AreEqual("A", replies[0]);
+            Assert.AreEqual("B", replies[1]);
+            Assert.AreEqual("C", replies[2]);
+        }
+
+        [Test]
+        public void MapToModelShouldOrderAllKeywords()
+        {
+            this.entity.AllKeywords.Add("B");
+            this.entity.AllKeywords.Add("C");
+            this.entity.AllKeywords.Add("A");
+
+            this.mapper.MapToModel(this.entity, this.model);
+
+            string[] keywords = this.model.AllKeywords.Select(r => r.Text).ToArray();
+            Assert.AreEqual("A", keywords[0]);
+            Assert.AreEqual("B", keywords[1]);
+            Assert.AreEqual("C", keywords[2]);
+        }
+
+        [Test]
+        public void MapToModelShouldOrderLooseKeywords()
+        {
+            this.entity.LooseKeywords.Add("B");
+            this.entity.LooseKeywords.Add("C");
+            this.entity.LooseKeywords.Add("A");
+
+            this.mapper.MapToModel(this.entity, this.model);
+
+            string[] keywords = this.model.LooseKeywords.Select(r => r.Text).ToArray();
+            Assert.AreEqual("A", keywords[0]);
+            Assert.AreEqual("B", keywords[1]);
+            Assert.AreEqual("C", keywords[2]);
+        }
+
+        [Test]
+        public void MapToModelShouldOrderExactKeywords()
+        {
+            this.entity.ExactKeywords.Add("B");
+            this.entity.ExactKeywords.Add("C");
+            this.entity.ExactKeywords.Add("A");
+
+            this.mapper.MapToModel(this.entity, this.model);
+
+            string[] keywords = this.model.ExactKeywords.Select(r => r.Text).ToArray();
+            Assert.AreEqual("A", keywords[0]);
+            Assert.AreEqual("B", keywords[1]);
+            Assert.AreEqual("C", keywords[2]);
+        }
     }
 }

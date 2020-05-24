@@ -12,11 +12,11 @@
         {
             model.Id = entity.Id;
             model.Timeout = entity.TimeoutInSeconds;
-            model.Users.AddRange(entity.Users.ToTextModels());
-            model.LooseKeywords.AddRange(entity.LooseKeywords.ToTextModels());
-            model.AllKeywords.AddRange(entity.AllKeywords.ToTextModels());
-            model.ExactKeywords.AddRange(entity.ExactKeywords.ToTextModels());
-            model.Replies.AddRange(entity.Replies.ToTextModels());
+            model.Users.AddRange(entity.Users.ToTextModels().OrderBy(m => m.Text));
+            model.LooseKeywords.AddRange(entity.LooseKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.AllKeywords.AddRange(entity.AllKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.ExactKeywords.AddRange(entity.ExactKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.Replies.AddRange(entity.Replies.ToTextModels().OrderBy(m => m.Text));
         }
 
         public void MapToEntity(MessageResponseModel model, MessageResponse entity)
