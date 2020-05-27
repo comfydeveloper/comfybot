@@ -9,6 +9,7 @@
     public class MessageResponseModel : NotifyingModel
     {
         private int timeout = 60;
+        private int priority;
 
         public MessageResponseModel()
         {
@@ -66,6 +67,12 @@
         {
             get => this.timeout;
             set { this.timeout = value; this.OnPropertyChanged(); }
+        }
+
+        public int Priority
+        {
+            get => this.priority;
+            set { this.priority = value; this.OnPropertyChanged(); }
         }
 
         private void AddUser()

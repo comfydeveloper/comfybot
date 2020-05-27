@@ -52,6 +52,24 @@
             this.twitchClient.Verify(c => c.SendMessage(channel, response, false), Times.Once);
         }
 
+        [Test]
+        public void HandleShouldSendSuitableMessageOrderedByPriority()
+        {
+            string response1 = "response1";
+            string response2 = "response2";
+            ApplicationSettings.Default.Channel = "channel";
+            MessageResponse messageResponse1 = new MessageResponse { Priority = 2 };
+            MessageResponse messageResponse2 = new MessageResponse { Priority = 1 };
+            this.chatMessage.Setup(m => m.Text).Returns("message");
+            this.repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2 });
+            this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response1)).Returns(true);
+            this.responseLoader.Setup(r => r.TryGetResponse(messageResponse2, this.chatMessage.Object, out response2)).Returns(true);
+
+            this.handler.Handle(this.twitchClient.Object, this.chatMessage.Object);
+
+            this.twitchClient.Verify(c => c.SendMessage("channel", response2, false), Times.Once);
+        }
+
         [TestCase("!")]
         [TestCase("!test")]
         [TestCase("! test")]

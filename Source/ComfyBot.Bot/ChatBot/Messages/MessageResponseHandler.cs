@@ -1,6 +1,7 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Messages
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Data.Models;
@@ -28,7 +29,7 @@
                 return;
             }
 
-            IEnumerable<MessageResponse> messageResponses = this.repository.GetAll();
+            IEnumerable<MessageResponse> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
 
             foreach (MessageResponse messageResponse in messageResponses)
             {

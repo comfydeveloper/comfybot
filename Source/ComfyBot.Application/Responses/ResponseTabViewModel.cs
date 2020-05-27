@@ -4,6 +4,9 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Windows.Data;
 
     using ComfyBot.Application.Shared;
     using ComfyBot.Application.Shared.Contracts;
@@ -15,6 +18,7 @@
     {
         private readonly IRepository<MessageResponse> repository;
         private readonly IMapper<MessageResponse, MessageResponseModel> mapper;
+        private string searchText;
 
         public ResponseTabViewModel(IRepository<MessageResponse> repository,
                                     IMapper<MessageResponse, MessageResponseModel> mapper)
@@ -34,7 +38,7 @@
 
         protected override void Initialize()
         {
-            IEnumerable<MessageResponse> messageResponses = this.repository.GetAll();
+            IEnumerable<MessageResponse> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
 
             foreach (MessageResponse entity in messageResponses)
             {
@@ -64,9 +68,41 @@
         {
             MessageResponseModel model = (MessageResponseModel)sender;
             MessageResponse entity = new MessageResponse();
-            this.mapper.MapToEntity(model, entity);
 
+            this.mapper.MapToEntity(model, entity);
             this.repository.AddOrUpdate(entity);
+        }
+
+        [ExcludeFromCodeCoverage]
+        public string SearchText
+        {
+            get => this.searchText;
+            set { this.searchText = value; this.UpdateSearch(); }
+        }
+
+        [ExcludeFromCodeCoverage]
+        private void UpdateSearch()
+        {
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Responses);
+
+            if (string.IsNullOrEmpty(this.SearchText))
+            {
+                collectionView.Filter = o => true;
+            }
+            else
+            {
+                collectionView.Filter = o =>
+                                        {
+                                            MessageResponseModel response = (MessageResponseModel) o;
+
+                                            return response.Replies.Any(k => k.Text.Contains(this.searchText))
+                                                   || response.AllKeywords.Any(k => k.Text.Contains(this.searchText))
+                                                   || response.ExactKeywords.Any(k => k.Text.Contains(this.searchText))
+                                                   || response.LooseKeywords.Any(k => k.Text.Contains(this.searchText));
+                                        };
+            }
+
+            collectionView.Refresh();
         }
     }
 }

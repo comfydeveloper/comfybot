@@ -155,5 +155,29 @@
 
             Assert.IsTrue(result);
         }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        public void PrioritySetterShouldSetValue(int priority)
+        {
+            this.model.Priority = priority;
+
+            Assert.AreEqual(priority, this.model.Priority);
+        }
+
+        [Test]
+        public void PrioritySetterShouldNotifyPropertyChange()
+        {
+            bool result = false;
+            void TestMethod(object sender, PropertyChangedEventArgs e)
+            {
+                result = true;
+            }
+            this.model.PropertyChanged += TestMethod;
+
+            this.model.Timeout = 1;
+
+            Assert.IsTrue(result);
+        }
     }
 }

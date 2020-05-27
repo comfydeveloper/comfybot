@@ -71,6 +71,21 @@
             Assert.AreEqual(timeOutInSeconds, entity.TimeoutInSeconds);
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        public void AddOrUpdateShouldUpdatePriority(int priority)
+        {
+            MessageResponse entity = new MessageResponse();
+            MessageResponse model = new MessageResponse { Priority = priority };
+            this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
+
+            this.repository.AddOrUpdate(model);
+
+            this.entities.Verify(e => e.Insert(model), Times.Never);
+            this.entities.Verify(e => e.Update(entity));
+            Assert.AreEqual(priority, entity.Priority);
+        }
+
         [TestCase(1, 2, 2)]
         [TestCase(4, 3, 4)]
         public void AddOrUpdateShouldUpdateUseCount(int newCount, int oldCount, int expected)

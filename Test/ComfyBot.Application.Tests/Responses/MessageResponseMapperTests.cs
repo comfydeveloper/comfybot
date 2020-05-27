@@ -47,6 +47,17 @@
             Assert.AreEqual(timeout, this.entity.TimeoutInSeconds);
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        public void MapToEntityShouldMapPriority(int priority)
+        {
+            this.model.Priority = priority;
+
+            this.mapper.MapToEntity(this.model, this.entity);
+
+            Assert.AreEqual(priority, this.entity.Priority);
+        }
+
         [TestCase("user1")]
         [TestCase("user2")]
         public void MapToEntityShouldMapUsers(string userName)
@@ -127,6 +138,17 @@
             this.mapper.MapToModel(this.entity, this.model);
 
             Assert.AreEqual(timeout, this.model.Timeout);
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        public void MapToModelShouldMapPriority(int priority)
+        {
+            this.entity.Priority = priority;
+
+            this.mapper.MapToModel(this.entity, this.model);
+
+            Assert.AreEqual(priority, this.model.Priority);
         }
 
         [TestCase("user1")]

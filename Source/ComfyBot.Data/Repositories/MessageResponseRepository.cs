@@ -28,6 +28,7 @@
 
         private void UpdateInternal(MessageResponse source, MessageResponse target)
         {
+            target.Priority = source.Priority;
             target.UseCount = Math.Max(source.UseCount, target.UseCount);
             target.TimeoutInSeconds = source.TimeoutInSeconds;
             target.LastUsed = source.LastUsed ?? target.LastUsed;

@@ -20,5 +20,7 @@
         public int TimeoutInSeconds { get; set; } = 30;
 
         public int UseCount { get; set; }
+
+        public int Priority { get; set; }
     }
 }

@@ -189,9 +189,11 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="25" />
                     </Grid.RowDefinitions>
-                    <ItemsControl Grid.Row="0" ItemsSource="{Binding Responses}">
+                    <TextBox Grid.Row="0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=500}"></TextBox>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Responses}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Style="{StaticResource Card}">
@@ -360,7 +362,9 @@
                                             <DockPanel LastChildFill="False">
                                                 <Label Content="And I reply every" FontWeight="Bold" />
                                                 <TextBox MinWidth="30" Text="{Binding Timeout}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                                <Label Content="seconds with" FontWeight="Bold" />
+                                                <Label Content="seconds and a priority of" FontWeight="Bold" />
+                                                <TextBox MinWidth="30" Text="{Binding Priority}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                <Label Content="with" FontWeight="Bold" />
                                                 <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
                                                     <Border.InputBindings>
                                                         <MouseBinding MouseAction="LeftClick" Command="{Binding AddReplyCommand}"/>
@@ -406,7 +410,7 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <DockPanel Grid.Row="1" LastChildFill="False" >
+                    <DockPanel Grid.Row="2" LastChildFill="False" >
                         <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent" HorizontalAlignment="Left" Margin="5 0 0 0">
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick" Command="{Binding AddResponseCommand}" />
