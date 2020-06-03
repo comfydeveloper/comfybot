@@ -190,5 +190,19 @@
             Assert.IsNull(response);
             Assert.IsFalse(result);
         }
+
+        [Test]
+        public void TryGetResponseShouldReplaceRandomWords()
+        {
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>());
+            this.chatCommand.Setup(c => c.CommandText).Returns("command");
+            this.textCommand.Commands.Add("command");
+            this.textCommand.Replies.Add("[w:test2,test1]");
+
+            bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+
+            Assert.IsTrue(result);
+            Assert.That(resultText == "test2" || resultText == "test1");
+        }
     }
 }
