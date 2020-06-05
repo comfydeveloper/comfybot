@@ -25,5 +25,14 @@
 
             Assert.True(result);
         }
+
+        [TestCase("test-test", "test", "-test")]
+        [TestCase("test-test", "test2", "test-test")]
+        public void ReplaceFirstShouldReplaceFirstOccurrenceOfSubstring(string original, string keyword, string expected)
+        {
+            string result = original.ReplaceFirst(keyword, "");
+
+            Assert.AreEqual(expected, result);
+        }
     }
 }

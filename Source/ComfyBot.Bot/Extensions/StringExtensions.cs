@@ -1,5 +1,6 @@
 ﻿namespace ComfyBot.Bot.Extensions
 {
+    using System;
     using System.Text.RegularExpressions;
 
     public static class StringExtensions
@@ -18,6 +19,16 @@
                 }
             }
             return true;
+        }
+
+        public static string ReplaceFirst(this string text, string search, string replace)
+        {
+            int position = text.IndexOf(search, StringComparison.Ordinal);
+            if (position < 0)
+            {
+                return text;
+            }
+            return text.Substring(0, position) + replace + text.Substring(position + search.Length);
         }
     }
 }

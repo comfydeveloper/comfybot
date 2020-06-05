@@ -4,18 +4,21 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    using ComfyBot.Bot.ChatBot.Services;
     using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Bot.Extensions;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Repositories;
 
-    public class TextCommandReplyReplyLoader : ITextCommandReplyLoader
+    public class TextCommandReplyLoader : ITextCommandReplyLoader
     {
         private readonly IRepository<TextCommand> repository;
+        private readonly IWildcardReplacer wildcardReplacer;
 
-        public TextCommandReplyReplyLoader(IRepository<TextCommand> repository)
+        public TextCommandReplyLoader(IRepository<TextCommand> repository, IWildcardReplacer wildcardReplacer)
         {
             this.repository = repository;
+            this.wildcardReplacer = wildcardReplacer;
         }
 
         public bool TryGetReply(TextCommand textCommand, IChatCommand command, out string reply)
@@ -35,7 +38,7 @@
                         reply = repliesWithParameters.GetRandom();
                         reply = reply.Replace("{{user}}", command.ChatMessage.UserName);
                         reply = reply.Replace("{{parameters}}", command.ArgumentsAsString);
-                        reply = this.ReplaceVariableWords(reply);
+                        reply = this.wildcardReplacer.Replace(reply);
 
                         var parametersWithIndexes = command.ArgumentsAsList.Select((s, i) => new { Text = s, Index = i });
 
@@ -48,30 +51,11 @@
                 }
                 reply = textCommand.Replies.Where(r => !r.Contains("{{parameter")).GetRandom();
                 reply = reply.Replace("{{user}}", command.ChatMessage.UserName);
-                reply = this.ReplaceVariableWords(reply);
+                reply = this.wildcardReplacer.Replace(reply);
                 return true;
             }
             reply = null;
             return false;
-        }
-
-        private string ReplaceVariableWords(string reply)
-        {
-            MatchCollection matches = Regex.Matches(reply, @"\[w:(.*?)\]");
-            Random random = new Random();
-
-            foreach (Match match in matches)
-            {
-                string variableWordsPart = match.Groups[1].Value;
-                string[] words = variableWordsPart.Split(',');
-
-
-                int randomNumber = random.Next(0, words.Length);
-                string randomWord = words[randomNumber];
-
-                reply = reply.Replace($"{match.Groups[0].Value}", randomWord);
-            }
-            return reply;
         }
 
         private bool HasOngoingTimeout(TextCommand textCommand)

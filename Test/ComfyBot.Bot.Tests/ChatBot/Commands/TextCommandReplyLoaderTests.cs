@@ -4,6 +4,7 @@
     using System.Collections.Generic;
 
     using ComfyBot.Bot.ChatBot.Commands;
+    using ComfyBot.Bot.ChatBot.Services;
     using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Repositories;
@@ -13,25 +14,28 @@
     using NUnit.Framework;
 
     [TestFixture]
-    public class TextCommandReplyReplyLoaderTests
+    public class TextCommandReplyLoaderTests
     {
         private Mock<IRepository<TextCommand>> repository;
         private Mock<IChatCommand> chatCommand;
+        private Mock<IWildcardReplacer> wildcardReplacer;
 
         private TextCommand textCommand;
 
-        private TextCommandReplyReplyLoader replyLoader;
+        private TextCommandReplyLoader replyLoader;
 
         [SetUp]
         public void Setup()
         {
             this.repository = new Mock<IRepository<TextCommand>>();
+            this.wildcardReplacer = new Mock<IWildcardReplacer>();
             this.chatCommand = new Mock<IChatCommand>();
             this.chatCommand.Setup(c => c.ChatMessage).Returns(new Mock<IChatMessage>().Object);
+            this.StubWildcardReplacer();
 
             this.textCommand = new TextCommand();
 
-            this.replyLoader = new TextCommandReplyReplyLoader(this.repository.Object);
+            this.replyLoader = new TextCommandReplyLoader(this.repository.Object, this.wildcardReplacer.Object);
         }
 
         [TestCase("command1", "command1", "reply1")]
@@ -128,6 +132,7 @@
         [TestCase("text with just one {{parameter2}}", "parameter1", "parameter2", "text with just one parameter2")]
         public void TryGetReplyShouldReplaceAllParameters(string replyText, string parameter1, string parameter2, string expected)
         {
+            this.StubWildcardReplacer();
             this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { parameter1, parameter2 });
             this.chatCommand.Setup(c => c.CommandText).Returns("command");
             this.textCommand.Replies.Add(replyText);
@@ -192,17 +197,21 @@
         }
 
         [Test]
-        public void TryGetResponseShouldReplaceRandomWords()
+        public void TryGetResponseShouldUseWildCardReplacer()
         {
             this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>());
             this.chatCommand.Setup(c => c.CommandText).Returns("command");
             this.textCommand.Commands.Add("command");
-            this.textCommand.Replies.Add("[w:test2,test1]");
+            this.textCommand.Replies.Add("reply");
 
             bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
 
-            Assert.IsTrue(result);
-            Assert.That(resultText == "test2" || resultText == "test1");
+            this.wildcardReplacer.Verify(r => r.Replace("reply"));
+        }
+
+        private void StubWildcardReplacer()
+        {
+            this.wildcardReplacer.Setup(r => r.Replace(It.IsAny<string>())).Returns<string>(s => s);
         }
     }
 }
