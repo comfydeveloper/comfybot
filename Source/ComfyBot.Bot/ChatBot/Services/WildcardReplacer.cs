@@ -10,12 +10,12 @@
         public string Replace(string original)
         {
             string result = ReplaceVariableWords(original);
-            result = this.ReplaceNumberRange(result);
+            result = ReplaceNumberRange(result);
 
             return result;
         }
 
-        private string ReplaceNumberRange(string original)
+        private static string ReplaceNumberRange(string original)
         {
             MatchCollection matches = Regex.Matches(original, @"\[n:(.*?)\]");
             Random random = new Random();

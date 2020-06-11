@@ -3,6 +3,7 @@
     using System;
 
     using ComfyBot.Bot.ChatBot.Messages;
+    using ComfyBot.Bot.ChatBot.Services;
     using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Repositories;
@@ -15,6 +16,7 @@
     public class MessageResponseLoaderTests
     {
         private Mock<IRepository<MessageResponse>> repository;
+        private Mock<IWildcardReplacer> wildcardReplacer;
         private Mock<IChatMessage> chatMessage;
 
         private MessageResponse messageResponse;
@@ -25,11 +27,13 @@
         public void Setup()
         {
             this.repository = new Mock<IRepository<MessageResponse>>();
+            this.wildcardReplacer = new Mock<IWildcardReplacer>();
             this.chatMessage = new Mock<IChatMessage>();
+            this.wildcardReplacer.Setup(r => r.Replace(It.IsAny<string>())).Returns<string>(s => s);
 
             this.messageResponse = new MessageResponse();
 
-            this.loader = new MessageResponseLoader(this.repository.Object);
+            this.loader = new MessageResponseLoader(this.repository.Object, this.wildcardReplacer.Object);
         }
 
         [TestCase(10)]
@@ -170,6 +174,19 @@
             this.loader.TryGetResponse(this.messageResponse, this.chatMessage.Object, out string response);
 
             Assert.AreEqual(expected, response);
+        }
+
+        [Test]
+        public void TryGetResponseShouldCallReplacementService()
+        {
+            string responseText = "response";
+            this.chatMessage.Setup(m => m.Text).Returns("keyword");
+            this.messageResponse.ExactKeywords.Add("keyword");
+            this.messageResponse.Replies.Add(responseText);
+
+            this.loader.TryGetResponse(this.messageResponse, this.chatMessage.Object, out string response);
+
+            this.wildcardReplacer.Verify(r => r.Replace(responseText));
         }
     }
 }

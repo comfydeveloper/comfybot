@@ -38,7 +38,6 @@
                         reply = repliesWithParameters.GetRandom();
                         reply = reply.Replace("{{user}}", command.ChatMessage.UserName);
                         reply = reply.Replace("{{parameters}}", command.ArgumentsAsString);
-                        reply = this.wildcardReplacer.Replace(reply);
 
                         var parametersWithIndexes = command.ArgumentsAsList.Select((s, i) => new { Text = s, Index = i });
 
@@ -46,6 +45,7 @@
                         {
                             reply = reply.Replace($"{{{{parameter{parameter.Index + 1}}}}}", parameter.Text);
                         }
+                        reply = this.wildcardReplacer.Replace(reply);
                         return true;
                     }
                 }

@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
 
+    using ComfyBot.Bot.ChatBot.Services;
     using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Bot.Extensions;
     using ComfyBot.Data.Models;
@@ -11,10 +12,12 @@
     public class MessageResponseLoader : IMessageResponseLoader
     {
         private readonly IRepository<MessageResponse> repository;
+        private readonly IWildcardReplacer wildcardReplacerObject;
 
-        public MessageResponseLoader(IRepository<MessageResponse> repository)
+        public MessageResponseLoader(IRepository<MessageResponse> repository, IWildcardReplacer wildcardReplacerObject)
         {
             this.repository = repository;
+            this.wildcardReplacerObject = wildcardReplacerObject;
         }
 
         public bool TryGetResponse(MessageResponse response, IChatMessage message, out string responseText)
@@ -36,6 +39,7 @@
                 this.UpdateUsageInfo(response);
                 responseText = response.Replies.GetRandom();
                 responseText = responseText.Replace("{{user}}", message.UserName);
+                responseText = this.wildcardReplacerObject.Replace(responseText);
                 return true;
             }
             return false;
