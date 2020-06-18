@@ -11,5 +11,9 @@
         IChatMessage ChatMessage { get; }
 
         string CommandText { get; }
+
+        bool IsBroadcaster { get; }
+
+        bool IsModerator { get; }
     }
 }

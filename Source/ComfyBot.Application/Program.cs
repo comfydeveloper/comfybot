@@ -7,6 +7,7 @@
 
     using ComfyBot.Bot.ChatBot;
     using ComfyBot.Bot.ChatBot.Commands;
+    using ComfyBot.Common.Http;
     using ComfyBot.Data.Database;
 
     using Microsoft.Extensions.DependencyInjection;
@@ -35,9 +36,9 @@
             Assembly[] assemblies = {
                                         typeof(Program).Assembly,
                                         typeof(ICommandHandler).Assembly,
-                                        typeof(IDatabaseFactory).Assembly
+                                        typeof(IDatabaseFactory).Assembly,
+                                        typeof(IHttpService).Assembly
                                     };
-
 
             foreach (Assembly assembly in assemblies)
             {

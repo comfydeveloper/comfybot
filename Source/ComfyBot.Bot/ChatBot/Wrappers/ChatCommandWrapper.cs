@@ -22,5 +22,9 @@
         public IChatMessage ChatMessage { get => new ChatMessageWrapper(this.command.ChatMessage); }
 
         public string CommandText { get => this.command.CommandText; }
+
+        public bool IsBroadcaster { get => this.command.ChatMessage.IsBroadcaster; }
+
+        public bool IsModerator { get => this.command.ChatMessage.IsModerator; }
     }
 }
