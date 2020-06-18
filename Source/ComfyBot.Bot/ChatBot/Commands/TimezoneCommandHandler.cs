@@ -24,7 +24,7 @@
 
         protected override void HandleInternal(ITwitchClient client, IChatCommand command)
         {
-            if (this.zoneLoader.TryLoad(command.ArgumentsAsList[0], out Timezone timezone))
+            if (this.zoneLoader.TryLoad(command.ArgumentsAsString, out Timezone timezone))
             {
                 TimezoneInfo timezoneInfo = this.timeLoader.GetTime(timezone);
 
@@ -32,7 +32,7 @@
             }
             else
             {
-                this.SendMessage(client, $"Sorry {command.ChatMessage.UserName}, can't find timezone info for '{command.ArgumentsAsList[0]}'.");
+                this.SendMessage(client, $"Sorry {command.ChatMessage.UserName}, can't find timezone info for '{command.ArgumentsAsString}'.");
             }
         }
     }

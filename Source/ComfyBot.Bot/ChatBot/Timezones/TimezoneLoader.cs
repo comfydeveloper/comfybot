@@ -12,6 +12,8 @@
 
         public bool TryLoad(string zone, out Timezone result)
         {
+            zone = zone.Replace(' ', '_');
+
             if (!areas.Any())
             {
                 string[] availableZones = HttpService.Instance.GetAsync<string[]>("http://worldtimeapi.org/api/timezone").Result;

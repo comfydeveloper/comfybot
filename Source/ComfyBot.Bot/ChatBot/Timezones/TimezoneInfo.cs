@@ -6,7 +6,7 @@
     public class TimezoneInfo
     {
         [JsonPropertyName("datetime")]
-        
+
         public DateTimeOffset DateTime { get; set; }
 
         [JsonPropertyName("timezone")]

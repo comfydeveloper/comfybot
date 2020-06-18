@@ -45,7 +45,8 @@
         {
             Settings.ApplicationSettings.Default.Channel = "channel";
             this.chatCommand.Setup(c => c.CommandText).Returns("timezone");
-            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string>{ "zone" });
+            this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "zone" });
+            this.chatCommand.Setup(c => c.ArgumentsAsString).Returns("zone");
             this.chatMessage.Setup(m => m.UserName).Returns("user");
             Timezone zone = new Timezone();
             this.timezoneLoader.Setup(l => l.TryLoad("zone", out zone)).Returns(true);
@@ -67,6 +68,7 @@
             Settings.ApplicationSettings.Default.Channel = "channel";
             this.chatCommand.Setup(c => c.CommandText).Returns("timezone");
             this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "zone" });
+            this.chatCommand.Setup(c => c.ArgumentsAsString).Returns("zone");
             this.chatMessage.Setup(m => m.UserName).Returns("user");
             Timezone zone = new Timezone();
             this.timezoneLoader.Setup(l => l.TryLoad("zone", out zone)).Returns(false);

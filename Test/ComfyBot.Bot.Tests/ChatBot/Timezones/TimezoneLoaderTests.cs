@@ -43,7 +43,7 @@
             string[] foundZones = { foundZone };
             this.httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
 
-            bool result = this.timezoneLoader.TryLoad("test", out Timezone zone);
+            bool result = this.timezoneLoader.TryLoad(searchText, out Timezone zone);
 
             Assert.True(result);
             Assert.IsNotNull(zone);
