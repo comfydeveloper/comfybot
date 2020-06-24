@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Linq;
 
     using ComfyBot.Application.Shared;
     using ComfyBot.Application.Shared.Contracts;
@@ -34,7 +35,7 @@
 
         protected override void Initialize()
         {
-            IEnumerable<TextCommand> textCommands = this.repository.GetAll();
+            IEnumerable<TextCommand> textCommands = this.repository.GetAll().OrderBy(c => c.Commands.OrderBy(text => text).FirstOrDefault());
 
             foreach (TextCommand entity in textCommands)
             {
