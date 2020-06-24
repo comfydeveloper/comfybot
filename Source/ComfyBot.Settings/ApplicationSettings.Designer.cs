@@ -70,5 +70,29 @@ namespace ComfyBot.Settings {
                 this["DatabasePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string OpenWeatherMapApiKey {
+            get {
+                return ((string)(this["OpenWeatherMapApiKey"]));
+            }
+            set {
+                this["OpenWeatherMapApiKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("EN")]
+        public string OpenWeatherMapApiLang {
+            get {
+                return ((string)(this["OpenWeatherMapApiLang"]));
+            }
+            set {
+                this["OpenWeatherMapApiLang"] = value;
+            }
+        }
     }
 }

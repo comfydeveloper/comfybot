@@ -485,23 +485,36 @@
                 </TabItem.Header>
                 <StackPanel>
                     <DockPanel LastChildFill="False" Margin="0 2">
-                        <Label Content="User Name" Width="80" />
+                        <Label Content="User Name" Width="90" />
                         <TextBox VerticalContentAlignment="Center" Text="{Binding UserName}" Width="500" />
                     </DockPanel>
                     <DockPanel LastChildFill="False" Margin="0 2" >
-                        <Label Content="OAuthKey" Width="80"  />
+                        <Label Content="OAuthKey" Width="90"  />
                         <PasswordBox x:Name="StreamKey" VerticalContentAlignment="Center" Width="500" />
                     </DockPanel>
                     <DockPanel LastChildFill="False" Margin="0 2" >
-                        <Label Content="Channel" Width="80"  />
+                        <Label Content="Channel" Width="90"  />
                         <TextBox VerticalContentAlignment="Center" Text="{Binding Channel}" Width="500" />
                     </DockPanel>
                     <DockPanel LastChildFill="False" Margin="0 2" >
-                        <Label Content="Data Storage" Width="80"  />
+                        <Label Content="Data Storage" Width="90"  />
                         <TextBox VerticalContentAlignment="Center" Text="{Binding DatabasePath}" Width="500" />
                     </DockPanel>
                     <Button Content="Update" Command="{Binding UpdateConfigurationCommand}" CommandParameter="{Binding ElementName=StreamKey}" Margin="5 0" Width="100" HorizontalAlignment="Left" />
+                    <DockPanel LastChildFill="False" Margin="0 2" >
+                        <Label Content="Weather Api Key" Width="110"  />
+                        <PasswordBox x:Name="WeatherApiKey"  VerticalContentAlignment="Center" Width="500" />
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="Weather Api Lang" Width="110"  />
+                        <ComboBox Width="50" HorizontalAlignment="Left" SelectedValue="{Binding WeatherApiLangKey}" SelectedValuePath="Content">
+                            <ComboBoxItem Content="EN" />
+                            <ComboBoxItem Content="DE" />
+                        </ComboBox>
+                    </DockPanel>
+                    <Button Content="Update" Command="{Binding UpdateWeatherApiKeyCommand}" CommandParameter="{Binding ElementName=WeatherApiKey}" Margin="5 0" Width="100" HorizontalAlignment="Left" />
                 </StackPanel>
+                
             </TabItem>
         </TabControl>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />

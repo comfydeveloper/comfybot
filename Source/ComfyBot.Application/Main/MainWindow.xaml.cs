@@ -24,6 +24,7 @@ namespace ComfyBot.Application
             Console.SetOut(writer);
 
             this.StreamKey.Password = ApplicationSettings.Default.AuthKey;
+            this.WeatherApiKey.Password = ApplicationSettings.Default.OpenWeatherMapApiKey;
         }
     }
 }

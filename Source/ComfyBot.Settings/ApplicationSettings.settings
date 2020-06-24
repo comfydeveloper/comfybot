@@ -14,5 +14,11 @@
     <Setting Name="DatabasePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">%USERPROFILE%\Documents\ComfyDev\ComfyBot.comfy</Value>
     </Setting>
+    <Setting Name="OpenWeatherMapApiKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="OpenWeatherMapApiLang" Type="System.String" Scope="User">
+      <Value Profile="(Default)">EN</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
