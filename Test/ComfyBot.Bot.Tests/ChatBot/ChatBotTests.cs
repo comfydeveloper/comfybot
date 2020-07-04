@@ -1,9 +1,9 @@
 ﻿namespace ComfyBot.Bot.Tests.ChatBot
 {
     using ComfyBot.Bot.ChatBot;
+    using ComfyBot.Bot.ChatBot.Chatters;
     using ComfyBot.Bot.ChatBot.Commands;
     using ComfyBot.Bot.ChatBot.Messages;
-    using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Bot.Initialization;
     using ComfyBot.Settings;
 
@@ -11,7 +11,6 @@
 
     using NUnit.Framework;
 
-    using TwitchLib.Client.Events;
     using TwitchLib.Client.Interfaces;
 
     [TestFixture]
@@ -19,6 +18,7 @@
     {
         private Mock<ITwitchClientFactory> clientFactory;
         private Mock<ITwitchClient> client;
+        private Mock<IChattersCache> chattersCache;
 
         private Mock<ICommandHandler> commandHandler1;
         private Mock<ICommandHandler> commandHandler2;
@@ -33,6 +33,7 @@
             this.clientFactory = new Mock<ITwitchClientFactory>();
             this.client = new Mock<ITwitchClient>();
             this.clientFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(this.client.Object);
+            this.chattersCache = new Mock<IChattersCache>();
 
             this.commandHandler1 = new Mock<ICommandHandler>();
             this.commandHandler2 = new Mock<ICommandHandler>();
@@ -42,7 +43,7 @@
             this.messageHandler2 = new Mock<IMessageHandler>();
             IMessageHandler[] messageHandlers = { this.messageHandler1.Object, this.messageHandler2.Object };
 
-            this.chatBot = new ChatBot(this.clientFactory.Object, commandHandlers, messageHandlers);
+            this.chatBot = new ChatBot(this.clientFactory.Object, commandHandlers, messageHandlers, this.chattersCache.Object);
         }
 
         [TestCase("user1", "password1", "channel1")]
@@ -57,30 +58,6 @@
 
             this.clientFactory.Verify(f => f.Create(username, password, channel));
             this.client.Verify(c => c.Connect());
-        }
-
-        [Test]
-        public void RunShouldRegisterCommandHandlers()
-        {
-            this.chatBot.Run();
-            OnChatCommandReceivedArgs args = new OnChatCommandReceivedArgs();
-
-            this.client.Raise(mock => mock.OnChatCommandReceived += null, args);
-
-            this.commandHandler1.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatCommand>()));
-            this.commandHandler2.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatCommand>()));
-        }
-
-        [Test]
-        public void RunShouldRegisterMessageHandlers()
-        {
-            this.chatBot.Run();
-            OnMessageReceivedArgs args = new OnMessageReceivedArgs();
-
-            this.client.Raise(mock => mock.OnMessageReceived += null, args);
-
-            this.messageHandler1.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatMessage>()));
-            this.messageHandler2.Verify(h => h.Handle(this.client.Object, It.IsAny<IChatMessage>()));
         }
 
         [Test]

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
+    using ComfyBot.Bot.ChatBot.Chatters;
     using ComfyBot.Bot.ChatBot.Commands;
     using ComfyBot.Bot.ChatBot.Messages;
     using ComfyBot.Bot.Extensions;
@@ -18,16 +19,19 @@
         private readonly ITwitchClientFactory twitchClientFactory;
         private readonly IEnumerable<ICommandHandler> commandHandlers;
         private readonly IEnumerable<IMessageHandler> messageHandlers;
+        private readonly IChattersCache chattersCache;
 
         private ITwitchClient twitchClient;
 
         public ChatBot(ITwitchClientFactory twitchClientFactory,
                        IEnumerable<ICommandHandler> commandHandlers,
-                       IEnumerable<IMessageHandler> messageHandlers)
+                       IEnumerable<IMessageHandler> messageHandlers,
+                       IChattersCache chattersCache)
         {
             this.twitchClientFactory = twitchClientFactory;
             this.commandHandlers = commandHandlers;
             this.messageHandlers = messageHandlers;
+            this.chattersCache = chattersCache;
         }
 
         public void Run()
@@ -58,6 +62,11 @@
             Log("Bot initialized.");
         }
 
+        private void Connect()
+        {
+            this.twitchClient.Connect();
+        }
+
         private void RegisterHandlers()
         {
             this.twitchClient.OnChatCommandReceived += this.OnCommandReceived;
@@ -65,11 +74,8 @@
             this.twitchClient.OnLog += OnLog;
             this.twitchClient.OnConnected += OnConnected;
             this.twitchClient.OnJoinedChannel += OnJoinedChannel;
-        }
-
-        private void Connect()
-        {
-            this.twitchClient.Connect();
+            this.twitchClient.OnUserJoined += OnUserJoined;
+            this.twitchClient.OnUserLeft += OnUserLeft;
         }
 
         private void Logon()
@@ -79,6 +85,19 @@
                                                                 ApplicationSettings.Default.Channel);
         }
 
+        [ExcludeFromCodeCoverage]
+        private void OnUserLeft(object sender, OnUserLeftArgs e)
+        {
+            this.chattersCache.Remove(e.Username);
+        }
+
+        [ExcludeFromCodeCoverage]
+        private void OnUserJoined(object sender, OnUserJoinedArgs e)
+        {
+            this.chattersCache.Add(e.Username);
+        }
+
+        [ExcludeFromCodeCoverage]
         private void OnCommandReceived(object sender, OnChatCommandReceivedArgs e)
         {
             foreach (ICommandHandler handler in commandHandlers)
@@ -87,6 +106,7 @@
             }
         }
 
+        [ExcludeFromCodeCoverage]
         private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
             foreach (IMessageHandler handler in this.messageHandlers)

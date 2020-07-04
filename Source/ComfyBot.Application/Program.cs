@@ -1,13 +1,17 @@
 ﻿namespace ComfyBot.Application
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
 
     using ComfyBot.Bot.ChatBot;
+    using ComfyBot.Bot.ChatBot.Chatters;
     using ComfyBot.Bot.ChatBot.Commands;
     using ComfyBot.Common.Http;
+    using ComfyBot.Common.Initialization;
     using ComfyBot.Data.Database;
 
     using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +26,13 @@
             RegisterServices(serviceCollection);
 
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+
+            IEnumerable<IInitializerJob> initializerJobs = serviceProvider.GetServices<IInitializerJob>();
+
+            foreach (IInitializerJob job in initializerJobs)
+            {
+                job.Execute();
+            }
 
             MainWindow mainWindow = serviceProvider.GetService<MainWindow>();
             IComfyBot comfyBot = serviceProvider.GetService<IComfyBot>();
