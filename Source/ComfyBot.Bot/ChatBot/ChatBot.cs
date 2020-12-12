@@ -80,9 +80,7 @@
 
         private void Logon()
         {
-            this.twitchClient = this.twitchClientFactory.Create(ApplicationSettings.Default.User,
-                                                                ApplicationSettings.Default.AuthKey,
-                                                                ApplicationSettings.Default.Channel);
+            this.twitchClient = this.twitchClientFactory.Create();
         }
 
         [ExcludeFromCodeCoverage]

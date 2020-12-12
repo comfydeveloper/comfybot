@@ -5,11 +5,10 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
-    using System.Threading.Tasks;
 
     using ComfyBot.Bot.ChatBot;
-    using ComfyBot.Bot.ChatBot.Chatters;
     using ComfyBot.Bot.ChatBot.Commands;
+    using ComfyBot.Bot.PubSub;
     using ComfyBot.Common.Http;
     using ComfyBot.Common.Initialization;
     using ComfyBot.Data.Database;
@@ -23,6 +22,7 @@
         public static void Main()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
+
             RegisterServices(serviceCollection);
 
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
@@ -37,6 +37,8 @@
             MainWindow mainWindow = serviceProvider.GetService<MainWindow>();
             IComfyBot comfyBot = serviceProvider.GetService<IComfyBot>();
             comfyBot.Run();
+            IComfyPubSub service = serviceProvider.GetService<IComfyPubSub>();
+            service.Run();
 
             App app = new App();
             app.Run(mainWindow);
