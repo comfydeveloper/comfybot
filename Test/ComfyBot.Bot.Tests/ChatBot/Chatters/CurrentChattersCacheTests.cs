@@ -24,10 +24,10 @@
         {
             this.cache.Add(user);
 
-            List<string> result = this.cache.GetAll().ToList();
+            List<Chatter> result = this.cache.GetAll().ToList();
 
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(user, result.First());
+            Assert.AreEqual(user, result.First().Name);
             this.cache.Remove(user);
         }
 
@@ -37,7 +37,7 @@
             this.cache.Add("user");
             this.cache.Remove("user");
 
-            List<string> result = this.cache.GetAll().ToList();
+            List<Chatter> result = this.cache.GetAll().ToList();
 
             Assert.AreEqual(0, result.Count);
         }
@@ -66,11 +66,10 @@
         {
             this.cache.AddRange(new[] { "user1", "user2" });
 
-            List<string> result = this.cache.GetAll().ToList();
+            List<Chatter> result = this.cache.GetAll().ToList();
             Assert.AreEqual(2, result.Count);
             this.cache.Remove("user1");
             this.cache.Remove("user2");
-
         }
     }
 }

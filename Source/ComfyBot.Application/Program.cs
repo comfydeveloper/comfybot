@@ -40,6 +40,14 @@
 
             App app = new App();
             app.Run(mainWindow);
+
+
+            IEnumerable<ICompletableJob> completableTask = serviceProvider.GetServices<ICompletableJob>();
+
+            foreach (ICompletableJob job in completableTask)
+            {
+                job.Complete();
+            }
         }
 
         private static void RegisterServices(IServiceCollection collection)

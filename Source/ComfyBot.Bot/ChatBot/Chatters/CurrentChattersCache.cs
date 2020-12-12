@@ -6,14 +6,15 @@
 
     public class CurrentChattersCache : IChattersCache
     {
-        private static readonly List<string> currentUsers = new List<string>();
+        private static readonly List<Chatter> currentUsers = new List<Chatter>();
         private static readonly Random random = new Random();
 
         public void Add(string user)
         {
-            if (!currentUsers.Contains(user))
+            if (currentUsers.All(u => u.Name != user))
             {
-                currentUsers.Add(user);
+                Chatter activity = new Chatter { Name = user };
+                currentUsers.Add(activity);
             }
         }
 
@@ -27,7 +28,8 @@
 
         public void Remove(string user)
         {
-            currentUsers.Remove(user);
+            Chatter activity = currentUsers.FirstOrDefault(u => u.Name == user);
+            currentUsers.Remove(activity);
         }
 
         public string GetRandom()
@@ -35,14 +37,24 @@
             if (currentUsers.Any())
             {
                 int randomIndex = random.Next(0, currentUsers.Count);
-                return currentUsers[randomIndex];
+                return currentUsers[randomIndex].Name;
             }
             return string.Empty;
         }
 
-        public IEnumerable<string> GetAll()
+        public IEnumerable<Chatter> GetAll()
         {
             return currentUsers.ToList();
+        }
+
+        public void UpdateActivity(string user)
+        {
+            Chatter activity = currentUsers.FirstOrDefault(u => u.Name == user);
+
+            if (activity != null)
+            {
+                activity.LastActivity = DateTime.Now;
+            }
         }
     }
 }

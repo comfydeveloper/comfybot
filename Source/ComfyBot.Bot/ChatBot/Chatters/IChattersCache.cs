@@ -12,6 +12,8 @@
 
         public string GetRandom();
 
-        public IEnumerable<string> GetAll();
+        public void UpdateActivity(string user);
+
+        public IEnumerable<Chatter> GetAll();
     }
 }
