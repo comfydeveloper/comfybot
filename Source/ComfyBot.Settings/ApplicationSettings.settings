@@ -20,5 +20,8 @@
     <Setting Name="OpenWeatherMapApiLang" Type="System.String" Scope="User">
       <Value Profile="(Default)">EN</Value>
     </Setting>
+    <Setting Name="ChannelId" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

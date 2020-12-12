@@ -497,6 +497,10 @@
                         <TextBox VerticalContentAlignment="Center" Text="{Binding Channel}" Width="500" />
                     </DockPanel>
                     <DockPanel LastChildFill="False" Margin="0 2" >
+                        <Label Content="ChannelId" Width="90"  />
+                        <TextBox VerticalContentAlignment="Center" Text="{Binding ChannelId}" Width="500" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="False" Margin="0 2" >
                         <Label Content="Data Storage" Width="90"  />
                         <TextBox VerticalContentAlignment="Center" Text="{Binding DatabasePath}" Width="500" />
                     </DockPanel>

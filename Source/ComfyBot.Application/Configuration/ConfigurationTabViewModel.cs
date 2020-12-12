@@ -18,6 +18,8 @@
 
         public string WeatherApiLangKey { get; set; }
 
+        public string ChannelId { get; set; }
+
         public ConfigurationTabViewModel()
         {
             this.UpdateConfigurationCommand = new ParameterCommand(this.UpdateConfiguration);
@@ -26,6 +28,7 @@
             this.Channel = ApplicationSettings.Default.Channel;
             this.DatabasePath = ApplicationSettings.Default.DatabasePath;
             this.WeatherApiLangKey = ApplicationSettings.Default.OpenWeatherMapApiLang;
+            this.ChannelId = ApplicationSettings.Default.ChannelId;
         }
 
         public ParameterCommand UpdateConfigurationCommand { get; }
@@ -34,6 +37,7 @@
 
         private void UpdateConfiguration(object parameter)
         {
+            ApplicationSettings.Default.ChannelId = this.ChannelId;
             ApplicationSettings.Default.AuthKey = ((PasswordBox)parameter).Password;
             ApplicationSettings.Default.User = this.UserName;
             ApplicationSettings.Default.Channel = this.Channel;
