@@ -14,8 +14,12 @@
 
         public void Execute()
         {
-            ChattersCollection result = HttpService.Instance.GetAsync<ChattersCollection>($"https://tmi.twitch.tv/group/user/{Settings.ApplicationSettings.Default.Channel}/chatters").Result;
+            if(string.IsNullOrEmpty(Settings.ApplicationSettings.Default.Channel))
+            {
+                return; 
+            }
 
+            ChattersCollection result = HttpService.Instance.GetAsync<ChattersCollection>($"https://tmi.twitch.tv/group/user/{Settings.ApplicationSettings.Default.Channel}/chatters").Result;
             this.chattersCache.AddRange(result.Chatters.All());
         }
     }
