@@ -16,18 +16,14 @@
 
         public string DatabasePath { get; set; }
 
-        public string WeatherApiLangKey { get; set; }
-
         public string ChannelId { get; set; }
 
         public ConfigurationTabViewModel()
         {
             this.UpdateConfigurationCommand = new ParameterCommand(this.UpdateConfiguration);
-            this.UpdateWeatherApiKeyCommand = new ParameterCommand(this.UpdateWeatherApiKey);
             this.UserName = ApplicationSettings.Default.User;
             this.Channel = ApplicationSettings.Default.Channel;
             this.DatabasePath = ApplicationSettings.Default.DatabasePath;
-            this.WeatherApiLangKey = ApplicationSettings.Default.OpenWeatherMapApiLang;
             this.ChannelId = ApplicationSettings.Default.ChannelId;
         }
 
@@ -42,13 +38,6 @@
             ApplicationSettings.Default.User = this.UserName;
             ApplicationSettings.Default.Channel = this.Channel;
             ApplicationSettings.Default.DatabasePath = this.DatabasePath;
-            ApplicationSettings.Default.Save();
-        }
-
-        private void UpdateWeatherApiKey(object parameter)
-        {
-            ApplicationSettings.Default.OpenWeatherMapApiKey = ((PasswordBox)parameter).Password;
-            ApplicationSettings.Default.OpenWeatherMapApiLang = this.WeatherApiLangKey;
             ApplicationSettings.Default.Save();
         }
     }
