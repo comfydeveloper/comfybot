@@ -32,7 +32,7 @@
         {
             this.clientFactory = new Mock<ITwitchClientFactory>();
             this.client = new Mock<ITwitchClient>();
-            this.clientFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(this.client.Object);
+            this.clientFactory.Setup(f => f.Create()).Returns(this.client.Object);
             this.chattersCache = new Mock<IChattersCache>();
 
             this.commandHandler1 = new Mock<ICommandHandler>();
@@ -56,7 +56,7 @@
 
             this.chatBot.Run();
 
-            this.clientFactory.Verify(f => f.Create(username, password, channel));
+            this.clientFactory.Verify(f => f.Create());
             this.client.Verify(c => c.Connect());
         }
 
@@ -69,7 +69,7 @@
 
             this.chatBot.Run();
 
-            this.clientFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            this.clientFactory.Verify(f => f.Create(), Times.Never);
         }
     }
 }
