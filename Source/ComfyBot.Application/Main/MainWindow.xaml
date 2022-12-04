@@ -64,9 +64,11 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="25" />
                         </Grid.RowDefinitions>
-                        <ItemsControl Grid.Row="0" ItemsSource="{Binding Commands}">
+                        <TextBox Grid.Row="0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Commands}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Style="{StaticResource Card}">
@@ -165,7 +167,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <DockPanel Grid.Row="1" LastChildFill="False">
+                        <DockPanel Grid.Row="2" LastChildFill="False">
                             <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent" HorizontalAlignment="Left" Margin="5 0 0 0">
                                 <Border.InputBindings>
                                     <MouseBinding MouseAction="LeftClick" Command="{Binding AddTextCommandCommand}" />
@@ -186,240 +188,240 @@
                     </DockPanel>
                 </TabItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="25" />
-                    </Grid.RowDefinitions>
-                    <TextBox Grid.Row="0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=500}"></TextBox>
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Responses}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Style="{StaticResource Card}">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="200" />
-                                            <ColumnDefinition Width="2" />
-                                            <ColumnDefinition Width="400" />
-                                            <ColumnDefinition Width="2" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="40" />
-                                        </Grid.ColumnDefinitions>
-                                        <!-- Users -->
-                                        <StackPanel Grid.Column="0" Margin="5">
-                                            <DockPanel LastChildFill="False">
-                                                <Label Content="This person" FontWeight="Bold" />
-                                                <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
-                                                    <Border.InputBindings>
-                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding AddUserCommand}"/>
-                                                    </Border.InputBindings>
-                                                    <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
-                                                </Border>
-                                            </DockPanel>
-                                            <ItemsControl ItemsSource="{Binding Users}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Border Style="{StaticResource Tag}">
-                                                            <DockPanel LastChildFill="False">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <TextBox Grid.Row="0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Responses}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource Card}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="2" />
+                                                <ColumnDefinition Width="400" />
+                                                <ColumnDefinition Width="2" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="40" />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Users -->
+                                            <StackPanel Grid.Column="0" Margin="5">
+                                                <DockPanel LastChildFill="False">
+                                                    <Label Content="This person" FontWeight="Bold" />
+                                                    <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
+                                                        <Border.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding AddUserCommand}"/>
+                                                        </Border.InputBindings>
+                                                        <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
+                                                    </Border>
+                                                </DockPanel>
+                                                <ItemsControl ItemsSource="{Binding Users}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource Tag}">
+                                                                <DockPanel LastChildFill="False">
                                                                     <TextBox Text="{Binding Text}" Style="{StaticResource TagText}">
                                                                         <TextBox.InputBindings>
                                                                             <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveUserCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
                                                                         </TextBox.InputBindings>
                                                                     </TextBox>
-                                                                <Border Background="Transparent" Cursor="Hand">
-                                                                    <Border.InputBindings>
-                                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveUserCommand}" CommandParameter="{Binding}"/>
-                                                                    </Border.InputBindings>
-                                                                    <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}" />
-                                                                </Border>
-                                                            </DockPanel>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 5" />
-                                        <!-- Keywords -->
-                                        <StackPanel Grid.Column="2" Margin="5">
-                                            <!-- Loose Keywords -->
-                                            <DockPanel LastChildFill="False">
-                                                <Label Content="Says any of these" FontWeight="Bold" />
-                                                <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
-                                                    <Border.InputBindings>
-                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding AddLooseKeywordCommand}"/>
-                                                    </Border.InputBindings>
-                                                    <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
-                                                </Border>
-                                            </DockPanel>
-                                            <ItemsControl ItemsSource="{Binding LooseKeywords}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Border Style="{StaticResource Tag}">
-                                                            <DockPanel LastChildFill="False">
+                                                                    <Border Background="Transparent" Cursor="Hand">
+                                                                        <Border.InputBindings>
+                                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveUserCommand}" CommandParameter="{Binding}"/>
+                                                                        </Border.InputBindings>
+                                                                        <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}" />
+                                                                    </Border>
+                                                                </DockPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 5" />
+                                            <!-- Keywords -->
+                                            <StackPanel Grid.Column="2" Margin="5">
+                                                <!-- Loose Keywords -->
+                                                <DockPanel LastChildFill="False">
+                                                    <Label Content="Says any of these" FontWeight="Bold" />
+                                                    <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
+                                                        <Border.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding AddLooseKeywordCommand}"/>
+                                                        </Border.InputBindings>
+                                                        <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
+                                                    </Border>
+                                                </DockPanel>
+                                                <ItemsControl ItemsSource="{Binding LooseKeywords}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource Tag}">
+                                                                <DockPanel LastChildFill="False">
                                                                     <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" >
                                                                         <TextBox.InputBindings>
                                                                             <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveLooseKeywordCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
                                                                         </TextBox.InputBindings>
                                                                     </TextBox>
-                                                                        <Border Background="Transparent" Cursor="Hand">
-                                                                    <Border.InputBindings>
-                                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveLooseKeywordCommand}" CommandParameter="{Binding}"/>
-                                                                    </Border.InputBindings>
-                                                                    <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}" />
-                                                                </Border>
-                                                            </DockPanel>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                            <!-- All keywords -->
-                                            <DockPanel LastChildFill="False">
-                                                <Label Content="Says all of these" FontWeight="Bold" />
-                                                <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
-                                                    <Border.InputBindings>
-                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding AddAllKeywordCommand}"/>
-                                                    </Border.InputBindings>
-                                                    <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
-                                                </Border>
-                                            </DockPanel>
-                                            <ItemsControl ItemsSource="{Binding AllKeywords}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Border Style="{StaticResource Tag}">
-                                                            <DockPanel LastChildFill="False">
-                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" >
-                                                                    <TextBox.InputBindings>
-                                                                        <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveAllKeywordCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
-                                                                    </TextBox.InputBindings>
-                                                                </TextBox>
-                                                                <Border Background="Transparent" Cursor="Hand">
-                                                                    <Border.InputBindings>
-                                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveAllKeywordCommand}" CommandParameter="{Binding}"/>
-                                                                    </Border.InputBindings>
-                                                                    <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}" />
-                                                                </Border>
-                                                            </DockPanel>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                            <!-- Exact keywords -->
-                                            <DockPanel LastChildFill="False">
-                                                <Label Content="Says exactly one of these" FontWeight="Bold"/>
-                                                <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
-                                                    <Border.InputBindings>
-                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding AddExactKeywordCommand}"/>
-                                                    </Border.InputBindings>
-                                                    <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
-                                                </Border>
-                                            </DockPanel>
-                                            <ItemsControl ItemsSource="{Binding ExactKeywords}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Border Style="{StaticResource Tag}">
-                                                            <DockPanel LastChildFill="False">
-                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" >
-                                                                    <TextBox.InputBindings>
-                                                                        <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveExactKeywordCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
-                                                                    </TextBox.InputBindings>
-                                                                </TextBox>
-                                                                <Border Background="Transparent" Cursor="Hand">
-                                                                    <Border.InputBindings>
-                                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveExactKeywordCommand}" CommandParameter="{Binding}"/>
-                                                                    </Border.InputBindings>
-                                                                    <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}"  />
-                                                                </Border>
-                                                            </DockPanel>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                        <GridSplitter Grid.Column="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 5"/>
-                                        <!-- Replies -->
-                                        <StackPanel Grid.Column="4" Margin="5">
-                                            <DockPanel LastChildFill="False">
-                                                <Label Content="And I reply every" FontWeight="Bold" />
-                                                <TextBox MinWidth="30" Text="{Binding Timeout}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                                <Label Content="seconds and a priority of" FontWeight="Bold" />
-                                                <TextBox MinWidth="30" Text="{Binding Priority}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                                <Label Content="with" FontWeight="Bold" />
-                                                <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
-                                                    <Border.InputBindings>
-                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding AddReplyCommand}"/>
-                                                    </Border.InputBindings>
-                                                    <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
-                                                </Border>
-                                            </DockPanel>
-                                            <ItemsControl ItemsSource="{Binding Replies}" Margin="0 2">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Border Style="{StaticResource Tag}">
-                                                            <DockPanel LastChildFill="False">
-                                                                <TextBox Text="{Binding Text}" Style="{StaticResource TagText}">
-                                                                    <TextBox.InputBindings>
+                                                                    <Border Background="Transparent" Cursor="Hand">
+                                                                        <Border.InputBindings>
+                                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveLooseKeywordCommand}" CommandParameter="{Binding}"/>
+                                                                        </Border.InputBindings>
+                                                                        <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}" />
+                                                                    </Border>
+                                                                </DockPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                <!-- All keywords -->
+                                                <DockPanel LastChildFill="False">
+                                                    <Label Content="Says all of these" FontWeight="Bold" />
+                                                    <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
+                                                        <Border.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding AddAllKeywordCommand}"/>
+                                                        </Border.InputBindings>
+                                                        <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
+                                                    </Border>
+                                                </DockPanel>
+                                                <ItemsControl ItemsSource="{Binding AllKeywords}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource Tag}">
+                                                                <DockPanel LastChildFill="False">
+                                                                    <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" >
+                                                                        <TextBox.InputBindings>
+                                                                            <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveAllKeywordCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
+                                                                        </TextBox.InputBindings>
+                                                                    </TextBox>
+                                                                    <Border Background="Transparent" Cursor="Hand">
+                                                                        <Border.InputBindings>
+                                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveAllKeywordCommand}" CommandParameter="{Binding}"/>
+                                                                        </Border.InputBindings>
+                                                                        <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}" />
+                                                                    </Border>
+                                                                </DockPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                <!-- Exact keywords -->
+                                                <DockPanel LastChildFill="False">
+                                                    <Label Content="Says exactly one of these" FontWeight="Bold"/>
+                                                    <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
+                                                        <Border.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding AddExactKeywordCommand}"/>
+                                                        </Border.InputBindings>
+                                                        <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
+                                                    </Border>
+                                                </DockPanel>
+                                                <ItemsControl ItemsSource="{Binding ExactKeywords}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource Tag}">
+                                                                <DockPanel LastChildFill="False">
+                                                                    <TextBox Text="{Binding Text}" Style="{StaticResource TagText}" >
+                                                                        <TextBox.InputBindings>
+                                                                            <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveExactKeywordCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
+                                                                        </TextBox.InputBindings>
+                                                                    </TextBox>
+                                                                    <Border Background="Transparent" Cursor="Hand">
+                                                                        <Border.InputBindings>
+                                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveExactKeywordCommand}" CommandParameter="{Binding}"/>
+                                                                        </Border.InputBindings>
+                                                                        <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}"  />
+                                                                    </Border>
+                                                                </DockPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                            <GridSplitter Grid.Column="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 5"/>
+                                            <!-- Replies -->
+                                            <StackPanel Grid.Column="4" Margin="5">
+                                                <DockPanel LastChildFill="False">
+                                                    <Label Content="And I reply every" FontWeight="Bold" />
+                                                    <TextBox MinWidth="30" Text="{Binding Timeout}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <Label Content="seconds and a priority of" FontWeight="Bold" />
+                                                    <TextBox MinWidth="30" Text="{Binding Priority}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <Label Content="with" FontWeight="Bold" />
+                                                    <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent">
+                                                        <Border.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding AddReplyCommand}"/>
+                                                        </Border.InputBindings>
+                                                        <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" />
+                                                    </Border>
+                                                </DockPanel>
+                                                <ItemsControl ItemsSource="{Binding Replies}" Margin="0 2">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource Tag}">
+                                                                <DockPanel LastChildFill="False">
+                                                                    <TextBox Text="{Binding Text}" Style="{StaticResource TagText}">
+                                                                        <TextBox.InputBindings>
                                                                             <KeyBinding Key="Escape" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveReplyCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=DataContext}"/>
-                                                                    </TextBox.InputBindings>
-                                                                </TextBox>
-                                                                <Border Background="Transparent" Cursor="Hand">
-                                                                    <Border.InputBindings>
-                                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveReplyCommand}" CommandParameter="{Binding}"/>
-                                                                    </Border.InputBindings>
-                                                                    <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}" />
-                                                                </Border>
-                                                            </DockPanel>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                        <Border Grid.Column="5" Background="#d32f2f" Cursor="Hand">
-                                            <Border.InputBindings>
-                                                <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveResponseCommand}" CommandParameter="{Binding}"/>
-                                            </Border.InputBindings>
-                                            <materialDesign:PackIcon Kind="Garbage" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFF" />
-                                        </Border>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <DockPanel Grid.Row="2" LastChildFill="False" >
-                        <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent" HorizontalAlignment="Left" Margin="5 0 0 0">
-                            <Border.InputBindings>
-                                <MouseBinding MouseAction="LeftClick" Command="{Binding AddResponseCommand}" />
-                            </Border.InputBindings>
-                            <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" Height="20" Width="20"/>
-                        </Border>
-                        <Label Content="Add a response" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                    </DockPanel>
-                </Grid>
+                                                                        </TextBox.InputBindings>
+                                                                    </TextBox>
+                                                                    <Border Background="Transparent" Cursor="Hand">
+                                                                        <Border.InputBindings>
+                                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveReplyCommand}" CommandParameter="{Binding}"/>
+                                                                        </Border.InputBindings>
+                                                                        <materialDesign:PackIcon Style="{StaticResource TagRemoveIcon}" />
+                                                                    </Border>
+                                                                </DockPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                            <Border Grid.Column="5" Background="#d32f2f" Cursor="Hand">
+                                                <Border.InputBindings>
+                                                    <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveResponseCommand}" CommandParameter="{Binding}"/>
+                                                </Border.InputBindings>
+                                                <materialDesign:PackIcon Kind="Garbage" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFF" />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <DockPanel Grid.Row="2" LastChildFill="False" >
+                            <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent" HorizontalAlignment="Left" Margin="5 0 0 0">
+                                <Border.InputBindings>
+                                    <MouseBinding MouseAction="LeftClick" Command="{Binding AddResponseCommand}" />
+                                </Border.InputBindings>
+                                <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" Height="20" Width="20"/>
+                            </Border>
+                            <Label Content="Add a response" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                        </DockPanel>
+                    </Grid>
                 </ScrollViewer>
             </TabItem>
             <!-- Shoutouts Tab -->

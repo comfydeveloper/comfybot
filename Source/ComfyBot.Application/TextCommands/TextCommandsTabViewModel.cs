@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Data;
     using ComfyBot.Application.Shared;
     using ComfyBot.Application.Shared.Contracts;
     using ComfyBot.Application.Shared.Extensions;
@@ -16,6 +18,7 @@
     {
         private readonly IRepository<TextCommand> repository;
         private readonly IMapper<TextCommand, TextCommandModel> mapper;
+        private string searchText;
 
         public TextCommandsTabViewModel(IRepository<TextCommand> repository,
                                         IMapper<TextCommand, TextCommandModel> mapper)
@@ -81,6 +84,36 @@
             this.mapper.MapToEntity(model, entity);
 
             this.repository.AddOrUpdate(entity);
+        }
+
+        [ExcludeFromCodeCoverage]
+        public string SearchText
+        {
+            get => this.searchText;
+            set { this.searchText = value; this.UpdateSearch(); }
+        }
+
+        [ExcludeFromCodeCoverage]
+        private void UpdateSearch()
+        {
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Commands);
+
+            if (string.IsNullOrEmpty(this.SearchText))
+            {
+                collectionView.Filter = o => true;
+            }
+            else
+            {
+                collectionView.Filter = o =>
+                {
+                    TextCommandModel response = (TextCommandModel)o;
+
+                    return response.Commands.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                           || response.Replies.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase));
+                };
+            }
+
+            collectionView.Refresh();
         }
     }
 }

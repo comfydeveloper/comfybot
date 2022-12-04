@@ -95,10 +95,10 @@
                                         {
                                             MessageResponseModel response = (MessageResponseModel) o;
 
-                                            return response.Replies.Any(k => k.Text.Contains(this.searchText))
-                                                   || response.AllKeywords.Any(k => k.Text.Contains(this.searchText))
-                                                   || response.ExactKeywords.Any(k => k.Text.Contains(this.searchText))
-                                                   || response.LooseKeywords.Any(k => k.Text.Contains(this.searchText));
+                                            return response.Replies.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                                                   || response.AllKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                                                   || response.ExactKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                                                   || response.LooseKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase));
                                         };
             }
 
