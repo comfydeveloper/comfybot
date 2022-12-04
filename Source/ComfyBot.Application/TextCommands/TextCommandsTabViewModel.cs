@@ -5,7 +5,7 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
-
+    using System.Windows;
     using ComfyBot.Application.Shared;
     using ComfyBot.Application.Shared.Contracts;
     using ComfyBot.Application.Shared.Extensions;
@@ -56,8 +56,22 @@
         {
             TextCommandModel model = (TextCommandModel)parameter;
 
-            this.Commands.Remove(model);
-            this.repository.Remove(model.Id);
+            if (MessageBox.Show(GetDeletionMessage(model),
+                               "Delete command",
+                               MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                this.Commands.Remove(model);
+                this.repository.Remove(model.Id);
+            }
+        }
+
+        private static string GetDeletionMessage(TextCommandModel model)
+        {
+            if (model.Commands.Any())
+            {
+                return $"Do you want to delete the command \"{string.Join(", ", model.Commands.Select(c => c.Text))}\"?";
+            }
+            return "Do you want to delete the command?";
         }
 
         private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
