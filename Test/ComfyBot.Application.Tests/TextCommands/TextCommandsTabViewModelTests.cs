@@ -1,4 +1,7 @@
-﻿namespace ComfyBot.Application.Tests.TextCommands
+﻿using System.Windows;
+using ComfyBot.Application.Shared.Wrappers;
+
+namespace ComfyBot.Application.Tests.TextCommands
 {
     using System.Linq;
     using ComfyBot.Application.Shared.Contracts;
@@ -15,7 +18,8 @@
     {
         private Mock<IRepository<TextCommand>> repository;
         private Mock<IMapper<TextCommand, TextCommandModel>> mapper;
-
+        private Mock<IMessageBox> messageBox;
+        
         private TextCommandsTabViewModel viewModel;
 
         [SetUp]
@@ -23,8 +27,10 @@
         {
             repository = new Mock<IRepository<TextCommand>>();
             mapper = new Mock<IMapper<TextCommand, TextCommandModel>>();
+            messageBox = new Mock<IMessageBox>();
 
-            viewModel = new TextCommandsTabViewModel(repository.Object, mapper.Object);
+
+            viewModel = new TextCommandsTabViewModel(repository.Object, mapper.Object, messageBox.Object);
         }
 
         [Test]
@@ -41,6 +47,7 @@
         {
             TextCommandModel model = new TextCommandModel { Id = id };
             viewModel.Commands.Add(model);
+            messageBox.Setup(b => b.Show(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButton>())).Returns(MessageBoxResult.Yes);
 
             viewModel.RemoveTextCommandCommand.Execute(model);
 

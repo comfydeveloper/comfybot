@@ -1,4 +1,6 @@
-﻿namespace ComfyBot.Application.TextCommands
+﻿using ComfyBot.Application.Shared.Wrappers;
+
+namespace ComfyBot.Application.TextCommands
 {
     using System;
     using System.Collections.Generic;
@@ -18,13 +20,16 @@
     {
         private readonly IRepository<TextCommand> repository;
         private readonly IMapper<TextCommand, TextCommandModel> mapper;
+        private readonly IMessageBox messageBox;
         private string searchText;
 
         public TextCommandsTabViewModel(IRepository<TextCommand> repository,
-                                        IMapper<TextCommand, TextCommandModel> mapper)
+                                        IMapper<TextCommand, TextCommandModel> mapper,
+                                        IMessageBox messageBox)
         {
             this.repository = repository;
             this.mapper = mapper;
+            this.messageBox = messageBox;
 
             AddTextCommandCommand = new DelegateCommand(AddTextCommand);
             RemoveTextCommandCommand = new ParameterCommand(RemoveTextCommand);
@@ -59,7 +64,7 @@
         {
             TextCommandModel model = (TextCommandModel)parameter;
 
-            if (MessageBox.Show(GetDeletionMessage(model),
+            if (messageBox.Show(GetDeletionMessage(model),
                                "Delete command",
                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {

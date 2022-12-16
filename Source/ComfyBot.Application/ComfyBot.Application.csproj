@@ -19,4 +19,8 @@
     <ProjectReference Include="..\ComfyBot.Settings\ComfyBot.Settings.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Shared\Wrappers\" />
+  </ItemGroup>
+
 </Project>
