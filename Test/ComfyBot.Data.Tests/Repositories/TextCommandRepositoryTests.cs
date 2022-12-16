@@ -1,4 +1,6 @@
-﻿namespace ComfyBot.Data.Tests.Repositories
+﻿using LiteDB;
+
+namespace ComfyBot.Data.Tests.Repositories
 {
     using System;
     using System.Collections.Generic;
@@ -150,7 +152,7 @@
         {
             this.repository.Remove(key);
 
-            this.entities.Verify(e => e.Remove(It.IsAny<Expression<Func<TextCommand, bool>>>()));
+            this.entities.Verify(e => e.DeleteMany(It.IsAny<Expression<Func<TextCommand, bool>>>()));
         }
     }
 }

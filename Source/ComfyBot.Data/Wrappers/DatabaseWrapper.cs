@@ -16,7 +16,7 @@
 
         public ILiteCollection<T> GetCollection<T>(string name)
         {
-            return new LiteCollectionWrapper<T>(this.liteDatabase.GetCollection<T>(name));
+            return this.liteDatabase.GetCollection<T>(name);
         }
 
         public void Dispose()

@@ -22,5 +22,7 @@
         public int UseCount { get; set; }
 
         public int Priority { get; set; }
+
+        public bool ReplyAlways { get; set; }
     }
 }

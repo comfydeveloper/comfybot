@@ -4,18 +4,15 @@
 
     using ComfyBot.Application.Configuration;
     using ComfyBot.Application.Responses;
-    using ComfyBot.Application.Shoutouts;
     using ComfyBot.Application.TextCommands;
 
     [ExcludeFromCodeCoverage]
     public class TabsViewModel
     {
-        public TabsViewModel(ShoutoutTabViewModel shoutouts,
-                             ResponseTabViewModel responses,
+        public TabsViewModel(ResponseTabViewModel responses,
                              ConfigurationTabViewModel configuration,
                              TextCommandsTabViewModel textCommands)
         {
-            this.Shoutouts = shoutouts;
             this.Responses = responses;
             this.Configuration = configuration;
             this.TextCommands = textCommands;
@@ -26,7 +23,5 @@
         public TextCommandsTabViewModel TextCommands { get; }
 
         public ResponseTabViewModel Responses { get; }
-
-        public ShoutoutTabViewModel Shoutouts { get; }
     }
 }

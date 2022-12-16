@@ -19,7 +19,7 @@
                 return; 
             }
 
-            ChattersCollection result = HttpService.Instance.GetAsync<ChattersCollection>($"https://tmi.twitch.tv/group/user/{Settings.ApplicationSettings.Default.Channel}/chatters").Result;
+            ChattersCollection result = HttpService.Instance.GetAsync<ChattersCollection>($"https://tmi.twitch.tv/group/user/{Settings.ApplicationSettings.Default.Channel.ToLower()}/chatters").Result;
             this.chattersCache.AddRange(result.Chatters.All());
         }
     }

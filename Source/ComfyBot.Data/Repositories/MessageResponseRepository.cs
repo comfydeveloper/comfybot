@@ -13,11 +13,11 @@
 
         protected override void Update(MessageResponse source, MessageResponse target)
         {
-            this.Clear(target);
-            this.UpdateInternal(source, target);
+            Clear(target);
+            UpdateInternal(source, target);
         }
 
-        private void Clear(MessageResponse target)
+        private static void Clear(MessageResponse target)
         {
             target.Users.Clear();
             target.AllKeywords.Clear();
@@ -26,7 +26,7 @@
             target.Replies.Clear();
         }
 
-        private void UpdateInternal(MessageResponse source, MessageResponse target)
+        private static void UpdateInternal(MessageResponse source, MessageResponse target)
         {
             target.Priority = source.Priority;
             target.UseCount = Math.Max(source.UseCount, target.UseCount);
@@ -37,6 +37,7 @@
             target.AllKeywords.AddRange(source.AllKeywords);
             target.LooseKeywords.AddRange(source.LooseKeywords);
             target.Replies.AddRange(source.Replies);
+            target.ReplyAlways = source.ReplyAlways;
         }
     }
 }

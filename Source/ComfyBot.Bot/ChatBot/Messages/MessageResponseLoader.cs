@@ -34,7 +34,7 @@
                 return false;
             }
 
-            if (MatchesLooseKeyword(response, message) || MatchesAllKeywords(response, message) || MatchesExactKeyword(response, message))
+            if (response.ReplyAlways || MatchesLooseKeyword(response, message) || MatchesAllKeywords(response, message) || MatchesExactKeyword(response, message))
             {
                 this.UpdateUsageInfo(response);
                 responseText = response.Replies.GetRandom();

@@ -2,15 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-
-    using ComfyBot.Bot.Initialization;
     using ComfyBot.Bot.PubSub.Extensions;
     using ComfyBot.Bot.PubSub.RewardRedeems;
     using ComfyBot.Bot.PubSub.Wrappers;
     using ComfyBot.Settings;
-
-    using TwitchLib.Client.Interfaces;
     using TwitchLib.PubSub;
     using TwitchLib.PubSub.Events;
 

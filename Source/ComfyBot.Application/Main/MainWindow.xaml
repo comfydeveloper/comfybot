@@ -249,6 +249,10 @@
                                             <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 5" />
                                             <!-- Keywords -->
                                             <StackPanel Grid.Column="2" Margin="5">
+                                                <DockPanel LastChildFill="False">
+                                                    <Label Content="Says anything" FontWeight="Bold" />
+                                                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding ReplyAlways}"></CheckBox> 
+                                                </DockPanel>
                                                 <!-- Loose Keywords -->
                                                 <DockPanel LastChildFill="False">
                                                     <Label Content="Says any of these" FontWeight="Bold" />

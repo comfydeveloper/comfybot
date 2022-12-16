@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
 
     using ComfyBot.Data.Database;
     using ComfyBot.Data.Models;
     using ComfyBot.Data.Wrappers;
+    using LiteDB;
 
     public abstract class Repository<T> : IRepository<T>
         where T : Entity
@@ -54,7 +56,7 @@
             using IDatabase database = this.databaseFactory.Create();
 
             ILiteCollection<T> collection = database.GetCollection<T>(this.table);
-            collection.Remove(t => t.Id == id);
+            collection.DeleteMany(t => t.Id == id);
         }
 
         public IEnumerable<T> GetAll()
@@ -62,7 +64,7 @@
             using IDatabase database = this.databaseFactory.Create();
 
             ILiteCollection<T> collection = database.GetCollection<T>(this.table);
-            return collection.FindAll();
+            return collection.FindAll().ToList();
         }
 
         protected abstract void Update(T source, T target);

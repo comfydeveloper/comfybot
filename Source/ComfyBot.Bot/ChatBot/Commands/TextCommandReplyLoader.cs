@@ -2,8 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Text.RegularExpressions;
-
     using ComfyBot.Bot.ChatBot.Services;
     using ComfyBot.Bot.ChatBot.Wrappers;
     using ComfyBot.Bot.Extensions;

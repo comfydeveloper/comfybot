@@ -13,6 +13,7 @@
             model.Id = entity.Id;
             model.Timeout = entity.TimeoutInSeconds;
             model.Priority = entity.Priority;
+            model.ReplyAlways = entity.ReplyAlways;
             model.Users.AddRange(entity.Users.ToTextModels().OrderBy(m => m.Text));
             model.LooseKeywords.AddRange(entity.LooseKeywords.ToTextModels().OrderBy(m => m.Text));
             model.AllKeywords.AddRange(entity.AllKeywords.ToTextModels().OrderBy(m => m.Text));
@@ -25,6 +26,7 @@
             entity.Id = model.Id;
             entity.TimeoutInSeconds = model.Timeout;
             entity.Priority = model.Priority;
+            entity.ReplyAlways = model.ReplyAlways;
             entity.Users = model.Users.Where(u => !string.IsNullOrEmpty(u.Text)).Select(u => u.Text).ToList();
             entity.LooseKeywords = model.LooseKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList();
             entity.AllKeywords = model.AllKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList();

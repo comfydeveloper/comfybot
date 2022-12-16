@@ -92,6 +92,17 @@
             Assert.AreEqual(expected ? "response" : null, response);
         }
 
+        [Test]
+        public void ShouldReturnMessageWhenSetToAlwaysReply()
+        {
+            messageResponse.ReplyAlways = true;
+
+            bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage.Object, out string response);
+
+            Assert.True(result);
+            Assert.NotNull(response);
+        }
+
         [TestCase("keyword1", "keyword2", "keyword1", true)]
         [TestCase("keyword1", "keyword2", "keyword2", true)]
         [TestCase("keyword1", "keyword2", "keyword1 message", false)]

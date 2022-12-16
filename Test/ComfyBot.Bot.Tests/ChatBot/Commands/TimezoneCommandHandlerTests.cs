@@ -2,9 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-
     using ComfyBot.Bot.ChatBot.Commands;
     using ComfyBot.Bot.ChatBot.Timezones;
     using ComfyBot.Bot.ChatBot.Wrappers;

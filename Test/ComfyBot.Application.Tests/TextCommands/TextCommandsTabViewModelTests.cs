@@ -1,8 +1,6 @@
 ﻿namespace ComfyBot.Application.Tests.TextCommands
 {
     using System.Linq;
-
-    using ComfyBot.Application.Responses;
     using ComfyBot.Application.Shared.Contracts;
     using ComfyBot.Application.TextCommands;
     using ComfyBot.Data.Models;

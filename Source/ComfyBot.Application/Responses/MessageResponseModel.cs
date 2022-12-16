@@ -10,6 +10,7 @@
     {
         private int timeout = 60;
         private int priority;
+        private bool replyAlways;
 
         public MessageResponseModel()
         {
@@ -67,6 +68,12 @@
         {
             get => this.timeout;
             set { this.timeout = value; this.OnPropertyChanged(); }
+        }
+
+        public bool ReplyAlways 
+        { 
+            get => replyAlways; 
+            set { replyAlways = value; this.OnPropertyChanged(); } 
         }
 
         public int Priority
@@ -132,7 +139,7 @@
 
         private void OnTextModelUpdate(object sender, PropertyChangedEventArgs e)
         {
-            TextModel model = (TextModel) sender;
+            TextModel model = (TextModel)sender;
 
             if (string.IsNullOrEmpty(model.Text))
             {
