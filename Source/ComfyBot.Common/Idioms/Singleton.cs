@@ -7,7 +7,7 @@
         where TInterface : class
         where TImplementation : TInterface, new()
     {
-        private static readonly TImplementation instance = new TImplementation();
+        private static readonly TImplementation instance = new();
 
         private static TInterface overriddenInstance;
 

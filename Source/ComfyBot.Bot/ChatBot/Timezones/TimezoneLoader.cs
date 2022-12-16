@@ -8,7 +8,7 @@
 
     public class TimezoneLoader : ITimezoneLoader
     {
-        private static readonly List<Timezone> areas = new List<Timezone>();
+        private static readonly List<Timezone> areas = new();
 
         public bool TryLoad(string zone, out Timezone result)
         {

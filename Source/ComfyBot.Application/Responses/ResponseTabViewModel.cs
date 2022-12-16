@@ -34,7 +34,7 @@
 
         public ParameterCommand RemoveResponseCommand { get; }
 
-        public ObservableCollection<MessageResponseModel> Responses { get; set; } = new ObservableCollection<MessageResponseModel>();
+        public ObservableCollection<MessageResponseModel> Responses { get; set; } = new();
 
         protected override void Initialize()
         {

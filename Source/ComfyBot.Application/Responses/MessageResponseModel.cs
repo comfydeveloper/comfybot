@@ -54,15 +54,15 @@
 
         public string Id { get; set; }
 
-        public ObservableCollection<TextModel> Users { get; set; } = new ObservableCollection<TextModel>();
+        public ObservableCollection<TextModel> Users { get; set; } = new();
 
-        public ObservableCollection<TextModel> ExactKeywords { get; set; } = new ObservableCollection<TextModel>();
+        public ObservableCollection<TextModel> ExactKeywords { get; set; } = new();
 
-        public ObservableCollection<TextModel> LooseKeywords { get; set; } = new ObservableCollection<TextModel>();
+        public ObservableCollection<TextModel> LooseKeywords { get; set; } = new();
 
-        public ObservableCollection<TextModel> AllKeywords { get; set; } = new ObservableCollection<TextModel>();
+        public ObservableCollection<TextModel> AllKeywords { get; set; } = new();
 
-        public ObservableCollection<TextModel> Replies { get; set; } = new ObservableCollection<TextModel>();
+        public ObservableCollection<TextModel> Replies { get; set; } = new();
 
         public int Timeout
         {

@@ -10,7 +10,7 @@
     [ExcludeFromCodeCoverage]
     public class ConsoleOutputWriter : TextWriter
     {
-        private readonly List<string> lastOutput = new List<string>();
+        private readonly List<string> lastOutput = new();
 
         public delegate void UpdateTextCallback(string message);
 

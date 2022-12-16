@@ -5,15 +5,15 @@
 
     public class MessageResponse : Entity
     {
-        public List<string> Users { get; set; } = new List<string>();
+        public List<string> Users { get; set; } = new();
 
-        public List<string> LooseKeywords { get; set; } = new List<string>();
+        public List<string> LooseKeywords { get; set; } = new();
 
-        public List<string> AllKeywords { get; set; } = new List<string>();
+        public List<string> AllKeywords { get; set; } = new();
 
-        public List<string> ExactKeywords { get; set; } = new List<string>();
+        public List<string> ExactKeywords { get; set; } = new();
 
-        public List<string> Replies { get; set; } = new List<string>();
+        public List<string> Replies { get; set; } = new();
 
         public DateTime? LastUsed { get; set; }
 

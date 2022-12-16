@@ -6,8 +6,8 @@
 
     public class CurrentChattersCache : IChattersCache
     {
-        private static readonly List<Chatter> currentUsers = new List<Chatter>();
-        private static readonly Random random = new Random();
+        private static readonly List<Chatter> currentUsers = new();
+        private static readonly Random random = new();
 
         public void Add(string user)
         {

@@ -34,7 +34,7 @@
 
         public ParameterCommand RemoveTextCommandCommand { get; set; }
 
-        public ObservableCollection<TextCommandModel> Commands { get; set; } = new ObservableCollection<TextCommandModel>();
+        public ObservableCollection<TextCommandModel> Commands { get; set; } = new();
 
         protected override void Initialize()
         {
