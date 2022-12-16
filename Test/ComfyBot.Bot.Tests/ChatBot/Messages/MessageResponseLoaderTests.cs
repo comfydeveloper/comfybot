@@ -96,6 +96,7 @@
         public void ShouldReturnMessageWhenSetToAlwaysReply()
         {
             messageResponse.ReplyAlways = true;
+            messageResponse.Replies.Add("response");
 
             bool result = loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
 

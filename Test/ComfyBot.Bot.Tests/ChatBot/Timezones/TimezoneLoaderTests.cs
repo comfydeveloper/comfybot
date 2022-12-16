@@ -1,4 +1,6 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Timezones
+﻿using System;
+
+namespace ComfyBot.Bot.Tests.ChatBot.Timezones
 {
     using ComfyBot.Bot.ChatBot.Timezones;
     using Common.Http;
@@ -26,7 +28,7 @@
         [Test]
         public void TryLoadShouldReturnFalseWhenNoMatchingTimezoneFound()
         {
-            string[] foundZones = new string[0];
+            string[] foundZones = Array.Empty<string>();
             httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
 
             bool result = timezoneLoader.TryLoad("test", out Timezone zone);
