@@ -5,9 +5,9 @@
     using System.Linq;
     using System.Linq.Expressions;
 
-    using ComfyBot.Data.Database;
-    using ComfyBot.Data.Models;
-    using ComfyBot.Data.Wrappers;
+    using Database;
+    using Models;
+    using Wrappers;
     using LiteDB;
 
     public abstract class Repository<T> : IRepository<T>
@@ -24,9 +24,9 @@
 
         public T Get(Expression<Func<T, bool>> predicate)
         {
-            using IDatabase database = this.databaseFactory.Create();
+            using IDatabase database = databaseFactory.Create();
 
-            ILiteCollection<T> collection = database.GetCollection<T>(this.table);
+            ILiteCollection<T> collection = database.GetCollection<T>(table);
             T model = collection.FindOne(predicate);
 
             return model;
@@ -34,9 +34,9 @@
 
         public void AddOrUpdate(T model)
         {
-            using IDatabase database = this.databaseFactory.Create();
+            using IDatabase database = databaseFactory.Create();
 
-            ILiteCollection<T> collection = database.GetCollection<T>(this.table);
+            ILiteCollection<T> collection = database.GetCollection<T>(table);
             T entity = collection.FindOne(x => x.Id == model.Id);
 
             if (entity == null)
@@ -46,24 +46,24 @@
             }
             else
             {
-                this.Update(model, entity);
+                Update(model, entity);
                 collection.Update(entity);
             }
         }
 
         public void Remove(string id)
         {
-            using IDatabase database = this.databaseFactory.Create();
+            using IDatabase database = databaseFactory.Create();
 
-            ILiteCollection<T> collection = database.GetCollection<T>(this.table);
+            ILiteCollection<T> collection = database.GetCollection<T>(table);
             collection.DeleteMany(t => t.Id == id);
         }
 
         public IEnumerable<T> GetAll()
         {
-            using IDatabase database = this.databaseFactory.Create();
+            using IDatabase database = databaseFactory.Create();
 
-            ILiteCollection<T> collection = database.GetCollection<T>(this.table);
+            ILiteCollection<T> collection = database.GetCollection<T>(table);
             return collection.FindAll().ToList();
         }
 

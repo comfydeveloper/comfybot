@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using ComfyBot.Common.Http;
+    using Common.Http;
 
     public class TimezoneLoader : ITimezoneLoader
     {

@@ -2,8 +2,8 @@
 {
     using System;
 
-    using ComfyBot.Data.Database;
-    using ComfyBot.Data.Models;
+    using Database;
+    using Models;
 
     public class MessageResponseRepository : Repository<MessageResponse>
     {

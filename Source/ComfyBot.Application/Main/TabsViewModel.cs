@@ -2,9 +2,9 @@
 {
     using System.Diagnostics.CodeAnalysis;
 
-    using ComfyBot.Application.Configuration;
-    using ComfyBot.Application.Responses;
-    using ComfyBot.Application.TextCommands;
+    using Configuration;
+    using Responses;
+    using TextCommands;
 
     [ExcludeFromCodeCoverage]
     public class TabsViewModel
@@ -13,9 +13,9 @@
                              ConfigurationTabViewModel configuration,
                              TextCommandsTabViewModel textCommands)
         {
-            this.Responses = responses;
-            this.Configuration = configuration;
-            this.TextCommands = textCommands;
+            Responses = responses;
+            Configuration = configuration;
+            TextCommands = textCommands;
         }
 
         public ConfigurationTabViewModel Configuration { get; }

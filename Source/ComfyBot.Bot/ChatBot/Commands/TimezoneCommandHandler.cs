@@ -1,8 +1,8 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Commands
 {
-    using ComfyBot.Bot.ChatBot.Timezones;
-    using ComfyBot.Bot.ChatBot.Wrappers;
-    using ComfyBot.Bot.Extensions;
+    using Timezones;
+    using Wrappers;
+    using Extensions;
 
     using TwitchLib.Client.Interfaces;
 
@@ -24,15 +24,15 @@
 
         protected override void HandleInternal(ITwitchClient client, IChatCommand command)
         {
-            if (this.zoneLoader.TryLoad(command.ArgumentsAsString, out Timezone timezone))
+            if (zoneLoader.TryLoad(command.ArgumentsAsString, out Timezone timezone))
             {
-                TimezoneInfo timezoneInfo = this.timeLoader.GetTime(timezone);
+                TimezoneInfo timezoneInfo = timeLoader.GetTime(timezone);
 
-                this.SendMessage(client, $"{command.ChatMessage.UserName}: {timezoneInfo.Timezone} {timezoneInfo.DateTime:G}");
+                SendMessage(client, $"{command.ChatMessage.UserName}: {timezoneInfo.Timezone} {timezoneInfo.DateTime:G}");
             }
             else
             {
-                this.SendMessage(client, $"Sorry {command.ChatMessage.UserName}, can't find timezone info for '{command.ArgumentsAsString}'.");
+                SendMessage(client, $"Sorry {command.ChatMessage.UserName}, can't find timezone info for '{command.ArgumentsAsString}'.");
             }
         }
     }

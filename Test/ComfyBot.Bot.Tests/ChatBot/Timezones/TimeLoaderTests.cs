@@ -1,7 +1,7 @@
 ﻿namespace ComfyBot.Bot.Tests.ChatBot.Timezones
 {
     using ComfyBot.Bot.ChatBot.Timezones;
-    using ComfyBot.Common.Http;
+    using Common.Http;
 
     using Moq;
 
@@ -17,10 +17,10 @@
         [SetUp]
         public void Setup()
         {
-            this.httpService = new Mock<IHttpService>();
-            this.timeLoader = new TimeLoader();
+            httpService = new Mock<IHttpService>();
+            timeLoader = new TimeLoader();
 
-            HttpService.OverrideInstance(this.httpService.Object);
+            HttpService.OverrideInstance(httpService.Object);
         }
 
         [Test]
@@ -33,9 +33,9 @@
                                     Region = "region"
                                 };
 
-            TimezoneInfo timezoneInfo = this.timeLoader.GetTime(timezone);
+            TimezoneInfo timezoneInfo = timeLoader.GetTime(timezone);
 
-            this.httpService.Verify(s => s.GetAsync<TimezoneInfo>($"http://worldtimeapi.org/api/timezone/{timezone}"));
+            httpService.Verify(s => s.GetAsync<TimezoneInfo>($"http://worldtimeapi.org/api/timezone/{timezone}"));
         }
 
         [TearDown]

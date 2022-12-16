@@ -3,11 +3,11 @@
     using System;
     using System.Linq;
 
-    using ComfyBot.Bot.ChatBot.Services;
-    using ComfyBot.Bot.ChatBot.Wrappers;
-    using ComfyBot.Bot.Extensions;
-    using ComfyBot.Data.Models;
-    using ComfyBot.Data.Repositories;
+    using Services;
+    using Wrappers;
+    using Extensions;
+    using Data.Models;
+    using Data.Repositories;
 
     public class MessageResponseLoader : IMessageResponseLoader
     {
@@ -36,10 +36,10 @@
 
             if (response.ReplyAlways || MatchesLooseKeyword(response, message) || MatchesAllKeywords(response, message) || MatchesExactKeyword(response, message))
             {
-                this.UpdateUsageInfo(response);
+                UpdateUsageInfo(response);
                 responseText = response.Replies.GetRandom();
                 responseText = responseText.Replace("{{user}}", message.UserName);
-                responseText = this.wildcardReplacerObject.Replace(responseText);
+                responseText = wildcardReplacerObject.Replace(responseText);
                 return true;
             }
             return false;
@@ -49,7 +49,7 @@
         {
             response.UseCount++;
             response.LastUsed = DateTime.Now;
-            this.repository.AddOrUpdate(response);
+            repository.AddOrUpdate(response);
         }
 
         private static bool HasOngoingTimeout(MessageResponse response)

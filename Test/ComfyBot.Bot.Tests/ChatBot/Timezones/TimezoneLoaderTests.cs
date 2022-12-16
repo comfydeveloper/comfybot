@@ -1,7 +1,7 @@
 ﻿namespace ComfyBot.Bot.Tests.ChatBot.Timezones
 {
     using ComfyBot.Bot.ChatBot.Timezones;
-    using ComfyBot.Common.Http;
+    using Common.Http;
 
     using Moq;
 
@@ -17,19 +17,19 @@
         [SetUp]
         public void Setup()
         {
-            this.httpService = new Mock<IHttpService>();
-            this.timezoneLoader = new TimezoneLoader();
+            httpService = new Mock<IHttpService>();
+            timezoneLoader = new TimezoneLoader();
 
-            HttpService.OverrideInstance(this.httpService.Object);
+            HttpService.OverrideInstance(httpService.Object);
         }
 
         [Test]
         public void TryLoadShouldReturnFalseWhenNoMatchingTimezoneFound()
         {
             string[] foundZones = new string[0];
-            this.httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
+            httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
 
-            bool result = this.timezoneLoader.TryLoad("test", out Timezone zone);
+            bool result = timezoneLoader.TryLoad("test", out Timezone zone);
 
             Assert.False(result);
             Assert.IsNull(zone);
@@ -41,9 +41,9 @@
         public void TryLoadShouldReturnTrueWhenMatchingTimezoneFound(string foundZone, string searchText)
         {
             string[] foundZones = { foundZone };
-            this.httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
+            httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
 
-            bool result = this.timezoneLoader.TryLoad(searchText, out Timezone zone);
+            bool result = timezoneLoader.TryLoad(searchText, out Timezone zone);
 
             Assert.True(result);
             Assert.IsNotNull(zone);
@@ -53,12 +53,12 @@
         public void TryLoadShouldCacheTimezones()
         {
             string[] foundZones = { "test" };
-            this.httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
+            httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
 
-            this.timezoneLoader.TryLoad("test", out Timezone zone1);
-            this.timezoneLoader.TryLoad("test", out Timezone zone2);
+            timezoneLoader.TryLoad("test", out Timezone zone1);
+            timezoneLoader.TryLoad("test", out Timezone zone2);
 
-            this.httpService.Verify(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone"), Times.Once());
+            httpService.Verify(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone"), Times.Once());
         }
 
         [TearDown]

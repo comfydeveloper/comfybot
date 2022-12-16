@@ -2,7 +2,7 @@
 {
     using System.Diagnostics.CodeAnalysis;
 
-    using ComfyBot.Bot.ChatBot.Wrappers;
+    using ChatBot.Wrappers;
 
     using TwitchLib.Client.Models;
 

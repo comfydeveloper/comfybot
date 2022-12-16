@@ -2,10 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using ComfyBot.Bot.PubSub.Extensions;
-    using ComfyBot.Bot.PubSub.RewardRedeems;
-    using ComfyBot.Bot.PubSub.Wrappers;
-    using ComfyBot.Settings;
+    using Extensions;
+    using RewardRedeems;
+    using Wrappers;
+    using Settings;
     using TwitchLib.PubSub;
     using TwitchLib.PubSub.Events;
 
@@ -27,24 +27,24 @@
                 return;
             }
 
-            this.client = new TwitchPubSub();
+            client = new TwitchPubSub();
 
-            this.client.OnPubSubServiceConnected += this.ClientOnOnPubSubServiceConnected;
-            this.client.OnRewardRedeemed += this.ClientOnOnRewardRedeemed;
+            client.OnPubSubServiceConnected += ClientOnOnPubSubServiceConnected;
+            client.OnRewardRedeemed += ClientOnOnRewardRedeemed;
 
-            this.client.ListenToRewards(ApplicationSettings.Default.ChannelId);
-            this.client.Connect();
+            client.ListenToRewards(ApplicationSettings.Default.ChannelId);
+            client.Connect();
         }
 
         private void ClientOnOnPubSubServiceConnected(object? sender, EventArgs e)
         {
-            this.client.SendTopics();
+            client.SendTopics();
         }
 
         private void ClientOnOnRewardRedeemed(object? sender, OnRewardRedeemedArgs e)
         {
             IRewardRedemption rewardRedemption = e.ToRewardRedemption();
-            foreach (IRewardRedeemHandler rewardRedeemHandler in this.rewardRedeemHandlers)
+            foreach (IRewardRedeemHandler rewardRedeemHandler in rewardRedeemHandlers)
             {
                 rewardRedeemHandler.Handle(rewardRedemption);
             }

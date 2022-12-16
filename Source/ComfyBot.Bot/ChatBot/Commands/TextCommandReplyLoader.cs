@@ -2,11 +2,11 @@
 {
     using System;
     using System.Linq;
-    using ComfyBot.Bot.ChatBot.Services;
-    using ComfyBot.Bot.ChatBot.Wrappers;
-    using ComfyBot.Bot.Extensions;
-    using ComfyBot.Data.Models;
-    using ComfyBot.Data.Repositories;
+    using Services;
+    using Wrappers;
+    using Extensions;
+    using Data.Models;
+    using Data.Repositories;
 
     public class TextCommandReplyLoader : ITextCommandReplyLoader
     {
@@ -23,7 +23,7 @@
         {
             if (!HasOngoingTimeout(textCommand) && CommandMatches(textCommand, command))
             {
-                this.UpdateCommandUsageInfo(textCommand);
+                UpdateCommandUsageInfo(textCommand);
 
                 if (command.ArgumentsAsList.Any())
                 {
@@ -43,13 +43,13 @@
                         {
                             reply = reply.Replace($"{{{{parameter{parameter.Index + 1}}}}}", parameter.Text);
                         }
-                        reply = this.wildcardReplacer.Replace(reply);
+                        reply = wildcardReplacer.Replace(reply);
                         return true;
                     }
                 }
                 reply = textCommand.Replies.Where(r => !r.Contains("{{parameter")).GetRandom();
                 reply = reply.Replace("{{user}}", command.ChatMessage.UserName);
-                reply = this.wildcardReplacer.Replace(reply);
+                reply = wildcardReplacer.Replace(reply);
                 return true;
             }
             reply = null;
@@ -65,7 +65,7 @@
         {
             textCommand.UseCount++;
             textCommand.LastUsed = DateTime.Now;
-            this.repository.AddOrUpdate(textCommand);
+            repository.AddOrUpdate(textCommand);
         }
 
         private static bool CommandMatches(TextCommand textCommand, IChatCommand command)

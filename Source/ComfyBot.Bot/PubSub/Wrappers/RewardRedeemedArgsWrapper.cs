@@ -15,16 +15,16 @@
             this.onRewardRedeemedArgs = onRewardRedeemedArgs;
         }
 
-        public Guid RewardId => this.onRewardRedeemedArgs.RewardId;
+        public Guid RewardId => onRewardRedeemedArgs.RewardId;
 
-        public string DisplayName => this.onRewardRedeemedArgs.DisplayName;
+        public string DisplayName => onRewardRedeemedArgs.DisplayName;
 
-        public string Message => this.onRewardRedeemedArgs.Message;
+        public string Message => onRewardRedeemedArgs.Message;
 
-        public string RewardTitle => this.onRewardRedeemedArgs.RewardTitle;
+        public string RewardTitle => onRewardRedeemedArgs.RewardTitle;
 
-        public string RewardPrompt => this.onRewardRedeemedArgs.RewardPrompt;
+        public string RewardPrompt => onRewardRedeemedArgs.RewardPrompt;
 
-        public int RewardCost => this.onRewardRedeemedArgs.RewardCost;
+        public int RewardCost => onRewardRedeemedArgs.RewardCost;
     }
 }

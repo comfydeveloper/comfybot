@@ -2,7 +2,7 @@
 {
     using System.Diagnostics.CodeAnalysis;
 
-    using ComfyBot.Bot.PubSub.Wrappers;
+    using Wrappers;
 
     using TwitchLib.PubSub.Events;
 

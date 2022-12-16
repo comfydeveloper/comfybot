@@ -7,10 +7,10 @@ namespace ComfyBot.Data.Tests.Repositories
     using System.Linq;
     using System.Linq.Expressions;
 
-    using ComfyBot.Data.Database;
-    using ComfyBot.Data.Models;
+    using Database;
+    using Models;
     using ComfyBot.Data.Repositories;
-    using ComfyBot.Data.Wrappers;
+    using Wrappers;
 
     using Moq;
 
@@ -28,11 +28,11 @@ namespace ComfyBot.Data.Tests.Repositories
         {
             Mock<IDatabaseFactory> databaseFactory = new Mock<IDatabaseFactory>();
             Mock<IDatabase> database = new Mock<IDatabase>();
-            this.entities = new Mock<ILiteCollection<TextCommand>>();
-            database.Setup(d => d.GetCollection<TextCommand>("textCommands")).Returns(this.entities.Object);
+            entities = new Mock<ILiteCollection<TextCommand>>();
+            database.Setup(d => d.GetCollection<TextCommand>("textCommands")).Returns(entities.Object);
             databaseFactory.Setup(f => f.Create()).Returns(database.Object);
 
-            this.repository = new TextCommandRepository(databaseFactory.Object);
+            repository = new TextCommandRepository(databaseFactory.Object);
         }
 
         [TestCase("key1")]
@@ -40,9 +40,9 @@ namespace ComfyBot.Data.Tests.Repositories
         public void GetShouldReturnElement(string id)
         {
             TextCommand entity = new TextCommand { Id = id };
-            this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+            entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-            TextCommand shoutout = this.repository.Get(s => s.Id == id);
+            TextCommand shoutout = repository.Get(s => s.Id == id);
 
             Assert.AreEqual(entity, shoutout);
         }
@@ -53,10 +53,10 @@ namespace ComfyBot.Data.Tests.Repositories
         {
             TextCommand model = new TextCommand();
 
-            this.repository.AddOrUpdate(model);
+            repository.AddOrUpdate(model);
 
-            this.entities.Verify(e => e.Insert(model));
-            this.entities.Verify(e => e.Update(model), Times.Never);
+            entities.Verify(e => e.Insert(model));
+            entities.Verify(e => e.Update(model), Times.Never);
         }
 
         [TestCase(1)]
@@ -65,12 +65,12 @@ namespace ComfyBot.Data.Tests.Repositories
         {
             TextCommand entity = new TextCommand();
             TextCommand model = new TextCommand { TimeoutInSeconds = timeOutInSeconds };
-            this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+            entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-            this.repository.AddOrUpdate(model);
+            repository.AddOrUpdate(model);
 
-            this.entities.Verify(e => e.Insert(model), Times.Never);
-            this.entities.Verify(e => e.Update(entity));
+            entities.Verify(e => e.Insert(model), Times.Never);
+            entities.Verify(e => e.Update(entity));
             Assert.AreEqual(timeOutInSeconds, entity.TimeoutInSeconds);
         }
 
@@ -86,12 +86,12 @@ namespace ComfyBot.Data.Tests.Repositories
                                 {
                                     Commands = new List<string> { value }
                                 };
-            this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+            entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-            this.repository.AddOrUpdate(model);
+            repository.AddOrUpdate(model);
 
-            this.entities.Verify(e => e.Insert(model), Times.Never);
-            this.entities.Verify(e => e.Update(entity));
+            entities.Verify(e => e.Insert(model), Times.Never);
+            entities.Verify(e => e.Update(entity));
             Assert.AreEqual(1, entity.Commands.Count);
             Assert.AreEqual(value, entity.Commands.First());
         }
@@ -102,12 +102,12 @@ namespace ComfyBot.Data.Tests.Repositories
         {
             TextCommand entity = new TextCommand();
             TextCommand model = new TextCommand { LastUsed = lastUsedTime };
-            this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+            entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-            this.repository.AddOrUpdate(model);
+            repository.AddOrUpdate(model);
 
-            this.entities.Verify(e => e.Insert(model), Times.Never);
-            this.entities.Verify(e => e.Update(entity));
+            entities.Verify(e => e.Insert(model), Times.Never);
+            entities.Verify(e => e.Update(entity));
             Assert.AreEqual(lastUsedTime, entity.LastUsed);
         }
 
@@ -117,9 +117,9 @@ namespace ComfyBot.Data.Tests.Repositories
         {
             TextCommand entity = new TextCommand();
             TextCommand model = new TextCommand { UseCount = count };
-            this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+            entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-            this.repository.AddOrUpdate(model);
+            repository.AddOrUpdate(model);
 
             Assert.AreEqual(count, entity.UseCount);
         }
@@ -136,12 +136,12 @@ namespace ComfyBot.Data.Tests.Repositories
             {
                 Replies = new List<string> { value }
             };
-            this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+            entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-            this.repository.AddOrUpdate(model);
+            repository.AddOrUpdate(model);
 
-            this.entities.Verify(e => e.Insert(model), Times.Never);
-            this.entities.Verify(e => e.Update(entity));
+            entities.Verify(e => e.Insert(model), Times.Never);
+            entities.Verify(e => e.Update(entity));
             Assert.AreEqual(1, entity.Replies.Count);
             Assert.AreEqual(value, entity.Replies.First());
         }
@@ -150,9 +150,9 @@ namespace ComfyBot.Data.Tests.Repositories
         [TestCase("key2")]
         public void RemoveShouldRemoveElement(string key)
         {
-            this.repository.Remove(key);
+            repository.Remove(key);
 
-            this.entities.Verify(e => e.DeleteMany(It.IsAny<Expression<Func<TextCommand, bool>>>()));
+            entities.Verify(e => e.DeleteMany(It.IsAny<Expression<Func<TextCommand, bool>>>()));
         }
     }
 }

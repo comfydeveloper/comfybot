@@ -5,9 +5,9 @@ namespace ComfyBot.Application
     using System;
     using System.Diagnostics.CodeAnalysis;
 
-    using ComfyBot.Application.Main;
-    using ComfyBot.Application.Output;
-    using ComfyBot.Settings;
+    using Main;
+    using Output;
+    using Settings;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -17,13 +17,13 @@ namespace ComfyBot.Application
     {
         public MainWindow(MainWindowViewModel viewModel)
         {
-            this.DataContext = viewModel;
+            DataContext = viewModel;
 
             InitializeComponent();
-            ConsoleOutputWriter writer = new ConsoleOutputWriter(this.ConsoleTextBox);
+            ConsoleOutputWriter writer = new ConsoleOutputWriter(ConsoleTextBox);
             Console.SetOut(writer);
 
-            this.StreamKey.Password = ApplicationSettings.Default.AuthKey;
+            StreamKey.Password = ApplicationSettings.Default.AuthKey;
         }
     }
 }

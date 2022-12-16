@@ -3,8 +3,8 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
 
-    using ComfyBot.Application.Shared;
-    using ComfyBot.Application.Shared.Extensions;
+    using Shared;
+    using Shared.Extensions;
 
     public class TextCommandModel : NotifyingModel
     {
@@ -12,13 +12,13 @@
 
         public TextCommandModel()
         {
-            this.AddTextCommand = new DelegateCommand(this.AddText);
-            this.AddReplyCommand = new DelegateCommand(this.AddReply);
-            this.RemoveTextCommand = new ParameterCommand(this.RemoveText);
-            this.RemoveReplyCommand = new ParameterCommand(this.RemoveReply);
+            AddTextCommand = new DelegateCommand(AddText);
+            AddReplyCommand = new DelegateCommand(AddReply);
+            RemoveTextCommand = new ParameterCommand(RemoveText);
+            RemoveReplyCommand = new ParameterCommand(RemoveReply);
 
-            this.Replies.RegisterCollectionItemChanged(this.OnReplyUpdate);
-            this.Commands.RegisterCollectionItemChanged(this.OnReplyUpdate);
+            Replies.RegisterCollectionItemChanged(OnReplyUpdate);
+            Commands.RegisterCollectionItemChanged(OnReplyUpdate);
         }
 
         public string Id { get; set; }
@@ -29,8 +29,8 @@
 
         public int Timeout
         {
-            get => this.timeout;
-            set { this.timeout = value; this.OnPropertyChanged(); }
+            get => timeout;
+            set { timeout = value; OnPropertyChanged(); }
         }
 
         public DelegateCommand AddReplyCommand { get; }
@@ -43,24 +43,24 @@
 
         private void AddText()
         {
-            this.Commands.Add(new TextModel());
+            Commands.Add(new TextModel());
         }
 
         private void RemoveText(object parameter)
         {
-            this.Commands.Remove((TextModel)parameter);
-            this.OnPropertyChanged();
+            Commands.Remove((TextModel)parameter);
+            OnPropertyChanged();
         }
 
         private void AddReply()
         {
-            this.Replies.Add(new TextModel());
+            Replies.Add(new TextModel());
         }
 
         private void RemoveReply(object parameter)
         {
-            this.Replies.Remove((TextModel)parameter);
-            this.OnPropertyChanged();
+            Replies.Remove((TextModel)parameter);
+            OnPropertyChanged();
         }
 
         private void OnReplyUpdate(object sender, PropertyChangedEventArgs e)
@@ -71,7 +71,7 @@
             {
                 return;
             }
-            this.OnPropertyChanged();
+            OnPropertyChanged();
         }
     }
 }

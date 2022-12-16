@@ -15,26 +15,26 @@
         [SetUp]
         public void Setup()
         {
-            this.model = new TextCommandModel();
+            model = new TextCommandModel();
         }
 
         [Test]
         public void AddReplyCommandShouldAddReply()
         {
-            this.model.AddReplyCommand.Execute();
+            model.AddReplyCommand.Execute();
 
-            Assert.AreEqual(1, this.model.Replies.Count);
+            Assert.AreEqual(1, model.Replies.Count);
         }
 
         [Test]
         public void RemoveReplyShouldRemoveItem()
         {
             TextModel textModel = new TextModel();
-            this.model.Replies.Add(textModel);
+            model.Replies.Add(textModel);
 
-            this.model.RemoveReplyCommand.Execute(textModel);
+            model.RemoveReplyCommand.Execute(textModel);
 
-            Assert.AreEqual(0, this.model.Replies.Count);
+            Assert.AreEqual(0, model.Replies.Count);
         }
 
         [TestCase(null, false)]
@@ -47,9 +47,9 @@
             {
                 result = true;
             }
-            this.model.PropertyChanged += TestMethod;
+            model.PropertyChanged += TestMethod;
             TextModel textModel = new TextModel();
-            this.model.Replies.Add(textModel);
+            model.Replies.Add(textModel);
 
             textModel.Text = text;
 
@@ -59,20 +59,20 @@
         [Test]
         public void AddTextCommandShouldAddReply()
         {
-            this.model.AddTextCommand.Execute();
+            model.AddTextCommand.Execute();
 
-            Assert.AreEqual(1, this.model.Commands.Count);
+            Assert.AreEqual(1, model.Commands.Count);
         }
 
         [Test]
         public void RemoveTextShouldRemoveItem()
         {
             TextModel textModel = new TextModel();
-            this.model.Commands.Add(textModel);
+            model.Commands.Add(textModel);
 
-            this.model.RemoveTextCommand.Execute(textModel);
+            model.RemoveTextCommand.Execute(textModel);
 
-            Assert.AreEqual(0, this.model.Commands.Count);
+            Assert.AreEqual(0, model.Commands.Count);
         }
 
         [TestCase(null, false)]
@@ -85,9 +85,9 @@
             {
                 result = true;
             }
-            this.model.PropertyChanged += TestMethod;
+            model.PropertyChanged += TestMethod;
             TextModel textModel = new TextModel();
-            this.model.Commands.Add(textModel);
+            model.Commands.Add(textModel);
 
             textModel.Text = text;
 
@@ -98,9 +98,9 @@
         [TestCase(2)]
         public void TimeoutSetterShouldSetValue(int timeout)
         {
-            this.model.Timeout = timeout;
+            model.Timeout = timeout;
 
-            Assert.AreEqual(timeout, this.model.Timeout);
+            Assert.AreEqual(timeout, model.Timeout);
         }
 
         [Test]
@@ -111,9 +111,9 @@
             {
                 result = true;
             }
-            this.model.PropertyChanged += TestMethod;
+            model.PropertyChanged += TestMethod;
 
-            this.model.Timeout = 1;
+            model.Timeout = 1;
 
             Assert.IsTrue(result);
         }

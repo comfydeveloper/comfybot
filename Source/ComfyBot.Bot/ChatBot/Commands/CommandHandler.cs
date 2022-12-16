@@ -1,7 +1,7 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Commands
 {
-    using ComfyBot.Bot.ChatBot.Wrappers;
-    using ComfyBot.Settings;
+    using Wrappers;
+    using Settings;
 
     using TwitchLib.Client.Interfaces;
 
@@ -9,9 +9,9 @@
     {
         public void Handle(ITwitchClient client, IChatCommand command)
         {
-            if (this.CanHandle(command))
+            if (CanHandle(command))
             {
-                this.HandleInternal(client, command);
+                HandleInternal(client, command);
             }
         }
 

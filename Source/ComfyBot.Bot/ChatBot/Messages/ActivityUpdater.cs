@@ -1,7 +1,7 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Messages
 {
-    using ComfyBot.Bot.ChatBot.Chatters;
-    using ComfyBot.Bot.ChatBot.Wrappers;
+    using Chatters;
+    using Wrappers;
 
     using TwitchLib.Client.Interfaces;
 
@@ -16,7 +16,7 @@
 
         public void Handle(ITwitchClient client, IChatMessage message)
         {
-            this.cache.UpdateActivity(message.UserName);
+            cache.UpdateActivity(message.UserName);
         }
     }
 }

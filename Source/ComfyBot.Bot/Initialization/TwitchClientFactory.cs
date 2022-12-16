@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
 
-    using ComfyBot.Settings;
+    using Settings;
 
     using TwitchLib.Client;
     using TwitchLib.Client.Interfaces;

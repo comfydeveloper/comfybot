@@ -14,9 +14,9 @@
         [Test]
         public void CanExecuteShouldReturnTrueWhenInjectedPredicateIsNull()
         {
-            this.command = new DelegateCommand(this.TestAction);
+            command = new DelegateCommand(TestAction);
 
-            bool result = this.command.CanExecute(new object());
+            bool result = command.CanExecute(new object());
 
             Assert.IsTrue(result);
         }
@@ -26,9 +26,9 @@
         public void CanExecuteShouldEvaluatePredicate(bool parameter)
         {
             bool Predicate(object b) => (bool)b;
-            this.command = new DelegateCommand(this.TestAction, Predicate);
+            command = new DelegateCommand(TestAction, Predicate);
 
-            bool result = this.command.CanExecute(parameter);
+            bool result = command.CanExecute(parameter);
 
             Assert.AreEqual(parameter, result);
         }
@@ -36,22 +36,22 @@
         [Test]
         public void ExecuteShouldExecuteAction()
         {
-            this.command = new DelegateCommand(this.TestAction);
+            command = new DelegateCommand(TestAction);
 
-            this.command.Execute(new object());
+            command.Execute(new object());
 
-            Assert.IsTrue(this.actionHasBeenExecuted);
+            Assert.IsTrue(actionHasBeenExecuted);
         }
 
         private void TestAction()
         {
-            this.actionHasBeenExecuted = true;
+            actionHasBeenExecuted = true;
         }
 
         [TearDown]
         public void TearDown()
         {
-            this.actionHasBeenExecuted = false;
+            actionHasBeenExecuted = false;
         }
     }
 }

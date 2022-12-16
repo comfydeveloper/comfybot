@@ -16,16 +16,16 @@
 
         public bool CanExecute(object parameter)
         {
-            if (this.canExecute == null)
+            if (canExecute == null)
             {
                 return true;
             }
-            return this.canExecute(parameter);
+            return canExecute(parameter);
         }
 
         public void Execute(object parameter)
         {
-            this.action(parameter);
+            action(parameter);
         }
 
         public event EventHandler CanExecuteChanged;

@@ -15,16 +15,16 @@
             this.command = command;
         }
 
-        public List<string> ArgumentsAsList { get => this.command.ArgumentsAsList; }
+        public List<string> ArgumentsAsList { get => command.ArgumentsAsList; }
 
-        public string ArgumentsAsString { get => this.command.ArgumentsAsString; }
+        public string ArgumentsAsString { get => command.ArgumentsAsString; }
 
-        public IChatMessage ChatMessage { get => new ChatMessageWrapper(this.command.ChatMessage); }
+        public IChatMessage ChatMessage { get => new ChatMessageWrapper(command.ChatMessage); }
 
-        public string CommandText { get => this.command.CommandText; }
+        public string CommandText { get => command.CommandText; }
 
-        public bool IsBroadcaster { get => this.command.ChatMessage.IsBroadcaster; }
+        public bool IsBroadcaster { get => command.ChatMessage.IsBroadcaster; }
 
-        public bool IsModerator { get => this.command.ChatMessage.IsModerator; }
+        public bool IsModerator { get => command.ChatMessage.IsModerator; }
     }
 }

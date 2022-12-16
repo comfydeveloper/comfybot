@@ -10,15 +10,15 @@
 
         public override string ToString()
         {
-            if (!string.IsNullOrEmpty(this.Region))
+            if (!string.IsNullOrEmpty(Region))
             {
-                return $"{Area}/{Location}/{this.Region}";
+                return $"{Area}/{Location}/{Region}";
             }
-            if (!string.IsNullOrEmpty(this.Location))
+            if (!string.IsNullOrEmpty(Location))
             {
                 return $"{Area}/{Location}";
             }
-            return this.Area;
+            return Area;
         }
     }
 }

@@ -8,11 +8,11 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Data;
-    using ComfyBot.Application.Shared;
-    using ComfyBot.Application.Shared.Contracts;
-    using ComfyBot.Application.Shared.Extensions;
-    using ComfyBot.Data.Models;
-    using ComfyBot.Data.Repositories;
+    using Shared;
+    using Shared.Contracts;
+    using Shared.Extensions;
+    using Data.Models;
+    using Data.Repositories;
 
     public class TextCommandsTabViewModel : InitializableTab
     {
@@ -26,8 +26,8 @@
             this.repository = repository;
             this.mapper = mapper;
 
-            this.AddTextCommandCommand = new DelegateCommand(this.AddTextCommand);
-            this.RemoveTextCommandCommand = new ParameterCommand(this.RemoveTextCommand);
+            AddTextCommandCommand = new DelegateCommand(AddTextCommand);
+            RemoveTextCommandCommand = new ParameterCommand(RemoveTextCommand);
         }
 
         public DelegateCommand AddTextCommandCommand { get; }
@@ -38,21 +38,21 @@
 
         protected override void Initialize()
         {
-            IEnumerable<TextCommand> textCommands = this.repository.GetAll().OrderBy(c => c.Commands.OrderBy(text => text).FirstOrDefault());
+            IEnumerable<TextCommand> textCommands = repository.GetAll().OrderBy(c => c.Commands.OrderBy(text => text).FirstOrDefault());
 
             foreach (TextCommand entity in textCommands)
             {
                 TextCommandModel model = new TextCommandModel();
-                this.mapper.MapToModel(entity, model);
-                this.Commands.Add(model);
+                mapper.MapToModel(entity, model);
+                Commands.Add(model);
             }
 
-            this.Commands.RegisterCollectionItemChanged(this.OnResponseUpdate);
+            Commands.RegisterCollectionItemChanged(OnResponseUpdate);
         }
 
         private void AddTextCommand()
         {
-            this.Commands.Add(new TextCommandModel { Id = Guid.NewGuid().ToString() });
+            Commands.Add(new TextCommandModel { Id = Guid.NewGuid().ToString() });
         }
 
         private void RemoveTextCommand(object parameter)
@@ -63,8 +63,8 @@
                                "Delete command",
                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                this.Commands.Remove(model);
-                this.repository.Remove(model.Id);
+                Commands.Remove(model);
+                repository.Remove(model.Id);
             }
         }
 
@@ -81,24 +81,24 @@
         {
             TextCommandModel model = (TextCommandModel)sender;
             TextCommand entity = new TextCommand();
-            this.mapper.MapToEntity(model, entity);
+            mapper.MapToEntity(model, entity);
 
-            this.repository.AddOrUpdate(entity);
+            repository.AddOrUpdate(entity);
         }
 
         [ExcludeFromCodeCoverage]
         public string SearchText
         {
-            get => this.searchText;
-            set { this.searchText = value; this.UpdateSearch(); }
+            get => searchText;
+            set { searchText = value; UpdateSearch(); }
         }
 
         [ExcludeFromCodeCoverage]
         private void UpdateSearch()
         {
-            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Commands);
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(Commands);
 
-            if (string.IsNullOrEmpty(this.SearchText))
+            if (string.IsNullOrEmpty(SearchText))
             {
                 collectionView.Filter = o => true;
             }
@@ -108,8 +108,8 @@
                 {
                     TextCommandModel response = (TextCommandModel)o;
 
-                    return response.Commands.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
-                           || response.Replies.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase));
+                    return response.Commands.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                           || response.Replies.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase));
                 };
             }
 

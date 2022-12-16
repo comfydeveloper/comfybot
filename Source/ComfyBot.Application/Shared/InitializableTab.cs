@@ -7,14 +7,14 @@
 
         public bool IsSelected
         {
-            get { return this.isSelected; }
+            get { return isSelected; }
             set
             {
-                this.isSelected = value;
-                if (!this.isInitialized && value)
+                isSelected = value;
+                if (!isInitialized && value)
                 {
-                    this.isInitialized = true;
-                    this.Initialize();
+                    isInitialized = true;
+                    Initialize();
                 }
             }
         }

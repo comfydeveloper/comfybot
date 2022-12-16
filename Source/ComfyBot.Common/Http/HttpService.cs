@@ -5,7 +5,7 @@
     using System.Text.Json;
     using System.Threading.Tasks;
 
-    using ComfyBot.Common.Idioms;
+    using Idioms;
 
     [ExcludeFromCodeCoverage]
     public class HttpService : Singleton<IHttpService, HttpService>, IHttpService
@@ -14,12 +14,12 @@
 
         public HttpService()
         {
-            this.httpClient = new HttpClient();
+            httpClient = new HttpClient();
         }
 
         public async Task<T> GetAsync<T>(string url)
         {
-            string result = await this.httpClient.GetAsync(url).Result.Content.ReadAsStringAsync();
+            string result = await httpClient.GetAsync(url).Result.Content.ReadAsStringAsync();
 
             return JsonSerializer.Deserialize<T>(result);
         }

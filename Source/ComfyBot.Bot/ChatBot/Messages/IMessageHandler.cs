@@ -1,6 +1,6 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Messages
 {
-    using ComfyBot.Bot.ChatBot.Wrappers;
+    using Wrappers;
 
     using TwitchLib.Client.Interfaces;
 

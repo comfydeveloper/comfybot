@@ -4,8 +4,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
 
-    using ComfyBot.Data.Wrappers;
-    using ComfyBot.Settings;
+    using Wrappers;
+    using Settings;
 
     using LiteDB;
 

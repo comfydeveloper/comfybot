@@ -1,7 +1,7 @@
 ﻿namespace ComfyBot.Bot.ChatBot.Messages
 {
-    using ComfyBot.Bot.ChatBot.Wrappers;
-    using ComfyBot.Data.Models;
+    using Wrappers;
+    using Data.Models;
 
     public interface IMessageResponseLoader
     {

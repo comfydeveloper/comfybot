@@ -16,12 +16,12 @@
 
         public ILiteCollection<T> GetCollection<T>(string name)
         {
-            return this.liteDatabase.GetCollection<T>(name);
+            return liteDatabase.GetCollection<T>(name);
         }
 
         public void Dispose()
         {
-            this.liteDatabase?.Dispose();
+            liteDatabase?.Dispose();
         }
     }
 }

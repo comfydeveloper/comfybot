@@ -7,7 +7,7 @@
     {
         public MainWindowViewModel(TabsViewModel tabs)
         {
-            this.Tabs = tabs;
+            Tabs = tabs;
         }
 
         public TabsViewModel Tabs { get; }

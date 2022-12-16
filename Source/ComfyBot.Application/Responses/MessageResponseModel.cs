@@ -3,8 +3,8 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
 
-    using ComfyBot.Application.Shared;
-    using ComfyBot.Application.Shared.Extensions;
+    using Shared;
+    using Shared.Extensions;
 
     public class MessageResponseModel : NotifyingModel
     {
@@ -14,22 +14,22 @@
 
         public MessageResponseModel()
         {
-            this.AddUserCommand = new DelegateCommand(this.AddUser);
-            this.AddLooseKeywordCommand = new DelegateCommand(this.AddLooseKeyword);
-            this.AddAllKeywordCommand = new DelegateCommand(this.AddAllKeyword);
-            this.AddExactKeywordCommand = new DelegateCommand(this.AddExactKeyword);
-            this.AddReplyCommand = new DelegateCommand(this.AddReply);
-            this.RemoveUserCommand = new ParameterCommand(this.RemoveUser);
-            this.RemoveLooseKeywordCommand = new ParameterCommand(this.RemoveLooseKeyword);
-            this.RemoveAllKeywordCommand = new ParameterCommand(this.RemoveAllKeyword);
-            this.RemoveExactKeywordCommand = new ParameterCommand(this.RemoveExactKeyword);
-            this.RemoveReplyCommand = new ParameterCommand(this.RemoveReply);
+            AddUserCommand = new DelegateCommand(AddUser);
+            AddLooseKeywordCommand = new DelegateCommand(AddLooseKeyword);
+            AddAllKeywordCommand = new DelegateCommand(AddAllKeyword);
+            AddExactKeywordCommand = new DelegateCommand(AddExactKeyword);
+            AddReplyCommand = new DelegateCommand(AddReply);
+            RemoveUserCommand = new ParameterCommand(RemoveUser);
+            RemoveLooseKeywordCommand = new ParameterCommand(RemoveLooseKeyword);
+            RemoveAllKeywordCommand = new ParameterCommand(RemoveAllKeyword);
+            RemoveExactKeywordCommand = new ParameterCommand(RemoveExactKeyword);
+            RemoveReplyCommand = new ParameterCommand(RemoveReply);
 
-            this.Users.RegisterCollectionItemChanged(this.OnTextModelUpdate);
-            this.LooseKeywords.RegisterCollectionItemChanged(this.OnTextModelUpdate);
-            this.AllKeywords.RegisterCollectionItemChanged(this.OnTextModelUpdate);
-            this.ExactKeywords.RegisterCollectionItemChanged(this.OnTextModelUpdate);
-            this.Replies.RegisterCollectionItemChanged(this.OnTextModelUpdate);
+            Users.RegisterCollectionItemChanged(OnTextModelUpdate);
+            LooseKeywords.RegisterCollectionItemChanged(OnTextModelUpdate);
+            AllKeywords.RegisterCollectionItemChanged(OnTextModelUpdate);
+            ExactKeywords.RegisterCollectionItemChanged(OnTextModelUpdate);
+            Replies.RegisterCollectionItemChanged(OnTextModelUpdate);
         }
 
         public DelegateCommand AddUserCommand { get; }
@@ -66,75 +66,75 @@
 
         public int Timeout
         {
-            get => this.timeout;
-            set { this.timeout = value; this.OnPropertyChanged(); }
+            get => timeout;
+            set { timeout = value; OnPropertyChanged(); }
         }
 
         public bool ReplyAlways 
         { 
             get => replyAlways; 
-            set { replyAlways = value; this.OnPropertyChanged(); } 
+            set { replyAlways = value; OnPropertyChanged(); } 
         }
 
         public int Priority
         {
-            get => this.priority;
-            set { this.priority = value; this.OnPropertyChanged(); }
+            get => priority;
+            set { priority = value; OnPropertyChanged(); }
         }
 
         private void AddUser()
         {
-            this.Users.Add(new TextModel());
+            Users.Add(new TextModel());
         }
 
         private void AddLooseKeyword()
         {
-            this.LooseKeywords.Add(new TextModel());
+            LooseKeywords.Add(new TextModel());
         }
 
         private void AddAllKeyword()
         {
-            this.AllKeywords.Add(new TextModel());
+            AllKeywords.Add(new TextModel());
         }
 
         private void AddExactKeyword()
         {
-            this.ExactKeywords.Add(new TextModel());
+            ExactKeywords.Add(new TextModel());
         }
 
         private void AddReply()
         {
-            this.Replies.Add(new TextModel());
+            Replies.Add(new TextModel());
         }
 
         private void RemoveUser(object parameter)
         {
-            this.Users.Remove((TextModel)parameter);
-            this.OnPropertyChanged();
+            Users.Remove((TextModel)parameter);
+            OnPropertyChanged();
         }
 
         private void RemoveLooseKeyword(object parameter)
         {
-            this.LooseKeywords.Remove((TextModel)parameter);
-            this.OnPropertyChanged();
+            LooseKeywords.Remove((TextModel)parameter);
+            OnPropertyChanged();
         }
 
         private void RemoveAllKeyword(object parameter)
         {
-            this.AllKeywords.Remove((TextModel)parameter);
-            this.OnPropertyChanged();
+            AllKeywords.Remove((TextModel)parameter);
+            OnPropertyChanged();
         }
 
         private void RemoveExactKeyword(object parameter)
         {
-            this.ExactKeywords.Remove((TextModel)parameter);
-            this.OnPropertyChanged();
+            ExactKeywords.Remove((TextModel)parameter);
+            OnPropertyChanged();
         }
 
         private void RemoveReply(object parameter)
         {
-            this.Replies.Remove((TextModel)parameter);
-            this.OnPropertyChanged();
+            Replies.Remove((TextModel)parameter);
+            OnPropertyChanged();
         }
 
         private void OnTextModelUpdate(object sender, PropertyChangedEventArgs e)
@@ -145,7 +145,7 @@
             {
                 return;
             }
-            this.OnPropertyChanged();
+            OnPropertyChanged();
         }
     }
 }

@@ -16,9 +16,9 @@
         [SetUp]
         public void Setup()
         {
-            this.chattersCache = new Mock<IChattersCache>();
+            chattersCache = new Mock<IChattersCache>();
 
-            this.replacer = new WildcardReplacer(this.chattersCache.Object);
+            replacer = new WildcardReplacer(chattersCache.Object);
         }
 
         [Test]
@@ -26,7 +26,7 @@
         {
             const string Original = "[w:test2,test1] and [w:test3]";
 
-            string result = this.replacer.Replace(Original);
+            string result = replacer.Replace(Original);
 
             Assert.That(result == "test2 and test3" || result == "test1 and test3");
         }
@@ -36,7 +36,7 @@
         {
             const string Original = "[n:1-9]";
 
-            string result = this.replacer.Replace(Original);
+            string result = replacer.Replace(Original);
 
             int resultNumber = int.Parse(result);
             Assert.That(resultNumber > 0 && resultNumber < 10);
@@ -45,10 +45,10 @@
         [Test]
         public void ReplaceShouldReplaceRandomChatter()
         {
-            this.chattersCache.Setup(c => c.GetRandom()).Returns("user");
+            chattersCache.Setup(c => c.GetRandom()).Returns("user");
             const string Original = "{{chatter}}";
 
-            string result = this.replacer.Replace(Original);
+            string result = replacer.Replace(Original);
 
             Assert.AreEqual("user", result);
         }

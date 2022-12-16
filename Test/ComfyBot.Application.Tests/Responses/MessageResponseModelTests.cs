@@ -15,102 +15,102 @@
         [SetUp]
         public void Setup()
         {
-            this.model = new MessageResponseModel();
+            model = new MessageResponseModel();
         }
 
         [Test]
         public void AddReplyCommandShouldAddReply()
         {
-            this.model.AddReplyCommand.Execute();
+            model.AddReplyCommand.Execute();
 
-            Assert.AreEqual(1, this.model.Replies.Count);
+            Assert.AreEqual(1, model.Replies.Count);
         }
 
         [Test]
         public void AddLooseKeywordCommandShouldAddItem()
         {
-            this.model.AddLooseKeywordCommand.Execute();
+            model.AddLooseKeywordCommand.Execute();
 
-            Assert.AreEqual(1, this.model.LooseKeywords.Count);
+            Assert.AreEqual(1, model.LooseKeywords.Count);
         }
 
         [Test]
         public void AddExactKeywordCommandShouldAddItem()
         {
-            this.model.AddExactKeywordCommand.Execute();
+            model.AddExactKeywordCommand.Execute();
 
-            Assert.AreEqual(1, this.model.ExactKeywords.Count);
+            Assert.AreEqual(1, model.ExactKeywords.Count);
         }
 
         [Test]
         public void AddAllKeywordCommandShouldAddItem()
         {
-            this.model.AddAllKeywordCommand.Execute();
+            model.AddAllKeywordCommand.Execute();
 
-            Assert.AreEqual(1, this.model.AllKeywords.Count);
+            Assert.AreEqual(1, model.AllKeywords.Count);
         }
 
         [Test]
         public void AddUserCommandShouldAddItem()
         {
-            this.model.AddUserCommand.Execute();
+            model.AddUserCommand.Execute();
 
-            Assert.AreEqual(1, this.model.Users.Count);
+            Assert.AreEqual(1, model.Users.Count);
         }
 
         [Test]
         public void RemoveUserShouldRemoveItem()
         {
             TextModel textModel = new TextModel();
-            this.model.Users.Add(textModel);
+            model.Users.Add(textModel);
 
-            this.model.RemoveUserCommand.Execute(textModel);
+            model.RemoveUserCommand.Execute(textModel);
 
-            Assert.AreEqual(0, this.model.Users.Count);
+            Assert.AreEqual(0, model.Users.Count);
         }
 
         [Test]
         public void RemoveAllKeywordShouldRemoveItem()
         {
             TextModel textModel = new TextModel();
-            this.model.AllKeywords.Add(textModel);
+            model.AllKeywords.Add(textModel);
 
-            this.model.RemoveAllKeywordCommand.Execute(textModel);
+            model.RemoveAllKeywordCommand.Execute(textModel);
 
-            Assert.AreEqual(0, this.model.AllKeywords.Count);
+            Assert.AreEqual(0, model.AllKeywords.Count);
         }
 
         [Test]
         public void RemoveLooseKeywordShouldRemoveItem()
         {
             TextModel textModel = new TextModel();
-            this.model.LooseKeywords.Add(textModel);
+            model.LooseKeywords.Add(textModel);
 
-            this.model.RemoveLooseKeywordCommand.Execute(textModel);
+            model.RemoveLooseKeywordCommand.Execute(textModel);
 
-            Assert.AreEqual(0, this.model.LooseKeywords.Count);
+            Assert.AreEqual(0, model.LooseKeywords.Count);
         }
 
         [Test]
         public void RemoveExactKeywordShouldRemoveItem()
         {
             TextModel textModel = new TextModel();
-            this.model.ExactKeywords.Add(textModel);
+            model.ExactKeywords.Add(textModel);
 
-            this.model.RemoveExactKeywordCommand.Execute(textModel);
+            model.RemoveExactKeywordCommand.Execute(textModel);
 
-            Assert.AreEqual(0, this.model.ExactKeywords.Count);
+            Assert.AreEqual(0, model.ExactKeywords.Count);
         }
 
         [Test]
         public void RemoveReplyShouldRemoveItem()
         {
             TextModel textModel = new TextModel();
-            this.model.Replies.Add(textModel);
+            model.Replies.Add(textModel);
 
-            this.model.RemoveReplyCommand.Execute(textModel);
+            model.RemoveReplyCommand.Execute(textModel);
 
-            Assert.AreEqual(0, this.model.Replies.Count);
+            Assert.AreEqual(0, model.Replies.Count);
         }
 
         [TestCase(null, false)]
@@ -123,9 +123,9 @@
             {
                 result = true;
             }
-            this.model.PropertyChanged += TestMethod;
+            model.PropertyChanged += TestMethod;
             TextModel textModel = new TextModel();
-            this.model.Users.Add(textModel);
+            model.Users.Add(textModel);
 
             textModel.Text = text;
 
@@ -136,9 +136,9 @@
         [TestCase(2)]
         public void TimeoutSetterShouldSetValue(int timeout)
         {
-            this.model.Timeout = timeout;
+            model.Timeout = timeout;
 
-            Assert.AreEqual(timeout, this.model.Timeout);
+            Assert.AreEqual(timeout, model.Timeout);
         }
 
         [Test]
@@ -149,9 +149,9 @@
             {
                 result = true;
             }
-            this.model.PropertyChanged += TestMethod;
+            model.PropertyChanged += TestMethod;
 
-            this.model.Timeout = 1;
+            model.Timeout = 1;
 
             Assert.IsTrue(result);
         }
@@ -160,9 +160,9 @@
         [TestCase(2)]
         public void PrioritySetterShouldSetValue(int priority)
         {
-            this.model.Priority = priority;
+            model.Priority = priority;
 
-            Assert.AreEqual(priority, this.model.Priority);
+            Assert.AreEqual(priority, model.Priority);
         }
 
         [Test]
@@ -173,9 +173,9 @@
             {
                 result = true;
             }
-            this.model.PropertyChanged += TestMethod;
+            model.PropertyChanged += TestMethod;
 
-            this.model.Timeout = 1;
+            model.Timeout = 1;
 
             Assert.IsTrue(result);
         }

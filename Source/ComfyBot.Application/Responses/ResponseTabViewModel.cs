@@ -8,11 +8,11 @@
     using System.Linq;
     using System.Windows.Data;
 
-    using ComfyBot.Application.Shared;
-    using ComfyBot.Application.Shared.Contracts;
-    using ComfyBot.Application.Shared.Extensions;
-    using ComfyBot.Data.Models;
-    using ComfyBot.Data.Repositories;
+    using Shared;
+    using Shared.Contracts;
+    using Shared.Extensions;
+    using Data.Models;
+    using Data.Repositories;
 
     public class ResponseTabViewModel : InitializableTab
     {
@@ -26,8 +26,8 @@
             this.repository = repository;
             this.mapper = mapper;
 
-            this.AddResponseCommand = new DelegateCommand(this.AddResponse);
-            this.RemoveResponseCommand = new ParameterCommand(this.RemoveResponse);
+            AddResponseCommand = new DelegateCommand(AddResponse);
+            RemoveResponseCommand = new ParameterCommand(RemoveResponse);
         }
 
         public DelegateCommand AddResponseCommand { get; }
@@ -38,30 +38,30 @@
 
         protected override void Initialize()
         {
-            IEnumerable<MessageResponse> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
+            IEnumerable<MessageResponse> messageResponses = repository.GetAll().OrderBy(r => r.Priority);
 
             foreach (MessageResponse entity in messageResponses)
             {
                 MessageResponseModel model = new MessageResponseModel();
-                this.mapper.MapToModel(entity, model);
-                this.Responses.Add(model);
+                mapper.MapToModel(entity, model);
+                Responses.Add(model);
             }
 
-            this.Responses.RegisterCollectionItemChanged(this.OnResponseUpdate);
+            Responses.RegisterCollectionItemChanged(OnResponseUpdate);
         }
 
         private void AddResponse()
         {
             MessageResponseModel messageResponse = new MessageResponseModel { Id = Guid.NewGuid().ToString() };
-            this.Responses.Add(messageResponse);
+            Responses.Add(messageResponse);
         }
 
         private void RemoveResponse(object parameter)
         {
             MessageResponseModel response = (MessageResponseModel) parameter;
 
-            this.Responses.Remove(response);
-            this.repository.Remove(response.Id);
+            Responses.Remove(response);
+            repository.Remove(response.Id);
         }
 
         private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
@@ -69,23 +69,23 @@
             MessageResponseModel model = (MessageResponseModel)sender;
             MessageResponse entity = new MessageResponse();
 
-            this.mapper.MapToEntity(model, entity);
-            this.repository.AddOrUpdate(entity);
+            mapper.MapToEntity(model, entity);
+            repository.AddOrUpdate(entity);
         }
 
         [ExcludeFromCodeCoverage]
         public string SearchText
         {
-            get => this.searchText;
-            set { this.searchText = value; this.UpdateSearch(); }
+            get => searchText;
+            set { searchText = value; UpdateSearch(); }
         }
 
         [ExcludeFromCodeCoverage]
         private void UpdateSearch()
         {
-            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Responses);
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(Responses);
 
-            if (string.IsNullOrEmpty(this.SearchText))
+            if (string.IsNullOrEmpty(SearchText))
             {
                 collectionView.Filter = o => true;
             }
@@ -95,10 +95,10 @@
                                         {
                                             MessageResponseModel response = (MessageResponseModel) o;
 
-                                            return response.Replies.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
-                                                   || response.AllKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
-                                                   || response.ExactKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
-                                                   || response.LooseKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase));
+                                            return response.Replies.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                                                   || response.AllKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                                                   || response.ExactKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                                                   || response.LooseKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase));
                                         };
             }
 

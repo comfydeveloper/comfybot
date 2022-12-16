@@ -22,7 +22,7 @@
         {
             foreach (string user in users)
             {
-                this.Add(user);
+                Add(user);
             }
         }
 

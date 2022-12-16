@@ -23,12 +23,12 @@
 
         public override void Write(char value)
         {
-            this.textbox.Dispatcher.Invoke(new UpdateTextCallback(this.UpdateText), new[] { value });
+            textbox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
         }
 
         public override void Write(string value)
         {
-            this.textbox.Dispatcher.Invoke(new UpdateTextCallback(this.UpdateText), new[] { value });
+            textbox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
         }
 
         public override Encoding Encoding
@@ -38,14 +38,14 @@
 
         private void UpdateText(string message)
         {
-            this.lastOutput.Add(message);
+            lastOutput.Add(message);
 
-            if (this.lastOutput.Count > 100)
+            if (lastOutput.Count > 100)
             {
-                this.lastOutput.RemoveAt(0);
+                lastOutput.RemoveAt(0);
             }
 
-            textbox.Text = string.Join(System.Environment.NewLine, this.lastOutput.Reverse<string>());
+            textbox.Text = string.Join(System.Environment.NewLine, lastOutput.Reverse<string>());
         }
     }
 }

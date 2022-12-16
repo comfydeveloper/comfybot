@@ -4,7 +4,7 @@
 
     using ComfyBot.Application.Shared;
     using ComfyBot.Application.TextCommands;
-    using ComfyBot.Data.Models;
+    using Data.Models;
 
     using NUnit.Framework;
 
@@ -19,102 +19,102 @@
         [SetUp]
         public void Setup()
         {
-            this.entity = new TextCommand();
-            this.model = new TextCommandModel();
+            entity = new TextCommand();
+            model = new TextCommandModel();
 
-            this.mapper = new TextCommandMapper();
+            mapper = new TextCommandMapper();
         }
 
         [TestCase("00000000-0000-0000-0000-000000000000")]
         [TestCase("00000000-0000-0000-0000-000000000001")]
         public void MapToEntityShouldMapId(string id)
         {
-            this.model.Id = id;
+            model.Id = id;
 
-            this.mapper.MapToEntity(this.model, this.entity);
+            mapper.MapToEntity(model, entity);
 
-            Assert.AreEqual(id, this.entity.Id);
+            Assert.AreEqual(id, entity.Id);
         }
 
         [TestCase(1)]
         [TestCase(2)]
         public void MapToEntityShouldMapTimeout(int timeout)
         {
-            this.model.Timeout = timeout;
+            model.Timeout = timeout;
 
-            this.mapper.MapToEntity(this.model, this.entity);
+            mapper.MapToEntity(model, entity);
 
-            Assert.AreEqual(timeout, this.entity.TimeoutInSeconds);
+            Assert.AreEqual(timeout, entity.TimeoutInSeconds);
         }
 
         [TestCase("reply1")]
         [TestCase("reply2")]
         public void MapToEntityShouldMapReplies(string reply)
         {
-            this.model.Replies.Add(new TextModel { Text = reply });
+            model.Replies.Add(new TextModel { Text = reply });
 
-            this.mapper.MapToEntity(this.model, this.entity);
+            mapper.MapToEntity(model, entity);
 
-            Assert.AreEqual(1, this.entity.Replies.Count);
-            Assert.AreEqual(reply, this.entity.Replies.First());
+            Assert.AreEqual(1, entity.Replies.Count);
+            Assert.AreEqual(reply, entity.Replies.First());
         }
 
         [TestCase("reply1")]
         [TestCase("reply2")]
         public void MapToEntityShouldMapCommands(string reply)
         {
-            this.model.Commands.Add(new TextModel { Text = reply });
+            model.Commands.Add(new TextModel { Text = reply });
 
-            this.mapper.MapToEntity(this.model, this.entity);
+            mapper.MapToEntity(model, entity);
 
-            Assert.AreEqual(1, this.entity.Commands.Count);
-            Assert.AreEqual(reply, this.entity.Commands.First());
+            Assert.AreEqual(1, entity.Commands.Count);
+            Assert.AreEqual(reply, entity.Commands.First());
         }
 
         [TestCase("00000000-0000-0000-0000-000000000000")]
         [TestCase("00000000-0000-0000-0000-000000000001")]
         public void MapToModelShouldMapId(string id)
         {
-            this.entity.Id = id;
+            entity.Id = id;
 
-            this.mapper.MapToModel(this.entity, this.model);
+            mapper.MapToModel(entity, model);
 
-            Assert.AreEqual(id, this.model.Id);
+            Assert.AreEqual(id, model.Id);
         }
 
         [TestCase(1)]
         [TestCase(2)]
         public void MapToModelShouldMapTimeout(int timeout)
         {
-            this.entity.TimeoutInSeconds = timeout;
+            entity.TimeoutInSeconds = timeout;
 
-            this.mapper.MapToModel(this.entity, this.model);
+            mapper.MapToModel(entity, model);
 
-            Assert.AreEqual(timeout, this.model.Timeout);
+            Assert.AreEqual(timeout, model.Timeout);
         }
 
         [TestCase("reply1")]
         [TestCase("reply2")]
         public void MapToModelShouldMapReplies(string reply)
         {
-            this.entity.Replies.Add(reply);
+            entity.Replies.Add(reply);
 
-            this.mapper.MapToModel(this.entity, this.model);
+            mapper.MapToModel(entity, model);
 
-            Assert.AreEqual(1, this.model.Replies.Count);
-            Assert.AreEqual(reply, this.model.Replies.First().Text);
+            Assert.AreEqual(1, model.Replies.Count);
+            Assert.AreEqual(reply, model.Replies.First().Text);
         }
 
         [Test]
         public void MapToModelShouldOrderReplies()
         {
-            this.entity.Replies.Add("B");
-            this.entity.Replies.Add("C");
-            this.entity.Replies.Add("A");
+            entity.Replies.Add("B");
+            entity.Replies.Add("C");
+            entity.Replies.Add("A");
 
-            this.mapper.MapToModel(this.entity, this.model);
+            mapper.MapToModel(entity, model);
 
-            string[] replies = this.model.Replies.Select(r => r.Text).ToArray();
+            string[] replies = model.Replies.Select(r => r.Text).ToArray();
             Assert.AreEqual("A", replies[0]);
             Assert.AreEqual("B", replies[1]);
             Assert.AreEqual("C", replies[2]);
@@ -123,13 +123,13 @@
         [Test]
         public void MapToModelShouldOrderCommands()
         {
-            this.entity.Commands.Add("B");
-            this.entity.Commands.Add("C");
-            this.entity.Commands.Add("A");
+            entity.Commands.Add("B");
+            entity.Commands.Add("C");
+            entity.Commands.Add("A");
 
-            this.mapper.MapToModel(this.entity, this.model);
+            mapper.MapToModel(entity, model);
 
-            string[] commands = this.model.Commands.Select(r => r.Text).ToArray();
+            string[] commands = model.Commands.Select(r => r.Text).ToArray();
             Assert.AreEqual("A", commands[0]);
             Assert.AreEqual("B", commands[1]);
             Assert.AreEqual("C", commands[2]);
@@ -139,12 +139,12 @@
         [TestCase("reply2")]
         public void MapToModelShouldMapCommands(string reply)
         {
-            this.entity.Commands.Add(reply);
+            entity.Commands.Add(reply);
 
-            this.mapper.MapToModel(this.entity, this.model);
+            mapper.MapToModel(entity, model);
 
-            Assert.AreEqual(1, this.model.Commands.Count);
-            Assert.AreEqual(reply, this.model.Commands.First().Text);
+            Assert.AreEqual(1, model.Commands.Count);
+            Assert.AreEqual(reply, model.Commands.First().Text);
         }
     }
 }

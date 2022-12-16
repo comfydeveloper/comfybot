@@ -15,29 +15,29 @@
         [SetUp]
         public void Setup()
         {
-            this.cache = new CurrentChattersCache();
+            cache = new CurrentChattersCache();
         }
 
         [TestCase("user1")]
         [TestCase("user2")]
         public void AddShouldAddUser(string user)
         {
-            this.cache.Add(user);
+            cache.Add(user);
 
-            List<Chatter> result = this.cache.GetAll().ToList();
+            List<Chatter> result = cache.GetAll().ToList();
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(user, result.First().Name);
-            this.cache.Remove(user);
+            cache.Remove(user);
         }
 
         [Test]
         public void RemoveShouldRemoveUser()
         {
-            this.cache.Add("user");
-            this.cache.Remove("user");
+            cache.Add("user");
+            cache.Remove("user");
 
-            List<Chatter> result = this.cache.GetAll().ToList();
+            List<Chatter> result = cache.GetAll().ToList();
 
             Assert.AreEqual(0, result.Count);
         }
@@ -45,7 +45,7 @@
         [Test]
         public void RandomShouldReturnEmptyStringWhenNoElementInCache()
         {
-            string result = this.cache.GetRandom();
+            string result = cache.GetRandom();
 
             Assert.AreEqual(string.Empty, result);
         }
@@ -53,23 +53,23 @@
         [Test]
         public void RandomShouldReturnRandomElementFromCache()
         {
-            this.cache.Add("user");
+            cache.Add("user");
 
-            string result = this.cache.GetRandom();
+            string result = cache.GetRandom();
 
             Assert.AreEqual(result, "user");
-            this.cache.Remove("user");
+            cache.Remove("user");
         }
 
         [Test]
         public void AddRangeShouldAddMultipleUsers()
         {
-            this.cache.AddRange(new[] { "user1", "user2" });
+            cache.AddRange(new[] { "user1", "user2" });
 
-            List<Chatter> result = this.cache.GetAll().ToList();
+            List<Chatter> result = cache.GetAll().ToList();
             Assert.AreEqual(2, result.Count);
-            this.cache.Remove("user1");
-            this.cache.Remove("user2");
+            cache.Remove("user1");
+            cache.Remove("user2");
         }
     }
 }

@@ -6,12 +6,12 @@
     using System.Linq;
     using System.Reflection;
 
-    using ComfyBot.Bot.ChatBot;
-    using ComfyBot.Bot.ChatBot.Commands;
-    using ComfyBot.Bot.PubSub;
-    using ComfyBot.Common.Http;
-    using ComfyBot.Common.Initialization;
-    using ComfyBot.Data.Database;
+    using Bot.ChatBot;
+    using Bot.ChatBot.Commands;
+    using Bot.PubSub;
+    using Common.Http;
+    using Common.Initialization;
+    using Data.Database;
 
     using Microsoft.Extensions.DependencyInjection;
 

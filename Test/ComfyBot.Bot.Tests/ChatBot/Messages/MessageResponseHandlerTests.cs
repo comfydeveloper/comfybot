@@ -2,9 +2,9 @@
 {
     using ComfyBot.Bot.ChatBot.Messages;
     using ComfyBot.Bot.ChatBot.Wrappers;
-    using ComfyBot.Data.Models;
-    using ComfyBot.Data.Repositories;
-    using ComfyBot.Settings;
+    using Data.Models;
+    using Data.Repositories;
+    using Settings;
 
     using Moq;
 
@@ -25,12 +25,12 @@
         [SetUp]
         public void Setup()
         {
-            this.repository = new Mock<IRepository<MessageResponse>>();
-            this.twitchClient = new Mock<ITwitchClient>();
-            this.responseLoader = new Mock<IMessageResponseLoader>();
-            this.chatMessage = new Mock<IChatMessage>();
+            repository = new Mock<IRepository<MessageResponse>>();
+            twitchClient = new Mock<ITwitchClient>();
+            responseLoader = new Mock<IMessageResponseLoader>();
+            chatMessage = new Mock<IChatMessage>();
 
-            this.handler = new MessageResponseHandler(this.repository.Object, this.responseLoader.Object);
+            handler = new MessageResponseHandler(repository.Object, responseLoader.Object);
         }
 
         [TestCase("channel1", "response1")]
@@ -40,16 +40,16 @@
             ApplicationSettings.Default.Channel = channel;
             MessageResponse messageResponse1 = new MessageResponse();
             MessageResponse messageResponse2 = new MessageResponse();
-            this.chatMessage.Setup(m => m.Text).Returns("message");
-            this.repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2, messageResponse2 });
-            this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response)).Returns(false);
-            this.responseLoader.Setup(r => r.TryGetResponse(messageResponse2, this.chatMessage.Object, out response)).Returns(true);
+            chatMessage.Setup(m => m.Text).Returns("message");
+            repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2, messageResponse2 });
+            responseLoader.Setup(r => r.TryGetResponse(messageResponse1, chatMessage.Object, out response)).Returns(false);
+            responseLoader.Setup(r => r.TryGetResponse(messageResponse2, chatMessage.Object, out response)).Returns(true);
 
-            this.handler.Handle(this.twitchClient.Object, this.chatMessage.Object);
+            handler.Handle(twitchClient.Object, chatMessage.Object);
 
-            this.responseLoader.Verify(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response));
-            this.responseLoader.Verify(r => r.TryGetResponse(messageResponse2, this.chatMessage.Object, out response));
-            this.twitchClient.Verify(c => c.SendMessage(channel, response, false), Times.Once);
+            responseLoader.Verify(r => r.TryGetResponse(messageResponse1, chatMessage.Object, out response));
+            responseLoader.Verify(r => r.TryGetResponse(messageResponse2, chatMessage.Object, out response));
+            twitchClient.Verify(c => c.SendMessage(channel, response, false), Times.Once);
         }
 
         [Test]
@@ -60,14 +60,14 @@
             ApplicationSettings.Default.Channel = "channel";
             MessageResponse messageResponse1 = new MessageResponse { Priority = 2 };
             MessageResponse messageResponse2 = new MessageResponse { Priority = 1 };
-            this.chatMessage.Setup(m => m.Text).Returns("message");
-            this.repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2 });
-            this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response1)).Returns(true);
-            this.responseLoader.Setup(r => r.TryGetResponse(messageResponse2, this.chatMessage.Object, out response2)).Returns(true);
+            chatMessage.Setup(m => m.Text).Returns("message");
+            repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2 });
+            responseLoader.Setup(r => r.TryGetResponse(messageResponse1, chatMessage.Object, out response1)).Returns(true);
+            responseLoader.Setup(r => r.TryGetResponse(messageResponse2, chatMessage.Object, out response2)).Returns(true);
 
-            this.handler.Handle(this.twitchClient.Object, this.chatMessage.Object);
+            handler.Handle(twitchClient.Object, chatMessage.Object);
 
-            this.twitchClient.Verify(c => c.SendMessage("channel", response2, false), Times.Once);
+            twitchClient.Verify(c => c.SendMessage("channel", response2, false), Times.Once);
         }
 
         [TestCase("!")]
@@ -75,11 +75,11 @@
         [TestCase("! test")]
         public void HandleShouldNotSendResponseWhenMessageIsCommand(string commandMessage)
         {
-            this.chatMessage.Setup(m => m.Text).Returns(commandMessage);
+            chatMessage.Setup(m => m.Text).Returns(commandMessage);
 
-            this.handler.Handle(this.twitchClient.Object, this.chatMessage.Object);
+            handler.Handle(twitchClient.Object, chatMessage.Object);
 
-            this.repository.Verify(r => r.GetAll(), Times.Never);
+            repository.Verify(r => r.GetAll(), Times.Never);
         }
     }
 }

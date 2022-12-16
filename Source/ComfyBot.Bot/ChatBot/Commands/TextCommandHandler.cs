@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
 
-    using ComfyBot.Bot.ChatBot.Wrappers;
-    using ComfyBot.Data.Models;
-    using ComfyBot.Data.Repositories;
+    using Wrappers;
+    using Data.Models;
+    using Data.Repositories;
 
     using TwitchLib.Client.Interfaces;
 
@@ -26,11 +26,11 @@
 
         protected override void HandleInternal(ITwitchClient client, IChatCommand command)
         {
-            IEnumerable<TextCommand> textCommands = this.repository.GetAll();
+            IEnumerable<TextCommand> textCommands = repository.GetAll();
 
             foreach (TextCommand textCommand in textCommands)
             {
-                if (this.replyLoader.TryGetReply(textCommand, command, out string reply))
+                if (replyLoader.TryGetReply(textCommand, command, out string reply))
                 {
                     SendMessage(client, reply);
                     return;

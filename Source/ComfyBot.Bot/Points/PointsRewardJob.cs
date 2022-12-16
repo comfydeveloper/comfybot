@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Timers;
 
-    using ComfyBot.Bot.ChatBot.Chatters;
+    using ChatBot.Chatters;
     using ComfyBot.Common.Initialization;
 
     public class PointsRewardJob : IInitializerJob, ICompletableJob
@@ -26,7 +26,7 @@
 
         private void OnElapsedTime(object sender, ElapsedEventArgs e)
         {
-            IEnumerable<Chatter> enumerable = this.chattersCache.GetAll();
+            IEnumerable<Chatter> enumerable = chattersCache.GetAll();
 
             //TODO write points to DB
             //TODO add bonus for everyone who was active 
@@ -34,7 +34,7 @@
 
         public void Complete()
         {
-            timer.Elapsed -= this.OnElapsedTime;
+            timer.Elapsed -= OnElapsedTime;
             timer.Stop();
             timer.Dispose();
         }

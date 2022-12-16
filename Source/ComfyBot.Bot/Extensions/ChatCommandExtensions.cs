@@ -1,6 +1,6 @@
 ﻿namespace ComfyBot.Bot.Extensions
 {
-    using ComfyBot.Bot.ChatBot.Wrappers;
+    using ChatBot.Wrappers;
 
     public static class ChatCommandExtensions
     {

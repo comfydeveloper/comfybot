@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
 
-    using ComfyBot.Application.Annotations;
+    using Annotations;
     using ComfyBot.Application.Shared;
     using ComfyBot.Application.Shared.Extensions;
 
@@ -84,12 +84,12 @@
             [NotifyPropertyChangedInvocator]
             protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             {
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
 
             public void Test()
             {
-                this.OnPropertyChanged();
+                OnPropertyChanged();
             }
         }
     }

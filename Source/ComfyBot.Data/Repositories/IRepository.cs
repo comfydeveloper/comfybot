@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq.Expressions;
 
-    using ComfyBot.Data.Models;
+    using Models;
 
     public interface IRepository<T> where T : Entity
     {

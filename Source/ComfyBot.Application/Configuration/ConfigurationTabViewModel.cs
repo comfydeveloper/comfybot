@@ -3,8 +3,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Windows.Controls;
 
-    using ComfyBot.Application.Shared;
-    using ComfyBot.Settings;
+    using Shared;
+    using Settings;
 
     //TODO [comfy] Uncovered because application.tests project would simply not want to use the System.Configuration.ConfigurationManager.
     [ExcludeFromCodeCoverage]
@@ -20,11 +20,11 @@
 
         public ConfigurationTabViewModel()
         {
-            this.UpdateConfigurationCommand = new ParameterCommand(this.UpdateConfiguration);
-            this.UserName = ApplicationSettings.Default.User;
-            this.Channel = ApplicationSettings.Default.Channel;
-            this.DatabasePath = ApplicationSettings.Default.DatabasePath;
-            this.ChannelId = ApplicationSettings.Default.ChannelId;
+            UpdateConfigurationCommand = new ParameterCommand(UpdateConfiguration);
+            UserName = ApplicationSettings.Default.User;
+            Channel = ApplicationSettings.Default.Channel;
+            DatabasePath = ApplicationSettings.Default.DatabasePath;
+            ChannelId = ApplicationSettings.Default.ChannelId;
         }
 
         public ParameterCommand UpdateConfigurationCommand { get; }
@@ -33,11 +33,11 @@
 
         private void UpdateConfiguration(object parameter)
         {
-            ApplicationSettings.Default.ChannelId = this.ChannelId;
+            ApplicationSettings.Default.ChannelId = ChannelId;
             ApplicationSettings.Default.AuthKey = ((PasswordBox)parameter).Password;
-            ApplicationSettings.Default.User = this.UserName;
-            ApplicationSettings.Default.Channel = this.Channel;
-            ApplicationSettings.Default.DatabasePath = this.DatabasePath;
+            ApplicationSettings.Default.User = UserName;
+            ApplicationSettings.Default.Channel = Channel;
+            ApplicationSettings.Default.DatabasePath = DatabasePath;
             ApplicationSettings.Default.Save();
         }
     }

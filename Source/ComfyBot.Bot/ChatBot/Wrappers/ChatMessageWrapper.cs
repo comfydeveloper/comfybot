@@ -14,12 +14,12 @@
             this.message = message;
         }
 
-        public bool IsBroadcaster { get => this.message.IsBroadcaster; }
+        public bool IsBroadcaster { get => message.IsBroadcaster; }
 
-        public bool IsModerator { get => this.message.IsModerator; }
+        public bool IsModerator { get => message.IsModerator; }
 
-        public string UserName { get => this.message.Username; }
+        public string UserName { get => message.Username; }
 
-        public string Text { get => this.message.Message; }
+        public string Text { get => message.Message; }
     }
 }

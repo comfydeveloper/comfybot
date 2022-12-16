@@ -4,8 +4,8 @@
     using ComfyBot.Bot.ChatBot.Chatters;
     using ComfyBot.Bot.ChatBot.Commands;
     using ComfyBot.Bot.ChatBot.Messages;
-    using ComfyBot.Bot.Initialization;
-    using ComfyBot.Settings;
+    using Initialization;
+    using Settings;
 
     using Moq;
 
@@ -30,20 +30,20 @@
         [SetUp]
         public void Setup()
         {
-            this.clientFactory = new Mock<ITwitchClientFactory>();
-            this.client = new Mock<ITwitchClient>();
-            this.clientFactory.Setup(f => f.Create()).Returns(this.client.Object);
-            this.chattersCache = new Mock<IChattersCache>();
+            clientFactory = new Mock<ITwitchClientFactory>();
+            client = new Mock<ITwitchClient>();
+            clientFactory.Setup(f => f.Create()).Returns(client.Object);
+            chattersCache = new Mock<IChattersCache>();
 
-            this.commandHandler1 = new Mock<ICommandHandler>();
-            this.commandHandler2 = new Mock<ICommandHandler>();
-            ICommandHandler[] commandHandlers = { this.commandHandler1.Object, this.commandHandler2.Object };
+            commandHandler1 = new Mock<ICommandHandler>();
+            commandHandler2 = new Mock<ICommandHandler>();
+            ICommandHandler[] commandHandlers = { commandHandler1.Object, commandHandler2.Object };
 
-            this.messageHandler1 = new Mock<IMessageHandler>();
-            this.messageHandler2 = new Mock<IMessageHandler>();
-            IMessageHandler[] messageHandlers = { this.messageHandler1.Object, this.messageHandler2.Object };
+            messageHandler1 = new Mock<IMessageHandler>();
+            messageHandler2 = new Mock<IMessageHandler>();
+            IMessageHandler[] messageHandlers = { messageHandler1.Object, messageHandler2.Object };
 
-            this.chatBot = new ChatBot(this.clientFactory.Object, commandHandlers, messageHandlers, this.chattersCache.Object);
+            chatBot = new ChatBot(clientFactory.Object, commandHandlers, messageHandlers, chattersCache.Object);
         }
 
         [TestCase("user1", "password1", "channel1")]
@@ -54,10 +54,10 @@
             ApplicationSettings.Default.AuthKey = password;
             ApplicationSettings.Default.Channel = channel;
 
-            this.chatBot.Run();
+            chatBot.Run();
 
-            this.clientFactory.Verify(f => f.Create());
-            this.client.Verify(c => c.Connect());
+            clientFactory.Verify(f => f.Create());
+            client.Verify(c => c.Connect());
         }
 
         [Test]
@@ -67,9 +67,9 @@
             ApplicationSettings.Default.AuthKey = string.Empty;
             ApplicationSettings.Default.User = string.Empty;
 
-            this.chatBot.Run();
+            chatBot.Run();
 
-            this.clientFactory.Verify(f => f.Create(), Times.Never);
+            clientFactory.Verify(f => f.Create(), Times.Never);
         }
     }
 }

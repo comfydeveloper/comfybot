@@ -6,8 +6,8 @@
 
         public string Text
         {
-            get => this.text;
-            set { this.text = value; this.OnPropertyChanged(); }
+            get => text;
+            set { text = value; OnPropertyChanged(); }
         }
     }
 }

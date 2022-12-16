@@ -3,8 +3,8 @@
     using System;
     using System.Text.RegularExpressions;
 
-    using ComfyBot.Bot.ChatBot.Chatters;
-    using ComfyBot.Bot.Extensions;
+    using Chatters;
+    using Extensions;
 
     public class WildcardReplacer : IWildcardReplacer
     {
@@ -67,7 +67,7 @@
 
             foreach (Match match in matches)
             {
-                string randomChatter = this.chattersCache.GetRandom();
+                string randomChatter = chattersCache.GetRandom();
 
                 original = original.ReplaceFirst($"{match.Groups[0].Value}", randomChatter);
             }

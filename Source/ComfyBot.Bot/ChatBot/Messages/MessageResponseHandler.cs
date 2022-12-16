@@ -3,10 +3,10 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using ComfyBot.Bot.ChatBot.Wrappers;
-    using ComfyBot.Data.Models;
-    using ComfyBot.Data.Repositories;
-    using ComfyBot.Settings;
+    using Wrappers;
+    using Data.Models;
+    using Data.Repositories;
+    using Settings;
 
     using TwitchLib.Client.Interfaces;
 
@@ -29,11 +29,11 @@
                 return;
             }
 
-            IEnumerable<MessageResponse> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
+            IEnumerable<MessageResponse> messageResponses = repository.GetAll().OrderBy(r => r.Priority);
 
             foreach (MessageResponse messageResponse in messageResponses)
             {
-                if (this.responseLoader.TryGetResponse(messageResponse, message, out string response))
+                if (responseLoader.TryGetResponse(messageResponse, message, out string response))
                 {
                     client.SendMessage(ApplicationSettings.Default.Channel, response);
                     return;

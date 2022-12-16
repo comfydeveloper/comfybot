@@ -4,12 +4,12 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    using ComfyBot.Bot.ChatBot.Chatters;
-    using ComfyBot.Bot.ChatBot.Commands;
-    using ComfyBot.Bot.ChatBot.Messages;
-    using ComfyBot.Bot.Extensions;
-    using ComfyBot.Bot.Initialization;
-    using ComfyBot.Settings;
+    using Chatters;
+    using Commands;
+    using Messages;
+    using Extensions;
+    using Initialization;
+    using Settings;
 
     using TwitchLib.Client.Events;
     using TwitchLib.Client.Interfaces;
@@ -36,9 +36,9 @@
 
         public void Run()
         {
-            if (this.IsBotReady())
+            if (IsBotReady())
             {
-                this.InitializeClient();
+                InitializeClient();
             }
             else
             {
@@ -56,43 +56,43 @@
 
         private void InitializeClient()
         {
-            this.Logon();
-            this.RegisterHandlers();
-            this.Connect();
+            Logon();
+            RegisterHandlers();
+            Connect();
             Log("Bot initialized.");
         }
 
         private void Connect()
         {
-            this.twitchClient.Connect();
+            twitchClient.Connect();
         }
 
         private void RegisterHandlers()
         {
-            this.twitchClient.OnChatCommandReceived += this.OnCommandReceived;
-            this.twitchClient.OnMessageReceived += this.OnMessageReceived;
-            this.twitchClient.OnLog += OnLog;
-            this.twitchClient.OnConnected += OnConnected;
-            this.twitchClient.OnJoinedChannel += OnJoinedChannel;
-            this.twitchClient.OnUserJoined += OnUserJoined;
-            this.twitchClient.OnUserLeft += OnUserLeft;
+            twitchClient.OnChatCommandReceived += OnCommandReceived;
+            twitchClient.OnMessageReceived += OnMessageReceived;
+            twitchClient.OnLog += OnLog;
+            twitchClient.OnConnected += OnConnected;
+            twitchClient.OnJoinedChannel += OnJoinedChannel;
+            twitchClient.OnUserJoined += OnUserJoined;
+            twitchClient.OnUserLeft += OnUserLeft;
         }
 
         private void Logon()
         {
-            this.twitchClient = this.twitchClientFactory.Create();
+            twitchClient = twitchClientFactory.Create();
         }
 
         [ExcludeFromCodeCoverage]
         private void OnUserLeft(object sender, OnUserLeftArgs e)
         {
-            this.chattersCache.Remove(e.Username);
+            chattersCache.Remove(e.Username);
         }
 
         [ExcludeFromCodeCoverage]
         private void OnUserJoined(object sender, OnUserJoinedArgs e)
         {
-            this.chattersCache.Add(e.Username);
+            chattersCache.Add(e.Username);
         }
 
         [ExcludeFromCodeCoverage]
@@ -100,16 +100,16 @@
         {
             foreach (ICommandHandler handler in commandHandlers)
             {
-                handler.Handle(this.twitchClient, e.Command.Wrap());
+                handler.Handle(twitchClient, e.Command.Wrap());
             }
         }
 
         [ExcludeFromCodeCoverage]
         private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            foreach (IMessageHandler handler in this.messageHandlers)
+            foreach (IMessageHandler handler in messageHandlers)
             {
-                handler.Handle(this.twitchClient, e.ChatMessage.Wrap());
+                handler.Handle(twitchClient, e.ChatMessage.Wrap());
             }
         }
 
