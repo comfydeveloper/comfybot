@@ -1,11 +1,10 @@
-﻿namespace ComfyBot.Bot.ChatBot.Chatters
+﻿namespace ComfyBot.Bot.ChatBot.Chatters;
+
+using System;
+
+public class Chatter
 {
-    using System;
+    public string Name { get; set; }
 
-    public class Chatter
-    {
-        public string Name { get; set; }
-
-        public DateTime? LastActivity;
-    }
+    public DateTime? LastActivity;
 }

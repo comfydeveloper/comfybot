@@ -1,15 +1,14 @@
-﻿namespace ComfyBot.Application.Main
+﻿namespace ComfyBot.Application.Main;
+
+using System.Diagnostics.CodeAnalysis;
+
+[ExcludeFromCodeCoverage]
+public class MainWindowViewModel
 {
-    using System.Diagnostics.CodeAnalysis;
-
-    [ExcludeFromCodeCoverage]
-    public class MainWindowViewModel
+    public MainWindowViewModel(TabsViewModel tabs)
     {
-        public MainWindowViewModel(TabsViewModel tabs)
-        {
-            Tabs = tabs;
-        }
-
-        public TabsViewModel Tabs { get; }
+        Tabs = tabs;
     }
+
+    public TabsViewModel Tabs { get; }
 }

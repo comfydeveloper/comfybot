@@ -1,57 +1,56 @@
-﻿namespace ComfyBot.Application.Tests.Shared
+﻿namespace ComfyBot.Application.Tests.Shared;
+
+using ComfyBot.Application.Shared;
+
+using NUnit.Framework;
+
+[TestFixture]
+public class ParameterCommandTests
 {
-    using ComfyBot.Application.Shared;
+    private ParameterCommand command;
 
-    using NUnit.Framework;
+    private bool actionHasBeenExecuted;
 
-    [TestFixture]
-    public class ParameterCommandTests
+    [Test]
+    public void CanExecuteShouldReturnTrueWhenInjectedPredicateIsNull()
     {
-        private ParameterCommand command;
+        command = new ParameterCommand(TestAction);
 
-        private bool actionHasBeenExecuted;
+        bool result = command.CanExecute(new object());
 
-        [Test]
-        public void CanExecuteShouldReturnTrueWhenInjectedPredicateIsNull()
-        {
-            command = new ParameterCommand(TestAction);
+        Assert.IsTrue(result);
+    }
 
-            bool result = command.CanExecute(new object());
+    [TestCase(true)]
+    [TestCase(false)]
+    public void CanExecuteShouldEvaluatePredicate(bool parameter)
+    {
+        bool Predicate(object b) => (bool)b;
+        command = new ParameterCommand(TestAction, Predicate);
 
-            Assert.IsTrue(result);
-        }
+        bool result = command.CanExecute(parameter);
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void CanExecuteShouldEvaluatePredicate(bool parameter)
-        {
-            bool Predicate(object b) => (bool)b;
-            command = new ParameterCommand(TestAction, Predicate);
+        Assert.AreEqual(parameter, result);
+    }
 
-            bool result = command.CanExecute(parameter);
+    [Test]
+    public void ExecuteShouldExecuteAction()
+    {
+        command = new ParameterCommand(TestAction);
 
-            Assert.AreEqual(parameter, result);
-        }
+        command.Execute(new object());
 
-        [Test]
-        public void ExecuteShouldExecuteAction()
-        {
-            command = new ParameterCommand(TestAction);
+        Assert.IsTrue(actionHasBeenExecuted);
+    }
 
-            command.Execute(new object());
+    private void TestAction(object parameter)
+    {
+        actionHasBeenExecuted = true;
+    }
 
-            Assert.IsTrue(actionHasBeenExecuted);
-        }
-
-        private void TestAction(object parameter)
-        {
-            actionHasBeenExecuted = true;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            actionHasBeenExecuted = false;
-        }
+    [TearDown]
+    public void TearDown()
+    {
+        actionHasBeenExecuted = false;
     }
 }

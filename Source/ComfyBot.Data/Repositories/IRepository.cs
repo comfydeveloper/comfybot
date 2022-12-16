@@ -1,19 +1,18 @@
-﻿namespace ComfyBot.Data.Repositories
+﻿namespace ComfyBot.Data.Repositories;
+
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+
+using Models;
+
+public interface IRepository<T> where T : Entity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
+    T Get(Expression<Func<T, bool>> predicate);
 
-    using Models;
+    void AddOrUpdate(T model);
 
-    public interface IRepository<T> where T : Entity
-    {
-        T Get(Expression<Func<T, bool>> predicate);
+    void Remove(string id);
 
-        void AddOrUpdate(T model);
-
-        void Remove(string id);
-
-        IEnumerable<T> GetAll();
-    }
+    IEnumerable<T> GetAll();
 }

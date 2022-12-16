@@ -1,24 +1,23 @@
-﻿namespace ComfyBot.Application.Shared
-{
-    public abstract class InitializableTab
-    {
-        private bool isSelected;
-        private bool isInitialized;
+﻿namespace ComfyBot.Application.Shared;
 
-        public bool IsSelected
+public abstract class InitializableTab
+{
+    private bool isSelected;
+    private bool isInitialized;
+
+    public bool IsSelected
+    {
+        get { return isSelected; }
+        set
         {
-            get { return isSelected; }
-            set
+            isSelected = value;
+            if (!isInitialized && value)
             {
-                isSelected = value;
-                if (!isInitialized && value)
-                {
-                    isInitialized = true;
-                    Initialize();
-                }
+                isInitialized = true;
+                Initialize();
             }
         }
-
-        protected abstract void Initialize();
     }
+
+    protected abstract void Initialize();
 }

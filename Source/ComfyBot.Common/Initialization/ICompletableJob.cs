@@ -1,7 +1,6 @@
-﻿namespace ComfyBot.Common.Initialization
+﻿namespace ComfyBot.Common.Initialization;
+
+public interface ICompletableJob
 {
-    public interface ICompletableJob
-    {
-        void Complete();
-    }
+    void Complete();
 }

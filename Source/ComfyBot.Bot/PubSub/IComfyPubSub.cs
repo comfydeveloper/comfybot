@@ -1,7 +1,6 @@
-﻿namespace ComfyBot.Bot.PubSub
+﻿namespace ComfyBot.Bot.PubSub;
+
+public interface IComfyPubSub
 {
-    public interface IComfyPubSub
-    {
-        void Run();
-    }
+    void Run();
 }

@@ -1,7 +1,6 @@
-﻿namespace ComfyBot.Bot.ChatBot.Services
+﻿namespace ComfyBot.Bot.ChatBot.Services;
+
+public interface IWildcardReplacer
 {
-    public interface IWildcardReplacer
-    {
-        string Replace(string original);
-    }
+    string Replace(string original);
 }

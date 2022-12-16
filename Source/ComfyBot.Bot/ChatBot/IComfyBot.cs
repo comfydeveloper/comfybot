@@ -1,7 +1,6 @@
-﻿namespace ComfyBot.Bot.ChatBot
+﻿namespace ComfyBot.Bot.ChatBot;
+
+public interface IComfyBot
 {
-    public interface IComfyBot
-    {
-        void Run();
-    }
+    void Run();
 }

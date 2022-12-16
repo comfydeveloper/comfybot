@@ -1,19 +1,18 @@
-﻿namespace ComfyBot.Bot.PubSub.Wrappers
+﻿namespace ComfyBot.Bot.PubSub.Wrappers;
+
+using System;
+
+public interface IRewardRedemption
 {
-    using System;
+    public Guid RewardId { get; }
 
-    public interface IRewardRedemption
-    {
-        public Guid RewardId { get; }
+    public string DisplayName { get; }
 
-        public string DisplayName { get; }
+    public string Message { get; }
 
-        public string Message { get; }
+    public string RewardTitle { get; }
 
-        public string RewardTitle { get; }
+    public string RewardPrompt { get; }
 
-        public string RewardPrompt { get; }
-
-        public int RewardCost { get; }
-    }
+    public int RewardCost { get; }
 }

@@ -1,78 +1,77 @@
-﻿namespace ComfyBot.Bot.ChatBot.Services
+﻿namespace ComfyBot.Bot.ChatBot.Services;
+
+using System;
+using System.Text.RegularExpressions;
+
+using Chatters;
+using Extensions;
+
+public class WildcardReplacer : IWildcardReplacer
 {
-    using System;
-    using System.Text.RegularExpressions;
+    private readonly IChattersCache chattersCache;
 
-    using Chatters;
-    using Extensions;
-
-    public class WildcardReplacer : IWildcardReplacer
+    public WildcardReplacer(IChattersCache chattersCache)
     {
-        private readonly IChattersCache chattersCache;
+        this.chattersCache = chattersCache;
+    }
 
-        public WildcardReplacer(IChattersCache chattersCache)
+    public string Replace(string original)
+    {
+        string result = ReplaceVariableWords(original);
+        result = ReplaceNumberRange(result);
+        result = ReplaceRandomChatter(result);
+
+        return result;
+    }
+
+    private static string ReplaceNumberRange(string original)
+    {
+        MatchCollection matches = Regex.Matches(original, @"\[n:(.*?)\]");
+        Random random = new Random();
+
+        foreach (Match match in matches)
         {
-            this.chattersCache = chattersCache;
-        }
+            string variableWordsPart = match.Groups[1].Value;
+            string[] numbers = variableWordsPart.Split('-');
 
-        public string Replace(string original)
-        {
-            string result = ReplaceVariableWords(original);
-            result = ReplaceNumberRange(result);
-            result = ReplaceRandomChatter(result);
-
-            return result;
-        }
-
-        private static string ReplaceNumberRange(string original)
-        {
-            MatchCollection matches = Regex.Matches(original, @"\[n:(.*?)\]");
-            Random random = new Random();
-
-            foreach (Match match in matches)
+            if (int.TryParse(numbers[0], out int minimum) && int.TryParse(numbers[1], out int maximum))
             {
-                string variableWordsPart = match.Groups[1].Value;
-                string[] numbers = variableWordsPart.Split('-');
-
-                if (int.TryParse(numbers[0], out int minimum) && int.TryParse(numbers[1], out int maximum))
-                {
-                    int randomNumber = random.Next(minimum, maximum + 1);
-                    original = original.ReplaceFirst($"{match.Groups[0].Value}", randomNumber.ToString());
-                }
+                int randomNumber = random.Next(minimum, maximum + 1);
+                original = original.ReplaceFirst($"{match.Groups[0].Value}", randomNumber.ToString());
             }
-            return original;
         }
+        return original;
+    }
 
-        private static string ReplaceVariableWords(string original)
+    private static string ReplaceVariableWords(string original)
+    {
+        MatchCollection matches = Regex.Matches(original, @"\[w:(.*?)\]");
+        Random random = new Random();
+
+        foreach (Match match in matches)
         {
-            MatchCollection matches = Regex.Matches(original, @"\[w:(.*?)\]");
-            Random random = new Random();
+            string variableWordsPart = match.Groups[1].Value;
+            string[] words = variableWordsPart.Split(',');
 
-            foreach (Match match in matches)
-            {
-                string variableWordsPart = match.Groups[1].Value;
-                string[] words = variableWordsPart.Split(',');
+            int randomIndex = random.Next(0, words.Length);
+            string randomWord = words[randomIndex];
 
-                int randomIndex = random.Next(0, words.Length);
-                string randomWord = words[randomIndex];
-
-                original = original.ReplaceFirst($"{match.Groups[0].Value}", randomWord);
-            }
-            return original;
+            original = original.ReplaceFirst($"{match.Groups[0].Value}", randomWord);
         }
+        return original;
+    }
 
-        private string ReplaceRandomChatter(string original)
+    private string ReplaceRandomChatter(string original)
+    {
+        MatchCollection matches = Regex.Matches(original, "{{chatter}}");
+
+        foreach (Match match in matches)
         {
-            MatchCollection matches = Regex.Matches(original, "{{chatter}}");
+            string randomChatter = chattersCache.GetRandom();
 
-            foreach (Match match in matches)
-            {
-                string randomChatter = chattersCache.GetRandom();
-
-                original = original.ReplaceFirst($"{match.Groups[0].Value}", randomChatter);
-            }
-
-            return original;
+            original = original.ReplaceFirst($"{match.Groups[0].Value}", randomChatter);
         }
+
+        return original;
     }
 }

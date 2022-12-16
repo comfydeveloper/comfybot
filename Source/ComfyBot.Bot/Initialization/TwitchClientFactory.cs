@@ -1,37 +1,36 @@
-﻿namespace ComfyBot.Bot.Initialization
+﻿namespace ComfyBot.Bot.Initialization;
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+
+using Settings;
+
+using TwitchLib.Client;
+using TwitchLib.Client.Interfaces;
+using TwitchLib.Client.Models;
+using TwitchLib.Communication.Clients;
+using TwitchLib.Communication.Models;
+
+[ExcludeFromCodeCoverage]
+public class TwitchClientFactory : ITwitchClientFactory
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
+    private static TwitchClient twitchClient;
 
-    using Settings;
-
-    using TwitchLib.Client;
-    using TwitchLib.Client.Interfaces;
-    using TwitchLib.Client.Models;
-    using TwitchLib.Communication.Clients;
-    using TwitchLib.Communication.Models;
-
-    [ExcludeFromCodeCoverage]
-    public class TwitchClientFactory : ITwitchClientFactory
+    public ITwitchClient Create()
     {
-        private static TwitchClient twitchClient;
-
-        public ITwitchClient Create()
+        if (twitchClient == null)
         {
-            if (twitchClient == null)
-            {
-                string userName = ApplicationSettings.Default.User;
-                string password = ApplicationSettings.Default.AuthKey;
-                string channel = ApplicationSettings.Default.Channel;
+            string userName = ApplicationSettings.Default.User;
+            string password = ApplicationSettings.Default.AuthKey;
+            string channel = ApplicationSettings.Default.Channel;
 
-                ConnectionCredentials credentials = new ConnectionCredentials(userName, password);
-                ClientOptions clientOptions = new ClientOptions { MessagesAllowedInPeriod = 100, ThrottlingPeriod = TimeSpan.FromSeconds(30) };
-                WebSocketClient websocketClient = new WebSocketClient(clientOptions);
-                twitchClient = new TwitchClient(websocketClient);
-                twitchClient.Initialize(credentials, channel);
-            }
-
-            return twitchClient;
+            ConnectionCredentials credentials = new ConnectionCredentials(userName, password);
+            ClientOptions clientOptions = new ClientOptions { MessagesAllowedInPeriod = 100, ThrottlingPeriod = TimeSpan.FromSeconds(30) };
+            WebSocketClient websocketClient = new WebSocketClient(clientOptions);
+            twitchClient = new TwitchClient(websocketClient);
+            twitchClient.Initialize(credentials, channel);
         }
+
+        return twitchClient;
     }
 }

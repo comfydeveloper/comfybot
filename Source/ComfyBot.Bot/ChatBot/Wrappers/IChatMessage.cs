@@ -1,13 +1,12 @@
-﻿namespace ComfyBot.Bot.ChatBot.Wrappers
+﻿namespace ComfyBot.Bot.ChatBot.Wrappers;
+
+public interface IChatMessage
 {
-    public interface IChatMessage
-    {
-        bool IsBroadcaster { get; }
+    bool IsBroadcaster { get; }
 
-        bool IsModerator { get; }
+    bool IsModerator { get; }
 
-        string UserName { get; }
+    string UserName { get; }
 
-        string Text { get; }
-    }
+    string Text { get; }
 }

@@ -1,27 +1,26 @@
-﻿namespace ComfyBot.Application.Main
+﻿namespace ComfyBot.Application.Main;
+
+using System.Diagnostics.CodeAnalysis;
+
+using Configuration;
+using Responses;
+using TextCommands;
+
+[ExcludeFromCodeCoverage]
+public class TabsViewModel
 {
-    using System.Diagnostics.CodeAnalysis;
-
-    using Configuration;
-    using Responses;
-    using TextCommands;
-
-    [ExcludeFromCodeCoverage]
-    public class TabsViewModel
+    public TabsViewModel(ResponseTabViewModel responses,
+        ConfigurationTabViewModel configuration,
+        TextCommandsTabViewModel textCommands)
     {
-        public TabsViewModel(ResponseTabViewModel responses,
-                             ConfigurationTabViewModel configuration,
-                             TextCommandsTabViewModel textCommands)
-        {
-            Responses = responses;
-            Configuration = configuration;
-            TextCommands = textCommands;
-        }
-
-        public ConfigurationTabViewModel Configuration { get; }
-
-        public TextCommandsTabViewModel TextCommands { get; }
-
-        public ResponseTabViewModel Responses { get; }
+        Responses = responses;
+        Configuration = configuration;
+        TextCommands = textCommands;
     }
+
+    public ConfigurationTabViewModel Configuration { get; }
+
+    public TextCommandsTabViewModel TextCommands { get; }
+
+    public ResponseTabViewModel Responses { get; }
 }

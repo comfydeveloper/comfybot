@@ -1,274 +1,273 @@
-﻿namespace ComfyBot.Application.Tests.Responses
+﻿namespace ComfyBot.Application.Tests.Responses;
+
+using System.Linq;
+
+using ComfyBot.Application.Responses;
+using ComfyBot.Application.Shared;
+using Data.Models;
+
+using NUnit.Framework;
+
+[TestFixture]
+public class MessageResponseMapperTests
 {
-    using System.Linq;
+    private MessageResponse entity;
+    private MessageResponseModel model;
 
-    using ComfyBot.Application.Responses;
-    using ComfyBot.Application.Shared;
-    using Data.Models;
+    private MessageResponseMapper mapper;
 
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class MessageResponseMapperTests
+    [SetUp]
+    public void Setup()
     {
-        private MessageResponse entity;
-        private MessageResponseModel model;
+        entity = new MessageResponse();
+        model = new MessageResponseModel();
 
-        private MessageResponseMapper mapper;
+        mapper = new MessageResponseMapper();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            entity = new MessageResponse();
-            model = new MessageResponseModel();
+    [TestCase("00000000-0000-0000-0000-000000000000")]
+    [TestCase("00000000-0000-0000-0000-000000000001")]
+    public void MapToEntityShouldMapId(string id)
+    {
+        model.Id = id;
 
-            mapper = new MessageResponseMapper();
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase("00000000-0000-0000-0000-000000000000")]
-        [TestCase("00000000-0000-0000-0000-000000000001")]
-        public void MapToEntityShouldMapId(string id)
-        {
-            model.Id = id;
+        Assert.AreEqual(id, entity.Id);
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase(1)]
+    [TestCase(2)]
+    public void MapToEntityShouldMapTimeout(int timeout)
+    {
+        model.Timeout = timeout;
 
-            Assert.AreEqual(id, entity.Id);
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase(1)]
-        [TestCase(2)]
-        public void MapToEntityShouldMapTimeout(int timeout)
-        {
-            model.Timeout = timeout;
+        Assert.AreEqual(timeout, entity.TimeoutInSeconds);
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase(1)]
+    [TestCase(2)]
+    public void MapToEntityShouldMapPriority(int priority)
+    {
+        model.Priority = priority;
 
-            Assert.AreEqual(timeout, entity.TimeoutInSeconds);
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase(1)]
-        [TestCase(2)]
-        public void MapToEntityShouldMapPriority(int priority)
-        {
-            model.Priority = priority;
+        Assert.AreEqual(priority, entity.Priority);
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase("user1")]
+    [TestCase("user2")]
+    public void MapToEntityShouldMapUsers(string userName)
+    {
+        model.Users.Add(new TextModel { Text = userName });
 
-            Assert.AreEqual(priority, entity.Priority);
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase("user1")]
-        [TestCase("user2")]
-        public void MapToEntityShouldMapUsers(string userName)
-        {
-            model.Users.Add(new TextModel { Text = userName });
+        Assert.AreEqual(1, entity.Users.Count);
+        Assert.AreEqual(userName, entity.Users.First());
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase("keyword1")]
+    [TestCase("keyword2")]
+    public void MapToEntityShouldMapLooseKeywords(string keyword)
+    {
+        model.LooseKeywords.Add(new TextModel { Text = keyword });
 
-            Assert.AreEqual(1, entity.Users.Count);
-            Assert.AreEqual(userName, entity.Users.First());
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase("keyword1")]
-        [TestCase("keyword2")]
-        public void MapToEntityShouldMapLooseKeywords(string keyword)
-        {
-            model.LooseKeywords.Add(new TextModel { Text = keyword });
+        Assert.AreEqual(1, entity.LooseKeywords.Count);
+        Assert.AreEqual(keyword, entity.LooseKeywords.First());
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase("keyword1")]
+    [TestCase("keyword2")]
+    public void MapToEntityShouldMapExactKeywords(string keyword)
+    {
+        model.ExactKeywords.Add(new TextModel { Text = keyword });
 
-            Assert.AreEqual(1, entity.LooseKeywords.Count);
-            Assert.AreEqual(keyword, entity.LooseKeywords.First());
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase("keyword1")]
-        [TestCase("keyword2")]
-        public void MapToEntityShouldMapExactKeywords(string keyword)
-        {
-            model.ExactKeywords.Add(new TextModel { Text = keyword });
+        Assert.AreEqual(1, entity.ExactKeywords.Count);
+        Assert.AreEqual(keyword, entity.ExactKeywords.First());
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase("keyword1")]
+    [TestCase("keyword2")]
+    public void MapToEntityShouldMapAllKeywords(string keyword)
+    {
+        model.AllKeywords.Add(new TextModel { Text = keyword });
 
-            Assert.AreEqual(1, entity.ExactKeywords.Count);
-            Assert.AreEqual(keyword, entity.ExactKeywords.First());
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase("keyword1")]
-        [TestCase("keyword2")]
-        public void MapToEntityShouldMapAllKeywords(string keyword)
-        {
-            model.AllKeywords.Add(new TextModel { Text = keyword });
+        Assert.AreEqual(1, entity.AllKeywords.Count);
+        Assert.AreEqual(keyword, entity.AllKeywords.First());
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase("reply1")]
+    [TestCase("reply2")]
+    public void MapToEntityShouldMapReplies(string reply)
+    {
+        model.Replies.Add(new TextModel { Text = reply });
 
-            Assert.AreEqual(1, entity.AllKeywords.Count);
-            Assert.AreEqual(keyword, entity.AllKeywords.First());
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase("reply1")]
-        [TestCase("reply2")]
-        public void MapToEntityShouldMapReplies(string reply)
-        {
-            model.Replies.Add(new TextModel { Text = reply });
+        Assert.AreEqual(1, entity.Replies.Count);
+        Assert.AreEqual(reply, entity.Replies.First());
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase("00000000-0000-0000-0000-000000000000")]
+    [TestCase("00000000-0000-0000-0000-000000000001")]
+    public void MapToModelShouldMapId(string id)
+    {
+        entity.Id = id;
 
-            Assert.AreEqual(1, entity.Replies.Count);
-            Assert.AreEqual(reply, entity.Replies.First());
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase("00000000-0000-0000-0000-000000000000")]
-        [TestCase("00000000-0000-0000-0000-000000000001")]
-        public void MapToModelShouldMapId(string id)
-        {
-            entity.Id = id;
+        Assert.AreEqual(id, model.Id);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase(1)]
+    [TestCase(2)]
+    public void MapToModelShouldMapTimeout(int timeout)
+    {
+        entity.TimeoutInSeconds = timeout;
 
-            Assert.AreEqual(id, model.Id);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase(1)]
-        [TestCase(2)]
-        public void MapToModelShouldMapTimeout(int timeout)
-        {
-            entity.TimeoutInSeconds = timeout;
+        Assert.AreEqual(timeout, model.Timeout);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase(1)]
+    [TestCase(2)]
+    public void MapToModelShouldMapPriority(int priority)
+    {
+        entity.Priority = priority;
 
-            Assert.AreEqual(timeout, model.Timeout);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase(1)]
-        [TestCase(2)]
-        public void MapToModelShouldMapPriority(int priority)
-        {
-            entity.Priority = priority;
+        Assert.AreEqual(priority, model.Priority);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase("user1")]
+    [TestCase("user2")]
+    public void MapToModelShouldMapUsers(string userName)
+    {
+        entity.Users.Add(userName);
 
-            Assert.AreEqual(priority, model.Priority);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase("user1")]
-        [TestCase("user2")]
-        public void MapToModelShouldMapUsers(string userName)
-        {
-            entity.Users.Add(userName);
+        Assert.AreEqual(1, model.Users.Count);
+        Assert.AreEqual(userName, model.Users.First().Text);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase("keyword1")]
+    [TestCase("keyword2")]
+    public void MapToModelShouldMapLooseKeywords(string keyword)
+    {
+        entity.LooseKeywords.Add(keyword);
 
-            Assert.AreEqual(1, model.Users.Count);
-            Assert.AreEqual(userName, model.Users.First().Text);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase("keyword1")]
-        [TestCase("keyword2")]
-        public void MapToModelShouldMapLooseKeywords(string keyword)
-        {
-            entity.LooseKeywords.Add(keyword);
+        Assert.AreEqual(1, model.LooseKeywords.Count);
+        Assert.AreEqual(keyword, model.LooseKeywords.First().Text);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase("keyword1")]
+    [TestCase("keyword2")]
+    public void MapToModelShouldMapExactKeywords(string keyword)
+    {
+        entity.ExactKeywords.Add(keyword);
 
-            Assert.AreEqual(1, model.LooseKeywords.Count);
-            Assert.AreEqual(keyword, model.LooseKeywords.First().Text);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase("keyword1")]
-        [TestCase("keyword2")]
-        public void MapToModelShouldMapExactKeywords(string keyword)
-        {
-            entity.ExactKeywords.Add(keyword);
+        Assert.AreEqual(1, model.ExactKeywords.Count);
+        Assert.AreEqual(keyword, model.ExactKeywords.First().Text);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase("keyword1")]
+    [TestCase("keyword2")]
+    public void MapToModelShouldMapAllKeywords(string keyword)
+    {
+        entity.AllKeywords.Add(keyword);
 
-            Assert.AreEqual(1, model.ExactKeywords.Count);
-            Assert.AreEqual(keyword, model.ExactKeywords.First().Text);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase("keyword1")]
-        [TestCase("keyword2")]
-        public void MapToModelShouldMapAllKeywords(string keyword)
-        {
-            entity.AllKeywords.Add(keyword);
+        Assert.AreEqual(1, model.AllKeywords.Count);
+        Assert.AreEqual(keyword, model.AllKeywords.First().Text);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase("reply1")]
+    [TestCase("reply2")]
+    public void MapToModelShouldMapReplies(string reply)
+    {
+        entity.Replies.Add(reply);
 
-            Assert.AreEqual(1, model.AllKeywords.Count);
-            Assert.AreEqual(keyword, model.AllKeywords.First().Text);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase("reply1")]
-        [TestCase("reply2")]
-        public void MapToModelShouldMapReplies(string reply)
-        {
-            entity.Replies.Add(reply);
+        Assert.AreEqual(1, model.Replies.Count);
+        Assert.AreEqual(reply, model.Replies.First().Text);
+    }
 
-            mapper.MapToModel(entity, model);
+    [Test]
+    public void MapToModelShouldOrderReplies()
+    {
+        entity.Replies.Add("B");
+        entity.Replies.Add("C");
+        entity.Replies.Add("A");
 
-            Assert.AreEqual(1, model.Replies.Count);
-            Assert.AreEqual(reply, model.Replies.First().Text);
-        }
+        mapper.MapToModel(entity, model);
 
-        [Test]
-        public void MapToModelShouldOrderReplies()
-        {
-            entity.Replies.Add("B");
-            entity.Replies.Add("C");
-            entity.Replies.Add("A");
+        string[] replies = model.Replies.Select(r => r.Text).ToArray();
+        Assert.AreEqual("A", replies[0]);
+        Assert.AreEqual("B", replies[1]);
+        Assert.AreEqual("C", replies[2]);
+    }
 
-            mapper.MapToModel(entity, model);
+    [Test]
+    public void MapToModelShouldOrderAllKeywords()
+    {
+        entity.AllKeywords.Add("B");
+        entity.AllKeywords.Add("C");
+        entity.AllKeywords.Add("A");
 
-            string[] replies = model.Replies.Select(r => r.Text).ToArray();
-            Assert.AreEqual("A", replies[0]);
-            Assert.AreEqual("B", replies[1]);
-            Assert.AreEqual("C", replies[2]);
-        }
+        mapper.MapToModel(entity, model);
 
-        [Test]
-        public void MapToModelShouldOrderAllKeywords()
-        {
-            entity.AllKeywords.Add("B");
-            entity.AllKeywords.Add("C");
-            entity.AllKeywords.Add("A");
+        string[] keywords = model.AllKeywords.Select(r => r.Text).ToArray();
+        Assert.AreEqual("A", keywords[0]);
+        Assert.AreEqual("B", keywords[1]);
+        Assert.AreEqual("C", keywords[2]);
+    }
 
-            mapper.MapToModel(entity, model);
+    [Test]
+    public void MapToModelShouldOrderLooseKeywords()
+    {
+        entity.LooseKeywords.Add("B");
+        entity.LooseKeywords.Add("C");
+        entity.LooseKeywords.Add("A");
 
-            string[] keywords = model.AllKeywords.Select(r => r.Text).ToArray();
-            Assert.AreEqual("A", keywords[0]);
-            Assert.AreEqual("B", keywords[1]);
-            Assert.AreEqual("C", keywords[2]);
-        }
+        mapper.MapToModel(entity, model);
 
-        [Test]
-        public void MapToModelShouldOrderLooseKeywords()
-        {
-            entity.LooseKeywords.Add("B");
-            entity.LooseKeywords.Add("C");
-            entity.LooseKeywords.Add("A");
+        string[] keywords = model.LooseKeywords.Select(r => r.Text).ToArray();
+        Assert.AreEqual("A", keywords[0]);
+        Assert.AreEqual("B", keywords[1]);
+        Assert.AreEqual("C", keywords[2]);
+    }
 
-            mapper.MapToModel(entity, model);
+    [Test]
+    public void MapToModelShouldOrderExactKeywords()
+    {
+        entity.ExactKeywords.Add("B");
+        entity.ExactKeywords.Add("C");
+        entity.ExactKeywords.Add("A");
 
-            string[] keywords = model.LooseKeywords.Select(r => r.Text).ToArray();
-            Assert.AreEqual("A", keywords[0]);
-            Assert.AreEqual("B", keywords[1]);
-            Assert.AreEqual("C", keywords[2]);
-        }
+        mapper.MapToModel(entity, model);
 
-        [Test]
-        public void MapToModelShouldOrderExactKeywords()
-        {
-            entity.ExactKeywords.Add("B");
-            entity.ExactKeywords.Add("C");
-            entity.ExactKeywords.Add("A");
-
-            mapper.MapToModel(entity, model);
-
-            string[] keywords = model.ExactKeywords.Select(r => r.Text).ToArray();
-            Assert.AreEqual("A", keywords[0]);
-            Assert.AreEqual("B", keywords[1]);
-            Assert.AreEqual("C", keywords[2]);
-        }
+        string[] keywords = model.ExactKeywords.Select(r => r.Text).ToArray();
+        Assert.AreEqual("A", keywords[0]);
+        Assert.AreEqual("B", keywords[1]);
+        Assert.AreEqual("C", keywords[2]);
     }
 }

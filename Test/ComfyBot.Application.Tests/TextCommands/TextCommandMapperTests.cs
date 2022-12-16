@@ -1,150 +1,149 @@
-﻿namespace ComfyBot.Application.Tests.TextCommands
+﻿namespace ComfyBot.Application.Tests.TextCommands;
+
+using System.Linq;
+
+using ComfyBot.Application.Shared;
+using ComfyBot.Application.TextCommands;
+using Data.Models;
+
+using NUnit.Framework;
+
+[TestFixture]
+public class TextCommandMapperTests
 {
-    using System.Linq;
+    private TextCommand entity;
+    private TextCommandModel model;
 
-    using ComfyBot.Application.Shared;
-    using ComfyBot.Application.TextCommands;
-    using Data.Models;
+    private TextCommandMapper mapper;
 
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class TextCommandMapperTests
+    [SetUp]
+    public void Setup()
     {
-        private TextCommand entity;
-        private TextCommandModel model;
+        entity = new TextCommand();
+        model = new TextCommandModel();
 
-        private TextCommandMapper mapper;
+        mapper = new TextCommandMapper();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            entity = new TextCommand();
-            model = new TextCommandModel();
+    [TestCase("00000000-0000-0000-0000-000000000000")]
+    [TestCase("00000000-0000-0000-0000-000000000001")]
+    public void MapToEntityShouldMapId(string id)
+    {
+        model.Id = id;
 
-            mapper = new TextCommandMapper();
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase("00000000-0000-0000-0000-000000000000")]
-        [TestCase("00000000-0000-0000-0000-000000000001")]
-        public void MapToEntityShouldMapId(string id)
-        {
-            model.Id = id;
+        Assert.AreEqual(id, entity.Id);
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase(1)]
+    [TestCase(2)]
+    public void MapToEntityShouldMapTimeout(int timeout)
+    {
+        model.Timeout = timeout;
 
-            Assert.AreEqual(id, entity.Id);
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase(1)]
-        [TestCase(2)]
-        public void MapToEntityShouldMapTimeout(int timeout)
-        {
-            model.Timeout = timeout;
+        Assert.AreEqual(timeout, entity.TimeoutInSeconds);
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase("reply1")]
+    [TestCase("reply2")]
+    public void MapToEntityShouldMapReplies(string reply)
+    {
+        model.Replies.Add(new TextModel { Text = reply });
 
-            Assert.AreEqual(timeout, entity.TimeoutInSeconds);
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase("reply1")]
-        [TestCase("reply2")]
-        public void MapToEntityShouldMapReplies(string reply)
-        {
-            model.Replies.Add(new TextModel { Text = reply });
+        Assert.AreEqual(1, entity.Replies.Count);
+        Assert.AreEqual(reply, entity.Replies.First());
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase("reply1")]
+    [TestCase("reply2")]
+    public void MapToEntityShouldMapCommands(string reply)
+    {
+        model.Commands.Add(new TextModel { Text = reply });
 
-            Assert.AreEqual(1, entity.Replies.Count);
-            Assert.AreEqual(reply, entity.Replies.First());
-        }
+        mapper.MapToEntity(model, entity);
 
-        [TestCase("reply1")]
-        [TestCase("reply2")]
-        public void MapToEntityShouldMapCommands(string reply)
-        {
-            model.Commands.Add(new TextModel { Text = reply });
+        Assert.AreEqual(1, entity.Commands.Count);
+        Assert.AreEqual(reply, entity.Commands.First());
+    }
 
-            mapper.MapToEntity(model, entity);
+    [TestCase("00000000-0000-0000-0000-000000000000")]
+    [TestCase("00000000-0000-0000-0000-000000000001")]
+    public void MapToModelShouldMapId(string id)
+    {
+        entity.Id = id;
 
-            Assert.AreEqual(1, entity.Commands.Count);
-            Assert.AreEqual(reply, entity.Commands.First());
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase("00000000-0000-0000-0000-000000000000")]
-        [TestCase("00000000-0000-0000-0000-000000000001")]
-        public void MapToModelShouldMapId(string id)
-        {
-            entity.Id = id;
+        Assert.AreEqual(id, model.Id);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase(1)]
+    [TestCase(2)]
+    public void MapToModelShouldMapTimeout(int timeout)
+    {
+        entity.TimeoutInSeconds = timeout;
 
-            Assert.AreEqual(id, model.Id);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase(1)]
-        [TestCase(2)]
-        public void MapToModelShouldMapTimeout(int timeout)
-        {
-            entity.TimeoutInSeconds = timeout;
+        Assert.AreEqual(timeout, model.Timeout);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase("reply1")]
+    [TestCase("reply2")]
+    public void MapToModelShouldMapReplies(string reply)
+    {
+        entity.Replies.Add(reply);
 
-            Assert.AreEqual(timeout, model.Timeout);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase("reply1")]
-        [TestCase("reply2")]
-        public void MapToModelShouldMapReplies(string reply)
-        {
-            entity.Replies.Add(reply);
+        Assert.AreEqual(1, model.Replies.Count);
+        Assert.AreEqual(reply, model.Replies.First().Text);
+    }
 
-            mapper.MapToModel(entity, model);
+    [Test]
+    public void MapToModelShouldOrderReplies()
+    {
+        entity.Replies.Add("B");
+        entity.Replies.Add("C");
+        entity.Replies.Add("A");
 
-            Assert.AreEqual(1, model.Replies.Count);
-            Assert.AreEqual(reply, model.Replies.First().Text);
-        }
+        mapper.MapToModel(entity, model);
 
-        [Test]
-        public void MapToModelShouldOrderReplies()
-        {
-            entity.Replies.Add("B");
-            entity.Replies.Add("C");
-            entity.Replies.Add("A");
+        string[] replies = model.Replies.Select(r => r.Text).ToArray();
+        Assert.AreEqual("A", replies[0]);
+        Assert.AreEqual("B", replies[1]);
+        Assert.AreEqual("C", replies[2]);
+    }
 
-            mapper.MapToModel(entity, model);
+    [Test]
+    public void MapToModelShouldOrderCommands()
+    {
+        entity.Commands.Add("B");
+        entity.Commands.Add("C");
+        entity.Commands.Add("A");
 
-            string[] replies = model.Replies.Select(r => r.Text).ToArray();
-            Assert.AreEqual("A", replies[0]);
-            Assert.AreEqual("B", replies[1]);
-            Assert.AreEqual("C", replies[2]);
-        }
+        mapper.MapToModel(entity, model);
 
-        [Test]
-        public void MapToModelShouldOrderCommands()
-        {
-            entity.Commands.Add("B");
-            entity.Commands.Add("C");
-            entity.Commands.Add("A");
+        string[] commands = model.Commands.Select(r => r.Text).ToArray();
+        Assert.AreEqual("A", commands[0]);
+        Assert.AreEqual("B", commands[1]);
+        Assert.AreEqual("C", commands[2]);
+    }
 
-            mapper.MapToModel(entity, model);
+    [TestCase("reply1")]
+    [TestCase("reply2")]
+    public void MapToModelShouldMapCommands(string reply)
+    {
+        entity.Commands.Add(reply);
 
-            string[] commands = model.Commands.Select(r => r.Text).ToArray();
-            Assert.AreEqual("A", commands[0]);
-            Assert.AreEqual("B", commands[1]);
-            Assert.AreEqual("C", commands[2]);
-        }
+        mapper.MapToModel(entity, model);
 
-        [TestCase("reply1")]
-        [TestCase("reply2")]
-        public void MapToModelShouldMapCommands(string reply)
-        {
-            entity.Commands.Add(reply);
-
-            mapper.MapToModel(entity, model);
-
-            Assert.AreEqual(1, model.Commands.Count);
-            Assert.AreEqual(reply, model.Commands.First().Text);
-        }
+        Assert.AreEqual(1, model.Commands.Count);
+        Assert.AreEqual(reply, model.Commands.First().Text);
     }
 }

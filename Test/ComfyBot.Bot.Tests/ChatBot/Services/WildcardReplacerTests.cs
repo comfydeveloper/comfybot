@@ -1,56 +1,55 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Services
+﻿namespace ComfyBot.Bot.Tests.ChatBot.Services;
+
+using ComfyBot.Bot.ChatBot.Chatters;
+using ComfyBot.Bot.ChatBot.Services;
+
+using Moq;
+
+using NUnit.Framework;
+
+public class WildcardReplacerTests
 {
-    using ComfyBot.Bot.ChatBot.Chatters;
-    using ComfyBot.Bot.ChatBot.Services;
+    private Mock<IChattersCache> chattersCache;
 
-    using Moq;
+    private WildcardReplacer replacer;
 
-    using NUnit.Framework;
-
-    public class WildcardReplacerTests
+    [SetUp]
+    public void Setup()
     {
-        private Mock<IChattersCache> chattersCache;
+        chattersCache = new Mock<IChattersCache>();
 
-        private WildcardReplacer replacer;
+        replacer = new WildcardReplacer(chattersCache.Object);
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            chattersCache = new Mock<IChattersCache>();
+    [Test]
+    public void ReplaceShouldReplaceVariableTextParts()
+    {
+        const string Original = "[w:test2,test1] and [w:test3]";
 
-            replacer = new WildcardReplacer(chattersCache.Object);
-        }
+        string result = replacer.Replace(Original);
 
-        [Test]
-        public void ReplaceShouldReplaceVariableTextParts()
-        {
-            const string Original = "[w:test2,test1] and [w:test3]";
+        Assert.That(result == "test2 and test3" || result == "test1 and test3");
+    }
 
-            string result = replacer.Replace(Original);
+    [Test]
+    public void ReplaceShouldReplaceNumberRanges()
+    {
+        const string Original = "[n:1-9]";
 
-            Assert.That(result == "test2 and test3" || result == "test1 and test3");
-        }
+        string result = replacer.Replace(Original);
 
-        [Test]
-        public void ReplaceShouldReplaceNumberRanges()
-        {
-            const string Original = "[n:1-9]";
+        int resultNumber = int.Parse(result);
+        Assert.That(resultNumber > 0 && resultNumber < 10);
+    }
 
-            string result = replacer.Replace(Original);
+    [Test]
+    public void ReplaceShouldReplaceRandomChatter()
+    {
+        chattersCache.Setup(c => c.GetRandom()).Returns("user");
+        const string Original = "{{chatter}}";
 
-            int resultNumber = int.Parse(result);
-            Assert.That(resultNumber > 0 && resultNumber < 10);
-        }
+        string result = replacer.Replace(Original);
 
-        [Test]
-        public void ReplaceShouldReplaceRandomChatter()
-        {
-            chattersCache.Setup(c => c.GetRandom()).Returns("user");
-            const string Original = "{{chatter}}";
-
-            string result = replacer.Replace(Original);
-
-            Assert.AreEqual("user", result);
-        }
+        Assert.AreEqual("user", result);
     }
 }

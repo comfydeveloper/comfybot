@@ -1,51 +1,50 @@
-﻿namespace ComfyBot.Application.Output
+﻿namespace ComfyBot.Application.Output;
+
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Windows.Controls;
+
+[ExcludeFromCodeCoverage]
+public class ConsoleOutputWriter : TextWriter
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Windows.Controls;
+    private readonly List<string> lastOutput = new();
 
-    [ExcludeFromCodeCoverage]
-    public class ConsoleOutputWriter : TextWriter
+    public delegate void UpdateTextCallback(string message);
+
+    private readonly TextBox textbox;
+
+    public ConsoleOutputWriter(TextBox textbox)
     {
-        private readonly List<string> lastOutput = new();
+        this.textbox = textbox;
+    }
 
-        public delegate void UpdateTextCallback(string message);
+    public override void Write(char value)
+    {
+        textbox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
+    }
 
-        private readonly TextBox textbox;
+    public override void Write(string value)
+    {
+        textbox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
+    }
 
-        public ConsoleOutputWriter(TextBox textbox)
+    public override Encoding Encoding
+    {
+        get { return Encoding.ASCII; }
+    }
+
+    private void UpdateText(string message)
+    {
+        lastOutput.Add(message);
+
+        if (lastOutput.Count > 100)
         {
-            this.textbox = textbox;
+            lastOutput.RemoveAt(0);
         }
 
-        public override void Write(char value)
-        {
-            textbox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
-        }
-
-        public override void Write(string value)
-        {
-            textbox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
-        }
-
-        public override Encoding Encoding
-        {
-            get { return Encoding.ASCII; }
-        }
-
-        private void UpdateText(string message)
-        {
-            lastOutput.Add(message);
-
-            if (lastOutput.Count > 100)
-            {
-                lastOutput.RemoveAt(0);
-            }
-
-            textbox.Text = string.Join(System.Environment.NewLine, lastOutput.Reverse<string>());
-        }
+        textbox.Text = string.Join(System.Environment.NewLine, lastOutput.Reverse<string>());
     }
 }

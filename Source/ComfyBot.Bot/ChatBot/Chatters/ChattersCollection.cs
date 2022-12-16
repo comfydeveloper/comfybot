@@ -1,13 +1,12 @@
-﻿namespace ComfyBot.Bot.ChatBot.Chatters
+﻿namespace ComfyBot.Bot.ChatBot.Chatters;
+
+using System.Text.Json.Serialization;
+
+public class ChattersCollection
 {
-    using System.Text.Json.Serialization;
+    [JsonPropertyName("chatter_count")]
+    public int Count { get; set; }
 
-    public class ChattersCollection
-    {
-        [JsonPropertyName("chatter_count")]
-        public int Count { get; set; }
-
-        [JsonPropertyName("chatters")]
-        public Chatters Chatters { get; set; }
-    }
+    [JsonPropertyName("chatters")]
+    public Chatters Chatters { get; set; }
 }

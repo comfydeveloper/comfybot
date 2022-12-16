@@ -1,9 +1,8 @@
-﻿namespace ComfyBot.Bot.PubSub.RewardRedeems
-{
-    using Wrappers;
+﻿namespace ComfyBot.Bot.PubSub.RewardRedeems;
 
-    public interface IRewardRedeemHandler
-    {
-        public void Handle(IRewardRedemption redemption);
-    }
+using Wrappers;
+
+public interface IRewardRedeemHandler
+{
+    public void Handle(IRewardRedemption redemption);
 }

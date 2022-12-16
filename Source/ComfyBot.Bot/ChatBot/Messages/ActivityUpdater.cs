@@ -1,22 +1,21 @@
-﻿namespace ComfyBot.Bot.ChatBot.Messages
+﻿namespace ComfyBot.Bot.ChatBot.Messages;
+
+using Chatters;
+using Wrappers;
+
+using TwitchLib.Client.Interfaces;
+
+public class ActivityUpdater : IMessageHandler
 {
-    using Chatters;
-    using Wrappers;
+    private readonly IChattersCache cache;
 
-    using TwitchLib.Client.Interfaces;
-
-    public class ActivityUpdater : IMessageHandler
+    public ActivityUpdater(IChattersCache cache)
     {
-        private readonly IChattersCache cache;
+        this.cache = cache;
+    }
 
-        public ActivityUpdater(IChattersCache cache)
-        {
-            this.cache = cache;
-        }
-
-        public void Handle(ITwitchClient client, IChatMessage message)
-        {
-            cache.UpdateActivity(message.UserName);
-        }
+    public void Handle(ITwitchClient client, IChatMessage message)
+    {
+        cache.UpdateActivity(message.UserName);
     }
 }

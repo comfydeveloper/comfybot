@@ -1,27 +1,26 @@
-﻿namespace ComfyBot.Data.Wrappers
+﻿namespace ComfyBot.Data.Wrappers;
+
+using System.Diagnostics.CodeAnalysis;
+
+using LiteDB;
+
+[ExcludeFromCodeCoverage]
+public class DatabaseWrapper : IDatabase
 {
-    using System.Diagnostics.CodeAnalysis;
+    private readonly LiteDatabase liteDatabase;
 
-    using LiteDB;
-
-    [ExcludeFromCodeCoverage]
-    public class DatabaseWrapper : IDatabase
+    public DatabaseWrapper(LiteDatabase liteDatabase)
     {
-        private readonly LiteDatabase liteDatabase;
+        this.liteDatabase = liteDatabase;
+    }
 
-        public DatabaseWrapper(LiteDatabase liteDatabase)
-        {
-            this.liteDatabase = liteDatabase;
-        }
+    public ILiteCollection<T> GetCollection<T>(string name)
+    {
+        return liteDatabase.GetCollection<T>(name);
+    }
 
-        public ILiteCollection<T> GetCollection<T>(string name)
-        {
-            return liteDatabase.GetCollection<T>(name);
-        }
-
-        public void Dispose()
-        {
-            liteDatabase?.Dispose();
-        }
+    public void Dispose()
+    {
+        liteDatabase?.Dispose();
     }
 }

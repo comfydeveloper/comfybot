@@ -1,75 +1,74 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Chatters
+﻿namespace ComfyBot.Bot.Tests.ChatBot.Chatters;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using ComfyBot.Bot.ChatBot.Chatters;
+
+using NUnit.Framework;
+
+[TestFixture]
+public class CurrentChattersCacheTests
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    private CurrentChattersCache cache;
 
-    using ComfyBot.Bot.ChatBot.Chatters;
-
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class CurrentChattersCacheTests
+    [SetUp]
+    public void Setup()
     {
-        private CurrentChattersCache cache;
+        cache = new CurrentChattersCache();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            cache = new CurrentChattersCache();
-        }
+    [TestCase("user1")]
+    [TestCase("user2")]
+    public void AddShouldAddUser(string user)
+    {
+        cache.Add(user);
 
-        [TestCase("user1")]
-        [TestCase("user2")]
-        public void AddShouldAddUser(string user)
-        {
-            cache.Add(user);
+        List<Chatter> result = cache.GetAll().ToList();
 
-            List<Chatter> result = cache.GetAll().ToList();
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(user, result.First().Name);
+        cache.Remove(user);
+    }
 
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(user, result.First().Name);
-            cache.Remove(user);
-        }
+    [Test]
+    public void RemoveShouldRemoveUser()
+    {
+        cache.Add("user");
+        cache.Remove("user");
 
-        [Test]
-        public void RemoveShouldRemoveUser()
-        {
-            cache.Add("user");
-            cache.Remove("user");
+        List<Chatter> result = cache.GetAll().ToList();
 
-            List<Chatter> result = cache.GetAll().ToList();
+        Assert.AreEqual(0, result.Count);
+    }
 
-            Assert.AreEqual(0, result.Count);
-        }
+    [Test]
+    public void RandomShouldReturnEmptyStringWhenNoElementInCache()
+    {
+        string result = cache.GetRandom();
 
-        [Test]
-        public void RandomShouldReturnEmptyStringWhenNoElementInCache()
-        {
-            string result = cache.GetRandom();
+        Assert.AreEqual(string.Empty, result);
+    }
 
-            Assert.AreEqual(string.Empty, result);
-        }
+    [Test]
+    public void RandomShouldReturnRandomElementFromCache()
+    {
+        cache.Add("user");
 
-        [Test]
-        public void RandomShouldReturnRandomElementFromCache()
-        {
-            cache.Add("user");
+        string result = cache.GetRandom();
 
-            string result = cache.GetRandom();
+        Assert.AreEqual(result, "user");
+        cache.Remove("user");
+    }
 
-            Assert.AreEqual(result, "user");
-            cache.Remove("user");
-        }
+    [Test]
+    public void AddRangeShouldAddMultipleUsers()
+    {
+        cache.AddRange(new[] { "user1", "user2" });
 
-        [Test]
-        public void AddRangeShouldAddMultipleUsers()
-        {
-            cache.AddRange(new[] { "user1", "user2" });
-
-            List<Chatter> result = cache.GetAll().ToList();
-            Assert.AreEqual(2, result.Count);
-            cache.Remove("user1");
-            cache.Remove("user2");
-        }
+        List<Chatter> result = cache.GetAll().ToList();
+        Assert.AreEqual(2, result.Count);
+        cache.Remove("user1");
+        cache.Remove("user2");
     }
 }

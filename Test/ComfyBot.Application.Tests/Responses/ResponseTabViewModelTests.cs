@@ -1,79 +1,78 @@
-﻿namespace ComfyBot.Application.Tests.Responses
+﻿namespace ComfyBot.Application.Tests.Responses;
+
+using System.Linq;
+
+using ComfyBot.Application.Responses;
+using ComfyBot.Application.Shared.Contracts;
+using Data.Models;
+using Data.Repositories;
+
+using Moq;
+
+using NUnit.Framework;
+
+[TestFixture]
+public class ResponseTabViewModelTests
 {
-    using System.Linq;
+    private Mock<IRepository<MessageResponse>> repository;
+    private Mock<IMapper<MessageResponse, MessageResponseModel>> mapper;
 
-    using ComfyBot.Application.Responses;
-    using ComfyBot.Application.Shared.Contracts;
-    using Data.Models;
-    using Data.Repositories;
+    private ResponseTabViewModel viewModel;
 
-    using Moq;
-
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class ResponseTabViewModelTests
+    [SetUp]
+    public void Setup()
     {
-        private Mock<IRepository<MessageResponse>> repository;
-        private Mock<IMapper<MessageResponse, MessageResponseModel>> mapper;
+        repository = new Mock<IRepository<MessageResponse>>();
+        mapper = new Mock<IMapper<MessageResponse, MessageResponseModel>>();
 
-        private ResponseTabViewModel viewModel;
+        viewModel = new ResponseTabViewModel(repository.Object, mapper.Object);
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            repository = new Mock<IRepository<MessageResponse>>();
-            mapper = new Mock<IMapper<MessageResponse, MessageResponseModel>>();
+    [Test]
+    public void AddResponseCommandShouldAddResponse()
+    {
+        viewModel.AddResponseCommand.Execute();
 
-            viewModel = new ResponseTabViewModel(repository.Object, mapper.Object);
-        }
+        Assert.AreEqual(1, viewModel.Responses.Count);
+    }
 
-        [Test]
-        public void AddResponseCommandShouldAddResponse()
-        {
-            viewModel.AddResponseCommand.Execute();
+    [TestCase("00000000-0000-0000-0000-000000000000")]
+    [TestCase("00000000-0000-0000-0000-000000000001")]
+    public void RemoveResponseCommandShouldRemoveResponse(string id)
+    {
+        MessageResponseModel model = new MessageResponseModel { Id = id };
+        viewModel.Responses.Add(model);
 
-            Assert.AreEqual(1, viewModel.Responses.Count);
-        }
+        viewModel.RemoveResponseCommand.Execute(model);
 
-        [TestCase("00000000-0000-0000-0000-000000000000")]
-        [TestCase("00000000-0000-0000-0000-000000000001")]
-        public void RemoveResponseCommandShouldRemoveResponse(string id)
-        {
-            MessageResponseModel model = new MessageResponseModel { Id = id };
-            viewModel.Responses.Add(model);
+        Assert.AreEqual(0, viewModel.Responses.Count);
+        repository.Verify(r => r.Remove(id));
+    }
 
-            viewModel.RemoveResponseCommand.Execute(model);
+    [TestCase(5)]
+    [TestCase(10)]
+    public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
+    {
+        MessageResponse[] entities = Enumerable.Repeat(new MessageResponse(), count).ToArray();
+        repository.Setup(r => r.GetAll()).Returns(entities);
 
-            Assert.AreEqual(0, viewModel.Responses.Count);
-            repository.Verify(r => r.Remove(id));
-        }
+        viewModel.IsSelected = true;
+        viewModel.IsSelected = true;
 
-        [TestCase(5)]
-        [TestCase(10)]
-        public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
-        {
-            MessageResponse[] entities = Enumerable.Repeat(new MessageResponse(), count).ToArray();
-            repository.Setup(r => r.GetAll()).Returns(entities);
+        Assert.AreEqual(count, viewModel.Responses.Count);
+        mapper.Verify(m => m.MapToModel(It.IsAny<MessageResponse>(), It.IsAny<MessageResponseModel>()), () => Times.Exactly(count));
+    }
 
-            viewModel.IsSelected = true;
-            viewModel.IsSelected = true;
+    [Test]
+    public void UpdatingATextModelShouldUpdateEntity()
+    {
+        MessageResponseModel model = new MessageResponseModel();
+        viewModel.Responses.Add(model);
+        viewModel.IsSelected = true;
 
-            Assert.AreEqual(count, viewModel.Responses.Count);
-            mapper.Verify(m => m.MapToModel(It.IsAny<MessageResponse>(), It.IsAny<MessageResponseModel>()), () => Times.Exactly(count));
-        }
+        model.Timeout = 1;
 
-        [Test]
-        public void UpdatingATextModelShouldUpdateEntity()
-        {
-            MessageResponseModel model = new MessageResponseModel();
-            viewModel.Responses.Add(model);
-            viewModel.IsSelected = true;
-
-            model.Timeout = 1;
-
-            repository.Verify(r => r.AddOrUpdate(It.IsAny<MessageResponse>()));
-            mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponse>()));
-        }
+        repository.Verify(r => r.AddOrUpdate(It.IsAny<MessageResponse>()));
+        mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponse>()));
     }
 }

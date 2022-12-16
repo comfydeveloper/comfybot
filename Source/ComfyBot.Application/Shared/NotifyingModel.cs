@@ -1,18 +1,17 @@
-﻿namespace ComfyBot.Application.Shared
+﻿namespace ComfyBot.Application.Shared;
+
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+using Annotations;
+
+public abstract class NotifyingModel : INotifyPropertyChanged
 {
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
+    public event PropertyChangedEventHandler PropertyChanged;
 
-    using Annotations;
-
-    public abstract class NotifyingModel : INotifyPropertyChanged
+    [NotifyPropertyChangedInvocator]
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

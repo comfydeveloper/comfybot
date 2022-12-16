@@ -1,34 +1,33 @@
-﻿namespace ComfyBot.Data.Repositories
+﻿namespace ComfyBot.Data.Repositories;
+
+using System;
+
+using Database;
+using Models;
+
+public class RewardRedeemResponseRepository : Repository<RewardRedeemResponse>
 {
-    using System;
+    public RewardRedeemResponseRepository(IDatabaseFactory databaseFactory)
+        : base(databaseFactory, "rewardRedeemResponses")
+    { }
 
-    using Database;
-    using Models;
-
-    public class RewardRedeemResponseRepository : Repository<RewardRedeemResponse>
+    protected override void Update(RewardRedeemResponse source, RewardRedeemResponse target)
     {
-        public RewardRedeemResponseRepository(IDatabaseFactory databaseFactory)
-            : base(databaseFactory, "rewardRedeemResponses")
-        { }
+        Clear(target);
+        UpdateInternal(source, target);
+    }
 
-        protected override void Update(RewardRedeemResponse source, RewardRedeemResponse target)
-        {
-            Clear(target);
-            UpdateInternal(source, target);
-        }
+    private static void Clear(RewardRedeemResponse target)
+    {
+        target.Replies.Clear();
+    }
 
-        private static void Clear(RewardRedeemResponse target)
-        {
-            target.Replies.Clear();
-        }
-
-        private static void UpdateInternal(RewardRedeemResponse source, RewardRedeemResponse target)
-        {
-            target.RewardTitle = source.RewardTitle;
-            target.Replies.AddRange(source.Replies);
-            target.TimeoutInSeconds = source.TimeoutInSeconds;
-            target.UseCount = Math.Max(source.UseCount, target.UseCount);
-            target.LastUsed = source.LastUsed ?? target.LastUsed;
-        }
+    private static void UpdateInternal(RewardRedeemResponse source, RewardRedeemResponse target)
+    {
+        target.RewardTitle = source.RewardTitle;
+        target.Replies.AddRange(source.Replies);
+        target.TimeoutInSeconds = source.TimeoutInSeconds;
+        target.UseCount = Math.Max(source.UseCount, target.UseCount);
+        target.LastUsed = source.LastUsed ?? target.LastUsed;
     }
 }

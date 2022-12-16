@@ -1,26 +1,25 @@
-﻿namespace ComfyBot.Bot.ChatBot.Chatters
+﻿namespace ComfyBot.Bot.ChatBot.Chatters;
+
+using Common.Http;
+using ComfyBot.Common.Initialization;
+
+public class ChattersCacheInitializer : IInitializerJob
 {
-    using Common.Http;
-    using ComfyBot.Common.Initialization;
+    private readonly IChattersCache chattersCache;
 
-    public class ChattersCacheInitializer : IInitializerJob
+    public ChattersCacheInitializer(IChattersCache chattersCache)
     {
-        private readonly IChattersCache chattersCache;
+        this.chattersCache = chattersCache;
+    }
 
-        public ChattersCacheInitializer(IChattersCache chattersCache)
+    public void Execute()
+    {
+        if(string.IsNullOrEmpty(Settings.ApplicationSettings.Default.Channel))
         {
-            this.chattersCache = chattersCache;
+            return; 
         }
 
-        public void Execute()
-        {
-            if(string.IsNullOrEmpty(Settings.ApplicationSettings.Default.Channel))
-            {
-                return; 
-            }
-
-            ChattersCollection result = HttpService.Instance.GetAsync<ChattersCollection>($"https://tmi.twitch.tv/group/user/{Settings.ApplicationSettings.Default.Channel.ToLower()}/chatters").Result;
-            chattersCache.AddRange(result.Chatters.All());
-        }
+        ChattersCollection result = HttpService.Instance.GetAsync<ChattersCollection>($"https://tmi.twitch.tv/group/user/{Settings.ApplicationSettings.Default.Channel.ToLower()}/chatters").Result;
+        chattersCache.AddRange(result.Chatters.All());
     }
 }

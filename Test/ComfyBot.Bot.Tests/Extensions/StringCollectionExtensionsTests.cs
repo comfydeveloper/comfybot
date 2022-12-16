@@ -1,48 +1,47 @@
-﻿namespace ComfyBot.Bot.Tests.Extensions
+﻿namespace ComfyBot.Bot.Tests.Extensions;
+
+using System.Collections.Generic;
+
+using ComfyBot.Bot.Extensions;
+
+using NUnit.Framework;
+
+[TestFixture]
+public class StringCollectionExtensionsTests
 {
-    using System.Collections.Generic;
-
-    using ComfyBot.Bot.Extensions;
-
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class StringCollectionExtensionsTests
+    [Test]
+    public void GetRandomShouldReturnRandomElementFromCollection()
     {
-        [Test]
-        public void GetRandomShouldReturnRandomElementFromCollection()
-        {
-            List<string> collection = new List<string> { "random1", "random2" };
-            int elementCount1 = 0;
-            int elementCount2 = 0;
+        List<string> collection = new List<string> { "random1", "random2" };
+        int elementCount1 = 0;
+        int elementCount2 = 0;
 
-            for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++)
+        {
+            string random = collection.GetRandom();
+
+            if (random == "random1")
             {
-                string random = collection.GetRandom();
-
-                if (random == "random1")
-                {
-                    elementCount1++;
-                }
-                else
-                {
-                    elementCount2++;
-                }
+                elementCount1++;
             }
-
-            Assert.AreEqual(50, elementCount1, 15);
-            Assert.AreEqual(50, elementCount2, 15);
+            else
+            {
+                elementCount2++;
+            }
         }
 
-        [TestCase("string1")]
-        [TestCase("string2")]
-        public void GetRandomShouldReturnOnlyElement(string text)
-        {
-            List<string> collection = new List<string> { text };
+        Assert.AreEqual(50, elementCount1, 15);
+        Assert.AreEqual(50, elementCount2, 15);
+    }
 
-            string result = collection.GetRandom();
+    [TestCase("string1")]
+    [TestCase("string2")]
+    public void GetRandomShouldReturnOnlyElement(string text)
+    {
+        List<string> collection = new List<string> { text };
 
-            Assert.AreEqual(text, result);
-        }
+        string result = collection.GetRandom();
+
+        Assert.AreEqual(text, result);
     }
 }

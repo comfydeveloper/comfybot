@@ -1,72 +1,71 @@
 ﻿using System;
 
-namespace ComfyBot.Bot.Tests.ChatBot.Timezones
+namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
+
+using ComfyBot.Bot.ChatBot.Timezones;
+using Common.Http;
+
+using Moq;
+
+using NUnit.Framework;
+
+[TestFixture]
+public class TimezoneLoaderTests
 {
-    using ComfyBot.Bot.ChatBot.Timezones;
-    using Common.Http;
+    private Mock<IHttpService> httpService;
 
-    using Moq;
+    private TimezoneLoader timezoneLoader;
 
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class TimezoneLoaderTests
+    [SetUp]
+    public void Setup()
     {
-        private Mock<IHttpService> httpService;
+        httpService = new Mock<IHttpService>();
+        timezoneLoader = new TimezoneLoader();
 
-        private TimezoneLoader timezoneLoader;
+        HttpService.OverrideInstance(httpService.Object);
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            httpService = new Mock<IHttpService>();
-            timezoneLoader = new TimezoneLoader();
+    [Test]
+    public void TryLoadShouldReturnFalseWhenNoMatchingTimezoneFound()
+    {
+        string[] foundZones = Array.Empty<string>();
+        httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
 
-            HttpService.OverrideInstance(httpService.Object);
-        }
+        bool result = timezoneLoader.TryLoad("test", out Timezone zone);
 
-        [Test]
-        public void TryLoadShouldReturnFalseWhenNoMatchingTimezoneFound()
-        {
-            string[] foundZones = Array.Empty<string>();
-            httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
+        Assert.False(result);
+        Assert.IsNull(zone);
+    }
 
-            bool result = timezoneLoader.TryLoad("test", out Timezone zone);
+    [TestCase("a/b/test", "test")]
+    [TestCase("a/test", "test")]
+    [TestCase("test", "test")]
+    public void TryLoadShouldReturnTrueWhenMatchingTimezoneFound(string foundZone, string searchText)
+    {
+        string[] foundZones = { foundZone };
+        httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
 
-            Assert.False(result);
-            Assert.IsNull(zone);
-        }
+        bool result = timezoneLoader.TryLoad(searchText, out Timezone zone);
 
-        [TestCase("a/b/test", "test")]
-        [TestCase("a/test", "test")]
-        [TestCase("test", "test")]
-        public void TryLoadShouldReturnTrueWhenMatchingTimezoneFound(string foundZone, string searchText)
-        {
-            string[] foundZones = { foundZone };
-            httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
+        Assert.True(result);
+        Assert.IsNotNull(zone);
+    }
 
-            bool result = timezoneLoader.TryLoad(searchText, out Timezone zone);
+    [Test]
+    public void TryLoadShouldCacheTimezones()
+    {
+        string[] foundZones = { "test" };
+        httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
 
-            Assert.True(result);
-            Assert.IsNotNull(zone);
-        }
+        timezoneLoader.TryLoad("test", out Timezone zone1);
+        timezoneLoader.TryLoad("test", out Timezone zone2);
 
-        [Test]
-        public void TryLoadShouldCacheTimezones()
-        {
-            string[] foundZones = { "test" };
-            httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
+        httpService.Verify(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone"), Times.Once());
+    }
 
-            timezoneLoader.TryLoad("test", out Timezone zone1);
-            timezoneLoader.TryLoad("test", out Timezone zone2);
-
-            httpService.Verify(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone"), Times.Once());
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            HttpService.OverrideInstance(null);
-        }
+    [TearDown]
+    public void TearDown()
+    {
+        HttpService.OverrideInstance(null);
     }
 }

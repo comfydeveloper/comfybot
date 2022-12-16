@@ -1,49 +1,48 @@
-﻿namespace ComfyBot.Bot.ChatBot.Messages
+﻿namespace ComfyBot.Bot.ChatBot.Messages;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using Wrappers;
+using Data.Models;
+using Data.Repositories;
+using Settings;
+
+using TwitchLib.Client.Interfaces;
+
+public class MessageResponseHandler : IMessageHandler
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    private readonly IRepository<MessageResponse> repository;
+    private readonly IMessageResponseLoader responseLoader;
 
-    using Wrappers;
-    using Data.Models;
-    using Data.Repositories;
-    using Settings;
-
-    using TwitchLib.Client.Interfaces;
-
-    public class MessageResponseHandler : IMessageHandler
+    public MessageResponseHandler(IRepository<MessageResponse> repository,
+        IMessageResponseLoader responseLoader)
     {
-        private readonly IRepository<MessageResponse> repository;
-        private readonly IMessageResponseLoader responseLoader;
+        this.repository = repository;
+        this.responseLoader = responseLoader;
+    }
 
-        public MessageResponseHandler(IRepository<MessageResponse> repository,
-                                      IMessageResponseLoader responseLoader)
+    public void Handle(ITwitchClient client, IChatMessage message)
+    {
+        if (IsCommand(message))
         {
-            this.repository = repository;
-            this.responseLoader = responseLoader;
+            return;
         }
 
-        public void Handle(ITwitchClient client, IChatMessage message)
+        IEnumerable<MessageResponse> messageResponses = repository.GetAll().OrderBy(r => r.Priority);
+
+        foreach (MessageResponse messageResponse in messageResponses)
         {
-            if (IsCommand(message))
+            if (responseLoader.TryGetResponse(messageResponse, message, out string response))
             {
+                client.SendMessage(ApplicationSettings.Default.Channel, response);
                 return;
             }
-
-            IEnumerable<MessageResponse> messageResponses = repository.GetAll().OrderBy(r => r.Priority);
-
-            foreach (MessageResponse messageResponse in messageResponses)
-            {
-                if (responseLoader.TryGetResponse(messageResponse, message, out string response))
-                {
-                    client.SendMessage(ApplicationSettings.Default.Channel, response);
-                    return;
-                }
-            }
         }
+    }
 
-        private static bool IsCommand(IChatMessage message)
-        {
-            return message.Text.StartsWith("!");
-        }
+    private static bool IsCommand(IChatMessage message)
+    {
+        return message.Text.StartsWith("!");
     }
 }

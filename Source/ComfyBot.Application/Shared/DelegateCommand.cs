@@ -1,43 +1,42 @@
-﻿namespace ComfyBot.Application.Shared
+﻿namespace ComfyBot.Application.Shared;
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows.Input;
+
+public class DelegateCommand : ICommand
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Windows.Input;
+    private readonly Action action;
 
-    public class DelegateCommand : ICommand
-    {
-        private readonly Action action;
-
-        private readonly Predicate<object> canExecute;
+    private readonly Predicate<object> canExecute;
 
 #pragma warning disable 67
-        public event EventHandler CanExecuteChanged
-        {
-            [ExcludeFromCodeCoverage]
-            add { CommandManager.RequerySuggested += value; }
-            [ExcludeFromCodeCoverage]
-            remove { CommandManager.RequerySuggested -= value; }
-        }
+    public event EventHandler CanExecuteChanged
+    {
+        [ExcludeFromCodeCoverage]
+        add { CommandManager.RequerySuggested += value; }
+        [ExcludeFromCodeCoverage]
+        remove { CommandManager.RequerySuggested -= value; }
+    }
 #pragma warning restore 67
 
-        public DelegateCommand(Action action, Predicate<object> canExecute = null)
-        {
-            this.action = action;
-            this.canExecute = canExecute;
-        }
+    public DelegateCommand(Action action, Predicate<object> canExecute = null)
+    {
+        this.action = action;
+        this.canExecute = canExecute;
+    }
 
-        public bool CanExecute(object parameter)
+    public bool CanExecute(object parameter)
+    {
+        if (canExecute == null)
         {
-            if (canExecute == null)
-            {
-                return true;
-            }
-            return canExecute(parameter);
+            return true;
         }
+        return canExecute(parameter);
+    }
 
-        public void Execute(object parameter = null)
-        {
-            action();
-        }
+    public void Execute(object parameter = null)
+    {
+        action();
     }
 }

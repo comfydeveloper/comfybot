@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Data.Wrappers
-{
-    using LiteDB;
-    using System;
+﻿namespace ComfyBot.Data.Wrappers;
 
-    public interface IDatabase : IDisposable
-    {
-        ILiteCollection<T> GetCollection<T>(string name);
-    }
+using LiteDB;
+using System;
+
+public interface IDatabase : IDisposable
+{
+    ILiteCollection<T> GetCollection<T>(string name);
 }

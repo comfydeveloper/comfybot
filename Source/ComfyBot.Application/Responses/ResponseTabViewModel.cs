@@ -1,108 +1,107 @@
-﻿namespace ComfyBot.Application.Responses
+﻿namespace ComfyBot.Application.Responses;
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Windows.Data;
+
+using Shared;
+using Shared.Contracts;
+using Shared.Extensions;
+using Data.Models;
+using Data.Repositories;
+
+public class ResponseTabViewModel : InitializableTab
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Windows.Data;
+    private readonly IRepository<MessageResponse> repository;
+    private readonly IMapper<MessageResponse, MessageResponseModel> mapper;
+    private string searchText;
 
-    using Shared;
-    using Shared.Contracts;
-    using Shared.Extensions;
-    using Data.Models;
-    using Data.Repositories;
-
-    public class ResponseTabViewModel : InitializableTab
+    public ResponseTabViewModel(IRepository<MessageResponse> repository,
+        IMapper<MessageResponse, MessageResponseModel> mapper)
     {
-        private readonly IRepository<MessageResponse> repository;
-        private readonly IMapper<MessageResponse, MessageResponseModel> mapper;
-        private string searchText;
+        this.repository = repository;
+        this.mapper = mapper;
 
-        public ResponseTabViewModel(IRepository<MessageResponse> repository,
-                                    IMapper<MessageResponse, MessageResponseModel> mapper)
+        AddResponseCommand = new DelegateCommand(AddResponse);
+        RemoveResponseCommand = new ParameterCommand(RemoveResponse);
+    }
+
+    public DelegateCommand AddResponseCommand { get; }
+
+    public ParameterCommand RemoveResponseCommand { get; }
+
+    public ObservableCollection<MessageResponseModel> Responses { get; set; } = new();
+
+    protected override void Initialize()
+    {
+        IEnumerable<MessageResponse> messageResponses = repository.GetAll().OrderBy(r => r.Priority);
+
+        foreach (MessageResponse entity in messageResponses)
         {
-            this.repository = repository;
-            this.mapper = mapper;
-
-            AddResponseCommand = new DelegateCommand(AddResponse);
-            RemoveResponseCommand = new ParameterCommand(RemoveResponse);
+            MessageResponseModel model = new MessageResponseModel();
+            mapper.MapToModel(entity, model);
+            Responses.Add(model);
         }
 
-        public DelegateCommand AddResponseCommand { get; }
+        Responses.RegisterCollectionItemChanged(OnResponseUpdate);
+    }
 
-        public ParameterCommand RemoveResponseCommand { get; }
+    private void AddResponse()
+    {
+        MessageResponseModel messageResponse = new MessageResponseModel { Id = Guid.NewGuid().ToString() };
+        Responses.Add(messageResponse);
+    }
 
-        public ObservableCollection<MessageResponseModel> Responses { get; set; } = new();
+    private void RemoveResponse(object parameter)
+    {
+        MessageResponseModel response = (MessageResponseModel) parameter;
 
-        protected override void Initialize()
+        Responses.Remove(response);
+        repository.Remove(response.Id);
+    }
+
+    private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
+    {
+        MessageResponseModel model = (MessageResponseModel)sender;
+        MessageResponse entity = new MessageResponse();
+
+        mapper.MapToEntity(model, entity);
+        repository.AddOrUpdate(entity);
+    }
+
+    [ExcludeFromCodeCoverage]
+    public string SearchText
+    {
+        get => searchText;
+        set { searchText = value; UpdateSearch(); }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private void UpdateSearch()
+    {
+        ICollectionView collectionView = CollectionViewSource.GetDefaultView(Responses);
+
+        if (string.IsNullOrEmpty(SearchText))
         {
-            IEnumerable<MessageResponse> messageResponses = repository.GetAll().OrderBy(r => r.Priority);
-
-            foreach (MessageResponse entity in messageResponses)
+            collectionView.Filter = o => true;
+        }
+        else
+        {
+            collectionView.Filter = o =>
             {
-                MessageResponseModel model = new MessageResponseModel();
-                mapper.MapToModel(entity, model);
-                Responses.Add(model);
-            }
+                MessageResponseModel response = (MessageResponseModel) o;
 
-            Responses.RegisterCollectionItemChanged(OnResponseUpdate);
+                return response.Replies.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.AllKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.ExactKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.LooseKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+            };
         }
 
-        private void AddResponse()
-        {
-            MessageResponseModel messageResponse = new MessageResponseModel { Id = Guid.NewGuid().ToString() };
-            Responses.Add(messageResponse);
-        }
-
-        private void RemoveResponse(object parameter)
-        {
-            MessageResponseModel response = (MessageResponseModel) parameter;
-
-            Responses.Remove(response);
-            repository.Remove(response.Id);
-        }
-
-        private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
-        {
-            MessageResponseModel model = (MessageResponseModel)sender;
-            MessageResponse entity = new MessageResponse();
-
-            mapper.MapToEntity(model, entity);
-            repository.AddOrUpdate(entity);
-        }
-
-        [ExcludeFromCodeCoverage]
-        public string SearchText
-        {
-            get => searchText;
-            set { searchText = value; UpdateSearch(); }
-        }
-
-        [ExcludeFromCodeCoverage]
-        private void UpdateSearch()
-        {
-            ICollectionView collectionView = CollectionViewSource.GetDefaultView(Responses);
-
-            if (string.IsNullOrEmpty(SearchText))
-            {
-                collectionView.Filter = o => true;
-            }
-            else
-            {
-                collectionView.Filter = o =>
-                                        {
-                                            MessageResponseModel response = (MessageResponseModel) o;
-
-                                            return response.Replies.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                                                   || response.AllKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                                                   || response.ExactKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                                                   || response.LooseKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase));
-                                        };
-            }
-
-            collectionView.Refresh();
-        }
+        collectionView.Refresh();
     }
 }

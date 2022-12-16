@@ -1,19 +1,18 @@
-﻿namespace ComfyBot.Bot.ChatBot.Wrappers
+﻿namespace ComfyBot.Bot.ChatBot.Wrappers;
+
+using System.Collections.Generic;
+
+public interface IChatCommand
 {
-    using System.Collections.Generic;
+    List<string> ArgumentsAsList { get; }
 
-    public interface IChatCommand
-    {
-        List<string> ArgumentsAsList { get; }
+    string ArgumentsAsString { get; }
 
-        string ArgumentsAsString { get; }
+    IChatMessage ChatMessage { get; }
 
-        IChatMessage ChatMessage { get; }
+    string CommandText { get; }
 
-        string CommandText { get; }
+    bool IsBroadcaster { get; }
 
-        bool IsBroadcaster { get; }
-
-        bool IsModerator { get; }
-    }
+    bool IsModerator { get; }
 }

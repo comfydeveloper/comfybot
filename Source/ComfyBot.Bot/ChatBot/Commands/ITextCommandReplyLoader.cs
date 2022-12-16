@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Bot.ChatBot.Commands
-{
-    using Wrappers;
-    using Data.Models;
+﻿namespace ComfyBot.Bot.ChatBot.Commands;
 
-    public interface ITextCommandReplyLoader
-    {
-        bool TryGetReply(TextCommand textCommand, IChatCommand command, out string reply);
-    }
+using Wrappers;
+using Data.Models;
+
+public interface ITextCommandReplyLoader
+{
+    bool TryGetReply(TextCommand textCommand, IChatCommand command, out string reply);
 }

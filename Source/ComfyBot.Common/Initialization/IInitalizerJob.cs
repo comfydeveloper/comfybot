@@ -1,7 +1,6 @@
-﻿namespace ComfyBot.Common.Initialization
+﻿namespace ComfyBot.Common.Initialization;
+
+public interface IInitializerJob
 {
-    public interface IInitializerJob
-    {
-        void Execute();
-    }
+    void Execute();
 }

@@ -1,27 +1,26 @@
-﻿namespace ComfyBot.Common.Http
+﻿namespace ComfyBot.Common.Http;
+
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+using Idioms;
+
+[ExcludeFromCodeCoverage]
+public class HttpService : Singleton<IHttpService, HttpService>, IHttpService
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Net.Http;
-    using System.Text.Json;
-    using System.Threading.Tasks;
+    private readonly HttpClient httpClient;
 
-    using Idioms;
-
-    [ExcludeFromCodeCoverage]
-    public class HttpService : Singleton<IHttpService, HttpService>, IHttpService
+    public HttpService()
     {
-        private readonly HttpClient httpClient;
+        httpClient = new HttpClient();
+    }
 
-        public HttpService()
-        {
-            httpClient = new HttpClient();
-        }
+    public async Task<T> GetAsync<T>(string url)
+    {
+        string result = await httpClient.GetAsync(url).Result.Content.ReadAsStringAsync();
 
-        public async Task<T> GetAsync<T>(string url)
-        {
-            string result = await httpClient.GetAsync(url).Result.Content.ReadAsStringAsync();
-
-            return JsonSerializer.Deserialize<T>(result);
-        }
+        return JsonSerializer.Deserialize<T>(result);
     }
 }

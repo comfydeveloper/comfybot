@@ -1,67 +1,66 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Commands
+﻿namespace ComfyBot.Bot.Tests.ChatBot.Commands;
+
+using ComfyBot.Bot.ChatBot.Commands;
+using ComfyBot.Bot.ChatBot.Wrappers;
+using Data.Models;
+using Data.Repositories;
+using Settings;
+
+using Moq;
+
+using NUnit.Framework;
+
+using TwitchLib.Client.Interfaces;
+
+[TestFixture]
+public class TextCommandHandlerTests
 {
-    using ComfyBot.Bot.ChatBot.Commands;
-    using ComfyBot.Bot.ChatBot.Wrappers;
-    using Data.Models;
-    using Data.Repositories;
-    using Settings;
+    private Mock<IRepository<TextCommand>> repository;
+    private Mock<ITextCommandReplyLoader> replyLoader;
 
-    using Moq;
+    private Mock<ITwitchClient> twitchClient;
+    private Mock<IChatCommand> chatCommand;
 
-    using NUnit.Framework;
+    private TextCommandHandler handler;
 
-    using TwitchLib.Client.Interfaces;
-
-    [TestFixture]
-    public class TextCommandHandlerTests
+    [SetUp]
+    public void Setup()
     {
-        private Mock<IRepository<TextCommand>> repository;
-        private Mock<ITextCommandReplyLoader> replyLoader;
+        repository = new Mock<IRepository<TextCommand>>();
+        replyLoader = new Mock<ITextCommandReplyLoader>();
 
-        private Mock<ITwitchClient> twitchClient;
-        private Mock<IChatCommand> chatCommand;
+        twitchClient = new Mock<ITwitchClient>();
+        chatCommand = new Mock<IChatCommand>();
 
-        private TextCommandHandler handler;
+        handler = new TextCommandHandler(repository.Object, replyLoader.Object);
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            repository = new Mock<IRepository<TextCommand>>();
-            replyLoader = new Mock<ITextCommandReplyLoader>();
+    [TestCase("channel1", "reply1")]
+    [TestCase("channel2", "reply2")]
+    public void HandleShouldSendLoadedReply(string channel, string reply)
+    {
+        ApplicationSettings.Default.Channel = channel;
+        TextCommand command1 = new TextCommand();
+        TextCommand command2 = new TextCommand();
+        repository.Setup(r => r.GetAll()).Returns(new[] { command1, command2 });
+        replyLoader.Setup(l => l.TryGetReply(command1, chatCommand.Object, out reply)).Returns(false);
+        replyLoader.Setup(l => l.TryGetReply(command1, chatCommand.Object, out reply)).Returns(true);
 
-            twitchClient = new Mock<ITwitchClient>();
-            chatCommand = new Mock<IChatCommand>();
+        handler.Handle(twitchClient.Object, chatCommand.Object);
 
-            handler = new TextCommandHandler(repository.Object, replyLoader.Object);
-        }
+        twitchClient.Verify(c => c.SendMessage(channel, reply, false), Times.Once);
+    }
 
-        [TestCase("channel1", "reply1")]
-        [TestCase("channel2", "reply2")]
-        public void HandleShouldSendLoadedReply(string channel, string reply)
-        {
-            ApplicationSettings.Default.Channel = channel;
-            TextCommand command1 = new TextCommand();
-            TextCommand command2 = new TextCommand();
-            repository.Setup(r => r.GetAll()).Returns(new[] { command1, command2 });
-            replyLoader.Setup(l => l.TryGetReply(command1, chatCommand.Object, out reply)).Returns(false);
-            replyLoader.Setup(l => l.TryGetReply(command1, chatCommand.Object, out reply)).Returns(true);
+    [Test]
+    public void HandleSHouldSendNothingIfNoReplyFound()
+    {
+        TextCommand command = new TextCommand();
+        repository.Setup(r => r.GetAll()).Returns(new[] { command });
+        string reply;
+        replyLoader.Setup(l => l.TryGetReply(command, chatCommand.Object, out reply)).Returns(false);
 
-            handler.Handle(twitchClient.Object, chatCommand.Object);
+        handler.Handle(twitchClient.Object, chatCommand.Object);
 
-            twitchClient.Verify(c => c.SendMessage(channel, reply, false), Times.Once);
-        }
-
-        [Test]
-        public void HandleSHouldSendNothingIfNoReplyFound()
-        {
-            TextCommand command = new TextCommand();
-            repository.Setup(r => r.GetAll()).Returns(new[] { command });
-            string reply;
-            replyLoader.Setup(l => l.TryGetReply(command, chatCommand.Object, out reply)).Returns(false);
-
-            handler.Handle(twitchClient.Object, chatCommand.Object);
-
-            twitchClient.Verify(c => c.SendMessage(It.IsAny<string>(), It.IsAny<string>(), false), Times.Never);
-        }
+        twitchClient.Verify(c => c.SendMessage(It.IsAny<string>(), It.IsAny<string>(), false), Times.Never);
     }
 }

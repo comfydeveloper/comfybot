@@ -1,47 +1,46 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Timezones
+﻿namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
+
+using ComfyBot.Bot.ChatBot.Timezones;
+using Common.Http;
+
+using Moq;
+
+using NUnit.Framework;
+
+[TestFixture]
+public class TimeLoaderTests
 {
-    using ComfyBot.Bot.ChatBot.Timezones;
-    using Common.Http;
+    private Mock<IHttpService> httpService;
 
-    using Moq;
+    private TimeLoader timeLoader;
 
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class TimeLoaderTests
+    [SetUp]
+    public void Setup()
     {
-        private Mock<IHttpService> httpService;
+        httpService = new Mock<IHttpService>();
+        timeLoader = new TimeLoader();
 
-        private TimeLoader timeLoader;
+        HttpService.OverrideInstance(httpService.Object);
+    }
 
-        [SetUp]
-        public void Setup()
+    [Test]
+    public void GetTimeShouldMapTimezone()
+    {
+        Timezone timezone = new Timezone
         {
-            httpService = new Mock<IHttpService>();
-            timeLoader = new TimeLoader();
+            Area = "area",
+            Location = "location",
+            Region = "region"
+        };
 
-            HttpService.OverrideInstance(httpService.Object);
-        }
+        TimezoneInfo timezoneInfo = timeLoader.GetTime(timezone);
 
-        [Test]
-        public void GetTimeShouldMapTimezone()
-        {
-            Timezone timezone = new Timezone
-                                {
-                                    Area = "area",
-                                    Location = "location",
-                                    Region = "region"
-                                };
+        httpService.Verify(s => s.GetAsync<TimezoneInfo>($"http://worldtimeapi.org/api/timezone/{timezone}"));
+    }
 
-            TimezoneInfo timezoneInfo = timeLoader.GetTime(timezone);
-
-            httpService.Verify(s => s.GetAsync<TimezoneInfo>($"http://worldtimeapi.org/api/timezone/{timezone}"));
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            HttpService.OverrideInstance(null);
-        }
+    [TearDown]
+    public void TearDown()
+    {
+        HttpService.OverrideInstance(null);
     }
 }

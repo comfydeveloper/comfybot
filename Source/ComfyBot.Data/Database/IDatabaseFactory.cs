@@ -1,9 +1,8 @@
-﻿namespace ComfyBot.Data.Database
-{
-    using Wrappers;
+﻿namespace ComfyBot.Data.Database;
 
-    public interface IDatabaseFactory
-    {
-        IDatabase Create();
-    }
+using Wrappers;
+
+public interface IDatabaseFactory
+{
+    IDatabase Create();
 }

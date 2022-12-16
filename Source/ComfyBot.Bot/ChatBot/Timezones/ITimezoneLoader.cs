@@ -1,7 +1,6 @@
-﻿namespace ComfyBot.Bot.ChatBot.Timezones
+﻿namespace ComfyBot.Bot.ChatBot.Timezones;
+
+public interface ITimezoneLoader
 {
-    public interface ITimezoneLoader
-    {
-        bool TryLoad(string zone, out Timezone result);
-    }
+    bool TryLoad(string zone, out Timezone result);
 }

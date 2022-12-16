@@ -1,21 +1,20 @@
-﻿namespace ComfyBot.Common.Idioms
+﻿namespace ComfyBot.Common.Idioms;
+
+using System.Diagnostics.CodeAnalysis;
+
+[ExcludeFromCodeCoverage]
+public abstract class Singleton<TInterface, TImplementation>
+    where TInterface : class
+    where TImplementation : TInterface, new()
 {
-    using System.Diagnostics.CodeAnalysis;
+    private static readonly TImplementation instance = new();
 
-    [ExcludeFromCodeCoverage]
-    public abstract class Singleton<TInterface, TImplementation>
-        where TInterface : class
-        where TImplementation : TInterface, new()
+    private static TInterface overriddenInstance;
+
+    public static TInterface Instance => overriddenInstance ?? instance;
+
+    public static void OverrideInstance(TInterface newInstance)
     {
-        private static readonly TImplementation instance = new();
-
-        private static TInterface overriddenInstance;
-
-        public static TInterface Instance => overriddenInstance ?? instance;
-
-        public static void OverrideInstance(TInterface newInstance)
-        {
-            overriddenInstance = newInstance;
-        }
+        overriddenInstance = newInstance;
     }
 }
