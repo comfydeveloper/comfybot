@@ -100,7 +100,15 @@ public class ChatBot : IComfyBot
     {
         foreach (ICommandHandler handler in commandHandlers)
         {
-            handler.Handle(twitchClient, e.Command.Wrap());
+            try
+            {
+                handler.Handle(twitchClient, e.Command.Wrap());
+            }
+            catch (Exception ex)
+            {
+                Log($"Failed to handle command {e.Command.CommandText} - {ex.Message}");
+            }
+
         }
     }
 
@@ -109,7 +117,14 @@ public class ChatBot : IComfyBot
     {
         foreach (IMessageHandler handler in messageHandlers)
         {
-            handler.Handle(twitchClient, e.ChatMessage.Wrap());
+            try
+            {
+                handler.Handle(twitchClient, e.ChatMessage.Wrap());
+            }
+            catch (Exception ex)
+            {
+                Log($"Failed to handle message - {ex.Message}");
+            }
         }
     }
 
