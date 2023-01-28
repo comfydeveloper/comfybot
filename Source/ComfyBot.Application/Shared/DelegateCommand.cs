@@ -14,9 +14,9 @@ public class DelegateCommand : ICommand
     public event EventHandler CanExecuteChanged
     {
         [ExcludeFromCodeCoverage]
-        add { CommandManager.RequerySuggested += value; }
+        add => CommandManager.RequerySuggested += value;
         [ExcludeFromCodeCoverage]
-        remove { CommandManager.RequerySuggested -= value; }
+        remove => CommandManager.RequerySuggested -= value;
     }
 #pragma warning restore 67
 

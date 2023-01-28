@@ -31,10 +31,7 @@ public class ConsoleOutputWriter : TextWriter
         textbox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
     }
 
-    public override Encoding Encoding
-    {
-        get { return Encoding.ASCII; }
-    }
+    public override Encoding Encoding => Encoding.ASCII;
 
     private void UpdateText(string message)
     {

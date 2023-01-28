@@ -14,11 +14,11 @@ public class ChatMessageWrapper : IChatMessage
         this.message = message;
     }
 
-    public bool IsBroadcaster { get => message.IsBroadcaster; }
+    public bool IsBroadcaster => message.IsBroadcaster;
 
-    public bool IsModerator { get => message.IsModerator; }
+    public bool IsModerator => message.IsModerator;
 
-    public string UserName { get => message.Username; }
+    public string UserName => message.Username;
 
-    public string Text { get => message.Message; }
+    public string Text => message.Message;
 }

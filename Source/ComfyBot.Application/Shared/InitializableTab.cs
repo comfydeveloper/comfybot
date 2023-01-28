@@ -7,7 +7,7 @@ public abstract class InitializableTab
 
     public bool IsSelected
     {
-        get { return isSelected; }
+        get => isSelected;
         set
         {
             isSelected = value;
