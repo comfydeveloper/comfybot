@@ -88,7 +88,7 @@ public class TextCommandsTabViewModel : InitializableTab
         TextCommand entity = new TextCommand();
         mapper.MapToEntity(model, entity);
 
-        repository.AddOrUpdate(entity);
+        repository.Write(entity);
     }
 
     [ExcludeFromCodeCoverage]

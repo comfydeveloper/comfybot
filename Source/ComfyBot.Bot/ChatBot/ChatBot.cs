@@ -86,13 +86,27 @@ public class ChatBot : IComfyBot
     [ExcludeFromCodeCoverage]
     private void OnUserLeft(object sender, OnUserLeftArgs e)
     {
-        chattersCache.Remove(e.Username);
+        try
+        {
+            chattersCache.Remove(e.Username);
+        }
+        catch (Exception ex)
+        {
+            Log($"Failed to remove user from chatters cache - {ex.Message}");
+        }
     }
 
     [ExcludeFromCodeCoverage]
     private void OnUserJoined(object sender, OnUserJoinedArgs e)
     {
-        chattersCache.Add(e.Username);
+        try
+        {
+            chattersCache.Add(e.Username);
+        }
+        catch (Exception ex)
+        {
+            Log($"Failed to add user to chatters cache - {ex.Message}");
+        }
     }
 
     [ExcludeFromCodeCoverage]
@@ -131,13 +145,27 @@ public class ChatBot : IComfyBot
     [ExcludeFromCodeCoverage]
     private static void OnConnected(object sender, OnConnectedArgs e)
     {
-        Log($"Successfully connected!");
+        try
+        {
+            Log($"Successfully connected!");
+        }
+        catch (Exception ex)
+        {
+            Log($"Failed to log successful connection - {ex.Message}");
+        }
     }
 
     [ExcludeFromCodeCoverage]
     private static void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
     {
-        Log($"Successfully joined channel {e.Channel}.");
+        try
+        {
+            Log($"Successfully joined channel {e.Channel}.");
+        }
+        catch (Exception ex)
+        {
+            Log($"Failed to log successful channel join - {ex.Message}");
+        }
     }
 
     [ExcludeFromCodeCoverage]

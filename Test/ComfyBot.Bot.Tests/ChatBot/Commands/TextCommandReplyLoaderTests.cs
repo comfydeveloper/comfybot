@@ -167,7 +167,7 @@ public class TextCommandReplyLoaderTests
         replyLoader.TryGetReply(textCommand, chatCommand.Object, out string response);
 
         Assert.That(textCommand.LastUsed, Is.EqualTo(DateTime.Now).Within(2).Seconds);
-        repository.Verify(r => r.AddOrUpdate(textCommand));
+        repository.Verify(r => r.Write(textCommand));
     }
 
     [Test]

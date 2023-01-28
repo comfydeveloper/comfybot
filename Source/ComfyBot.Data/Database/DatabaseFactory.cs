@@ -17,7 +17,7 @@ public class DatabaseFactory : IDatabaseFactory
         string databasePath = GetDatabasePath();
         Directory.CreateDirectory(Path.GetDirectoryName(databasePath));
 
-        return new DatabaseWrapper(new LiteDatabase(databasePath));
+        return new DatabaseWrapper(new LiteDatabase($"Filename={databasePath}; Connection=Shared;"));
     }
 
     private static string GetDatabasePath()

@@ -16,9 +16,7 @@ public class TextCommandRepository : Repository<TextCommand>
         target.TimeoutInSeconds = source.TimeoutInSeconds;
         target.UseCount = Math.Max(source.UseCount, target.UseCount);
         target.LastUsed = source.LastUsed ?? target.LastUsed;
-        target.Commands.Clear();
-        target.Commands.AddRange(source.Commands);
-        target.Replies.Clear();
-        target.Replies.AddRange(source.Replies);
+        target.Commands = source.Commands;
+        target.Replies = source.Replies;
     }
 }

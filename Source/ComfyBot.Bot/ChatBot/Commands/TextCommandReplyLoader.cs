@@ -65,7 +65,7 @@ public class TextCommandReplyLoader : ITextCommandReplyLoader
     {
         textCommand.UseCount++;
         textCommand.LastUsed = DateTime.Now;
-        repository.AddOrUpdate(textCommand);
+        repository.Write(textCommand);
     }
 
     private static bool CommandMatches(TextCommand textCommand, IChatCommand command)

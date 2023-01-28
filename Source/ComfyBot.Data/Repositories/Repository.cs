@@ -32,7 +32,7 @@ public abstract class Repository<T> : IRepository<T>
         return model;
     }
 
-    public void AddOrUpdate(T model)
+    public void Write(T model)
     {
         using IDatabase database = databaseFactory.Create();
 

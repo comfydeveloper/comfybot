@@ -159,7 +159,7 @@ public class MessageResponseLoaderTests
         loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
 
         Assert.That(messageResponse.LastUsed, Is.EqualTo(DateTime.Now).Within(2).Seconds);
-        repository.Verify(r => r.AddOrUpdate(messageResponse));
+        repository.Verify(r => r.Write(messageResponse));
     }
 
     [Test]

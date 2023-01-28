@@ -30,23 +30,35 @@ public class ComfyPubSub : IComfyPubSub
         client = new TwitchPubSub();
 
         client.OnPubSubServiceConnected += ClientOnOnPubSubServiceConnected;
-        client.OnRewardRedeemed += ClientOnOnRewardRedeemed;
+        client.OnChannelPointsRewardRedeemed += OnChannelPointsRewardRedeemed;
 
-        client.ListenToRewards(ApplicationSettings.Default.ChannelId);
+        client.ListenToChannelPoints(ApplicationSettings.Default.ChannelId);
         client.Connect();
     }
 
-    private void ClientOnOnPubSubServiceConnected(object? sender, EventArgs e)
+    private void ClientOnOnPubSubServiceConnected(object sender, EventArgs e)
     {
         client.SendTopics();
     }
 
-    private void ClientOnOnRewardRedeemed(object? sender, OnRewardRedeemedArgs e)
+    private void OnChannelPointsRewardRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
     {
-        IRewardRedemption rewardRedemption = e.ToRewardRedemption();
-        foreach (IRewardRedeemHandler rewardRedeemHandler in rewardRedeemHandlers)
+        try
         {
-            rewardRedeemHandler.Handle(rewardRedemption);
+            IRewardRedemption rewardRedemption = e.ToRewardRedemption();
+            foreach (IRewardRedeemHandler rewardRedeemHandler in rewardRedeemHandlers)
+            {
+                rewardRedeemHandler.Handle(rewardRedemption);
+            }
         }
+        catch (Exception ex)
+        {
+            Log($"Failed to handle channel point redeem {e.RewardRedeemed.Redemption.Reward.Title} - {ex.Message}");
+        }
+    }
+
+    private static void Log(string message)
+    {
+        Console.Write($"{DateTime.Now}: {message}");
     }
 }

@@ -49,7 +49,7 @@ public class MessageResponseLoader : IMessageResponseLoader
     {
         response.UseCount++;
         response.LastUsed = DateTime.Now;
-        repository.AddOrUpdate(response);
+        repository.Write(response);
     }
 
     private static bool HasOngoingTimeout(MessageResponse response)

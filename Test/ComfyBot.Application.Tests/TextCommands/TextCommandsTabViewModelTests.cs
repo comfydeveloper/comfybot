@@ -78,7 +78,7 @@ public class TextCommandsTabViewModelTests
 
         model.Timeout = 1;
 
-        repository.Verify(r => r.AddOrUpdate(It.IsAny<TextCommand>()));
+        repository.Verify(r => r.Write(It.IsAny<TextCommand>()));
         mapper.Verify(r => r.MapToEntity(model, It.IsAny<TextCommand>()));
     }
 }

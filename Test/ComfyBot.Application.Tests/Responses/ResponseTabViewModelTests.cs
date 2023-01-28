@@ -72,7 +72,7 @@ public class ResponseTabViewModelTests
 
         model.Timeout = 1;
 
-        repository.Verify(r => r.AddOrUpdate(It.IsAny<MessageResponse>()));
+        repository.Verify(r => r.Write(It.IsAny<MessageResponse>()));
         mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponse>()));
     }
 }

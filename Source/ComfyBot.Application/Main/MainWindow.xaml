@@ -251,7 +251,7 @@
                                             <StackPanel Grid.Column="2" Margin="5">
                                                 <DockPanel LastChildFill="False">
                                                     <Label Content="Says anything" FontWeight="Bold" />
-                                                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding ReplyAlways}"></CheckBox> 
+                                                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding ReplyAlways}"></CheckBox>
                                                 </DockPanel>
                                                 <!-- Loose Keywords -->
                                                 <DockPanel LastChildFill="False">
@@ -424,59 +424,6 @@
                                 <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" Height="20" Width="20"/>
                             </Border>
                             <Label Content="Add a response" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                        </DockPanel>
-                    </Grid>
-                </ScrollViewer>
-            </TabItem>
-            <!-- Shoutouts Tab -->
-            <TabItem DataContext="{Binding Tabs.Shoutouts}" IsSelected="{Binding IsSelected}">
-                <TabItem.Header>
-                    <DockPanel LastChildFill="False">
-                        <materialDesign:PackIcon Kind="Voice"/>
-                        <TextBlock Text="Shoutouts " Margin="5 0 0 0"/>
-                    </DockPanel>
-                </TabItem.Header>
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="25" />
-                        </Grid.RowDefinitions>
-                        <ItemsControl Grid.Row="0" ItemsSource="{Binding Shoutouts}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Style="{StaticResource Card}" Height="40">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="30" />
-                                            </Grid.ColumnDefinitions>
-                                            <DockPanel Grid.Column="0">
-                                                <Label Content="User" VerticalAlignment="Center" />
-                                                <TextBox Text="{Binding Command}" Style="{StaticResource UnderscoreTextBox}" MinWidth="80">
-                                                </TextBox>
-                                                <Label Content="Shoutout" VerticalAlignment="Center" />
-                                                <TextBox Text="{Binding Message}"  Style="{StaticResource UnderscoreTextBox}" />
-                                            </DockPanel>
-                                            <Border Grid.Column="1"   Background="#d32f2f" Cursor="Hand" Margin="5 0 0 0">
-                                                <Border.InputBindings>
-                                                    <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveShoutoutCommand}" CommandParameter="{Binding}"/>
-                                                </Border.InputBindings>
-                                                <materialDesign:PackIcon Kind="Trash" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFF" />
-                                            </Border>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                        <DockPanel Grid.Row="1" LastChildFill="False">
-                            <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent" HorizontalAlignment="Left" Margin="5 0 0 0">
-                                <Border.InputBindings>
-                                    <MouseBinding MouseAction="LeftClick" Command="{Binding AddShoutoutCommand}" />
-                                </Border.InputBindings>
-                                <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" Height="20" Width="20"/>
-                            </Border>
-                            <Label Content="Add a shoutout" />
                         </DockPanel>
                     </Grid>
                 </ScrollViewer>

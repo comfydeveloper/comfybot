@@ -52,7 +52,7 @@ public class MessageResponseRepositoryTests
     {
         MessageResponse model = new MessageResponse();
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         entities.Verify(e => e.Insert(model));
         entities.Verify(e => e.Update(model), Times.Never);
@@ -66,7 +66,7 @@ public class MessageResponseRepositoryTests
         MessageResponse model = new MessageResponse { TimeoutInSeconds = timeOutInSeconds };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         entities.Verify(e => e.Insert(model), Times.Never);
         entities.Verify(e => e.Update(entity));
@@ -81,7 +81,7 @@ public class MessageResponseRepositoryTests
         MessageResponse model = new MessageResponse { Priority = priority };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         entities.Verify(e => e.Insert(model), Times.Never);
         entities.Verify(e => e.Update(entity));
@@ -96,7 +96,7 @@ public class MessageResponseRepositoryTests
         MessageResponse model = new MessageResponse { UseCount = newCount };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         Assert.AreEqual(expected, entity.UseCount);
     }
@@ -122,7 +122,7 @@ public class MessageResponseRepositoryTests
         };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         entities.Verify(e => e.Insert(model), Times.Never);
         entities.Verify(e => e.Update(entity));

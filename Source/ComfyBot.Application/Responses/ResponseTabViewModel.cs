@@ -70,7 +70,7 @@ public class ResponseTabViewModel : InitializableTab
         MessageResponse entity = new MessageResponse();
 
         mapper.MapToEntity(model, entity);
-        repository.AddOrUpdate(entity);
+        repository.Write(entity);
     }
 
     [ExcludeFromCodeCoverage]

@@ -7,10 +7,10 @@ using Wrappers;
 using TwitchLib.PubSub.Events;
 
 [ExcludeFromCodeCoverage]
-public static class ArgsExtensions
+public static class OnChannelPointsRewardRedeemedArgsExtensions
 {
-    public static IRewardRedemption ToRewardRedemption(this OnRewardRedeemedArgs args)
+    public static IRewardRedemption ToRewardRedemption(this OnChannelPointsRewardRedeemedArgs args)
     {
-        return new RewardRedeemedArgsWrapper(args);
+        return new OnChannelPointsRewardRedeemedArgsWrapper(args);
     }
 }

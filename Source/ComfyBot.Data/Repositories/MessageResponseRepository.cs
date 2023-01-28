@@ -13,30 +13,15 @@ public class MessageResponseRepository : Repository<MessageResponse>
 
     protected override void Update(MessageResponse source, MessageResponse target)
     {
-        Clear(target);
-        UpdateInternal(source, target);
-    }
-
-    private static void Clear(MessageResponse target)
-    {
-        target.Users.Clear();
-        target.AllKeywords.Clear();
-        target.ExactKeywords.Clear();
-        target.LooseKeywords.Clear();
-        target.Replies.Clear();
-    }
-
-    private static void UpdateInternal(MessageResponse source, MessageResponse target)
-    {
         target.Priority = source.Priority;
         target.UseCount = Math.Max(source.UseCount, target.UseCount);
         target.TimeoutInSeconds = source.TimeoutInSeconds;
         target.LastUsed = source.LastUsed ?? target.LastUsed;
-        target.Users.AddRange(source.Users);
-        target.ExactKeywords.AddRange(source.ExactKeywords);
-        target.AllKeywords.AddRange(source.AllKeywords);
-        target.LooseKeywords.AddRange(source.LooseKeywords);
-        target.Replies.AddRange(source.Replies);
+        target.Users = source.Users;
+        target.ExactKeywords = source.ExactKeywords;
+        target.AllKeywords = source.AllKeywords;
+        target.LooseKeywords = source.LooseKeywords;
+        target.Replies = source.Replies;
         target.ReplyAlways = source.ReplyAlways;
     }
 }

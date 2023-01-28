@@ -71,7 +71,7 @@ public class Program
     private static void RegisterImplementationsWithoutInterfaces(IServiceCollection collection, Assembly assembly)
     {
         Type[] registrations = assembly.GetExportedTypes()
-            .Where(type => type.Namespace.StartsWith("ComfyBot")
+            .Where(type => type.Namespace!.StartsWith("ComfyBot")
                            && !type.IsAbstract
                            && !type.GetInterfaces().Any())
             .ToArray();

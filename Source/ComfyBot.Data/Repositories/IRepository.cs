@@ -10,7 +10,7 @@ public interface IRepository<T> where T : Entity
 {
     T Get(Expression<Func<T, bool>> predicate);
 
-    void AddOrUpdate(T model);
+    void Write(T model);
 
     void Remove(string id);
 

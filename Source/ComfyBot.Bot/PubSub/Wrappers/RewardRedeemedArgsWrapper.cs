@@ -6,24 +6,24 @@ using System.Diagnostics.CodeAnalysis;
 using TwitchLib.PubSub.Events;
 
 [ExcludeFromCodeCoverage]
-public class RewardRedeemedArgsWrapper : IRewardRedemption
+public class OnChannelPointsRewardRedeemedArgsWrapper : IRewardRedemption
 {
-    private readonly OnRewardRedeemedArgs onRewardRedeemedArgs;
+    private readonly OnChannelPointsRewardRedeemedArgs onRewardRedeemedArgs;
 
-    public RewardRedeemedArgsWrapper(OnRewardRedeemedArgs onRewardRedeemedArgs)
+    public OnChannelPointsRewardRedeemedArgsWrapper(OnChannelPointsRewardRedeemedArgs onRewardRedeemedArgs)
     {
         this.onRewardRedeemedArgs = onRewardRedeemedArgs;
     }
 
-    public Guid RewardId => onRewardRedeemedArgs.RewardId;
+    public Guid RewardId => Guid.Parse(onRewardRedeemedArgs.RewardRedeemed.Redemption.Id);
 
-    public string DisplayName => onRewardRedeemedArgs.DisplayName;
+    public string DisplayName => onRewardRedeemedArgs.RewardRedeemed.Redemption.User.DisplayName;
 
-    public string Message => onRewardRedeemedArgs.Message;
+    public string Message => onRewardRedeemedArgs.RewardRedeemed.Redemption.UserInput;
 
-    public string RewardTitle => onRewardRedeemedArgs.RewardTitle;
+    public string RewardTitle => onRewardRedeemedArgs.RewardRedeemed.Redemption.Reward.Title;
 
-    public string RewardPrompt => onRewardRedeemedArgs.RewardPrompt;
+    public string RewardPrompt => onRewardRedeemedArgs.RewardRedeemed.Redemption.Reward.Prompt;
 
-    public int RewardCost => onRewardRedeemedArgs.RewardCost;
+    public int RewardCost => onRewardRedeemedArgs.RewardRedeemed.Redemption.Reward.Cost;
 }

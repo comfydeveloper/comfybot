@@ -53,7 +53,7 @@ public class TextCommandRepositoryTests
     {
         TextCommand model = new TextCommand();
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         entities.Verify(e => e.Insert(model));
         entities.Verify(e => e.Update(model), Times.Never);
@@ -67,7 +67,7 @@ public class TextCommandRepositoryTests
         TextCommand model = new TextCommand { TimeoutInSeconds = timeOutInSeconds };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         entities.Verify(e => e.Insert(model), Times.Never);
         entities.Verify(e => e.Update(entity));
@@ -88,7 +88,7 @@ public class TextCommandRepositoryTests
         };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         entities.Verify(e => e.Insert(model), Times.Never);
         entities.Verify(e => e.Update(entity));
@@ -104,7 +104,7 @@ public class TextCommandRepositoryTests
         TextCommand model = new TextCommand { LastUsed = lastUsedTime };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         entities.Verify(e => e.Insert(model), Times.Never);
         entities.Verify(e => e.Update(entity));
@@ -119,7 +119,7 @@ public class TextCommandRepositoryTests
         TextCommand model = new TextCommand { UseCount = count };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         Assert.AreEqual(count, entity.UseCount);
     }
@@ -138,7 +138,7 @@ public class TextCommandRepositoryTests
         };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
-        repository.AddOrUpdate(model);
+        repository.Write(model);
 
         entities.Verify(e => e.Insert(model), Times.Never);
         entities.Verify(e => e.Update(entity));
