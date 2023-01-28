@@ -52,7 +52,7 @@ public class TextCommandHandlerTests
     }
 
     [Test]
-    public void HandleSHouldSendNothingIfNoReplyFound()
+    public void HandleShouldSendNothingIfNoReplyFound()
     {
         TextCommand command = new TextCommand();
         repository.Setup(r => r.GetAll()).Returns(new[] { command });
