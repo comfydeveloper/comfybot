@@ -1,4 +1,6 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot;
+﻿using Microsoft.Extensions.Logging;
+
+namespace ComfyBot.Bot.Tests.ChatBot;
 
 using ComfyBot.Bot.ChatBot;
 using ComfyBot.Bot.ChatBot.Chatters;
@@ -42,8 +44,9 @@ public class ChatBotTests
         messageHandler1 = new Mock<IMessageHandler>();
         messageHandler2 = new Mock<IMessageHandler>();
         IMessageHandler[] messageHandlers = { messageHandler1.Object, messageHandler2.Object };
+        var logger = new Mock<ILogger<ChatBot>>();
 
-        chatBot = new ChatBot(clientFactory.Object, commandHandlers, messageHandlers, chattersCache.Object);
+        chatBot = new ChatBot(clientFactory.Object, commandHandlers, messageHandlers, chattersCache.Object, logger.Object);
     }
 
     [TestCase("user1", "password1", "channel1")]

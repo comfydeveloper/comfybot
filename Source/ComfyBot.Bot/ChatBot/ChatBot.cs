@@ -22,18 +22,21 @@ public class ChatBot : IComfyBot
     private readonly IEnumerable<ICommandHandler> commandHandlers;
     private readonly IEnumerable<IMessageHandler> messageHandlers;
     private readonly IChattersCache chattersCache;
+    private readonly ILogger<ChatBot> logger;
 
     private ITwitchClient twitchClient;
 
     public ChatBot(ITwitchClientFactory twitchClientFactory,
         IEnumerable<ICommandHandler> commandHandlers,
         IEnumerable<IMessageHandler> messageHandlers,
-        IChattersCache chattersCache)
+        IChattersCache chattersCache,
+        ILogger<ChatBot> logger)
     {
         this.twitchClientFactory = twitchClientFactory;
         this.commandHandlers = commandHandlers;
         this.messageHandlers = messageHandlers;
         this.chattersCache = chattersCache;
+        this.logger = logger;
     }
 
     public void Run()
@@ -58,10 +61,18 @@ public class ChatBot : IComfyBot
 
     private void InitializeClient()
     {
-        Logon();
-        RegisterHandlers();
-        Connect();
-        Log("Bot initialized.");
+        try
+        {
+            Logon();
+            RegisterHandlers();
+            Connect();
+            Log("Bot initialized.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogCritical(ex, "Failed to initialize bot");
+            throw;
+        }
     }
 
     private void Connect()
@@ -107,7 +118,7 @@ public class ChatBot : IComfyBot
         }
         catch (Exception ex)
         {
-            Log($"Failed to add user to chatters cache - {ex.Message}");
+            logger.LogError(ex, "Failed to remove user from chatters cache");
         }
     }
 
@@ -122,6 +133,7 @@ public class ChatBot : IComfyBot
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "Failed to handle command {@CommandText}", e.Command.CommandText);
                 Log($"Failed to handle command {e.Command.CommandText} - {ex.Message}");
             }
 
@@ -139,26 +151,26 @@ public class ChatBot : IComfyBot
             }
             catch (Exception ex)
             {
-                Log($"Failed to handle message - {ex.Message}");
+                logger.LogError(ex, "Failed to handle message {@Message}", e.ChatMessage.Message);
             }
         }
     }
 
     [ExcludeFromCodeCoverage]
-    private static void OnConnected(object sender, OnConnectedArgs e)
+    private void OnConnected(object sender, OnConnectedArgs e)
     {
         try
         {
-            Log($"Successfully connected!");
+            Log("Successfully connected!");
         }
         catch (Exception ex)
         {
-            Log($"Failed to log successful connection - {ex.Message}");
+            logger.LogError(ex, "Failed to log successful connection");
         }
     }
 
     [ExcludeFromCodeCoverage]
-    private static void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
+    private void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
     {
         try
         {
@@ -166,7 +178,7 @@ public class ChatBot : IComfyBot
         }
         catch (Exception ex)
         {
-            Log($"Failed to log successful channel join - {ex.Message}");
+            logger.LogError(ex, "Failed to log successful channel join");
         }
     }
 
