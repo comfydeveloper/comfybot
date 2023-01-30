@@ -14,21 +14,21 @@ public class ConsoleOutputWriter : TextWriter
 
     public delegate void UpdateTextCallback(string message);
 
-    private readonly TextBox textbox;
+    private readonly TextBox textBox;
 
-    public ConsoleOutputWriter(TextBox textbox)
+    public ConsoleOutputWriter(TextBox textBox)
     {
-        this.textbox = textbox;
+        this.textBox = textBox;
     }
 
     public override void Write(char value)
     {
-        textbox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
+        textBox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
     }
 
     public override void Write(string value)
     {
-        textbox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
+        textBox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
     }
 
     public override Encoding Encoding => Encoding.ASCII;
@@ -42,6 +42,6 @@ public class ConsoleOutputWriter : TextWriter
             lastOutput.RemoveAt(0);
         }
 
-        textbox.Text = string.Join(System.Environment.NewLine, lastOutput.Reverse<string>());
+        textBox.Text = string.Join(System.Environment.NewLine, lastOutput.Reverse<string>());
     }
 }

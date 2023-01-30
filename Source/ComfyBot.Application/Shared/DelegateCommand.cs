@@ -28,11 +28,7 @@ public class DelegateCommand : ICommand
 
     public bool CanExecute(object parameter)
     {
-        if (canExecute == null)
-        {
-            return true;
-        }
-        return canExecute(parameter);
+        return canExecute == null || canExecute(parameter);
     }
 
     public void Execute(object parameter = null)

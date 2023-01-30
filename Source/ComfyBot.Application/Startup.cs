@@ -1,61 +1,29 @@
-﻿namespace ComfyBot.Application;
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-
-using Bot.ChatBot;
-using Bot.ChatBot.Commands;
-using Bot.PubSub;
-using Common.Http;
-using Common.Initialization;
-using Data.Database;
-
+using ComfyBot.Application.Shared.Contracts;
+using ComfyBot.Bot.ChatBot.Commands;
+using ComfyBot.Common.Http;
+using ComfyBot.Data.Database;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-[ExcludeFromCodeCoverage]
-public class Program
+namespace ComfyBot.Application;
+
+public class Startup
 {
-    [STAThread]
-    public static void Main()
+    public static void RegisterDependencies(IServiceCollection collection)
     {
-        IServiceCollection serviceCollection = new ServiceCollection();
+        var configBuilder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", false, true);
+        var configuration = configBuilder.Build();
+        var appSettings = new AppSettings();
+        configuration.Bind(appSettings);
+        collection.AddSingleton(appSettings);
 
-        RegisterServices(serviceCollection);
-
-        IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-
-        IEnumerable<IInitializerJob> initializerJobs = serviceProvider.GetServices<IInitializerJob>();
-
-        foreach (IInitializerJob job in initializerJobs)
-        {
-            job.Execute();
-        }
-
-        MainWindow mainWindow = serviceProvider.GetService<MainWindow>();
-        IComfyBot comfyBot = serviceProvider.GetService<IComfyBot>();
-        comfyBot.Run();
-        IComfyPubSub service = serviceProvider.GetService<IComfyPubSub>();
-        service.Run();
-
-        App app = new App();
-        app.Run(mainWindow);
-
-
-        IEnumerable<ICompletableJob> completableTask = serviceProvider.GetServices<ICompletableJob>();
-
-        foreach (ICompletableJob job in completableTask)
-        {
-            job.Complete();
-        }
-    }
-
-    private static void RegisterServices(IServiceCollection collection)
-    {
         Assembly[] assemblies = {
-            typeof(Program).Assembly,
+            typeof(Startup).Assembly,
             typeof(ICommandHandler).Assembly,
             typeof(IDatabaseFactory).Assembly,
             typeof(IHttpService).Assembly
@@ -91,7 +59,7 @@ public class Program
                   && !type.IsAbstract
                   && (!type.Name.Contains("Wrapper") || type.GetConstructor(Type.EmptyTypes) != null)
             from service in type.GetInterfaces()
-            select new {service, implementation = type};
+            select new { service, implementation = type };
 
         foreach (var registration in registrations)
         {

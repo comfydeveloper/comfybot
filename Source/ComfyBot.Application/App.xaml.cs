@@ -1,10 +1,68 @@
-﻿namespace ComfyBot.Application;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
+namespace ComfyBot.Application;
+
+using System.Windows;
+using System;
 using Application = System.Windows.Application;
+using ComfyBot.Common.Initialization;
+using System.Collections.Generic;
+using ComfyBot.Bot.ChatBot;
+using ComfyBot.Bot.PubSub;
 
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application
 {
+    public static IHost? AppHost { get; private set; }
+
+    public static IServiceProvider ServiceProvider { get; private set; } = null!;
+
+    public App()
+    {
+        AppHost = Host.CreateDefaultBuilder()
+            .ConfigureServices(ComfyBot.Application.Startup.RegisterDependencies)
+            .Build();
+
+        ServiceProvider = AppHost.Services;
+    }
+
+    [STAThread]
+    protected override async void OnStartup(StartupEventArgs e)
+    {
+        await AppHost!.StartAsync();
+
+        var startupForm = AppHost.Services.GetRequiredService<MainWindow>();
+
+        IEnumerable<IInitializerJob> initializerJobs = AppHost.Services.GetServices<IInitializerJob>();
+
+        foreach (IInitializerJob job in initializerJobs)
+        {
+            job.Execute();
+        }
+
+        IComfyBot comfyBot = AppHost.Services.GetService<IComfyBot>();
+        comfyBot.Run();
+        IComfyPubSub service = AppHost.Services.GetService<IComfyPubSub>();
+        service.Run();
+
+        startupForm.Show();
+
+        base.OnStartup(e);
+    }
+
+    protected override async void OnExit(ExitEventArgs e)
+    {
+        IEnumerable<ICompletableJob> completableTask = AppHost!.Services.GetServices<ICompletableJob>();
+
+        foreach (ICompletableJob job in completableTask)
+        {
+            job.Complete();
+        }
+
+        await AppHost!.StopAsync();
+        base.OnExit(e);
+    }
 }

@@ -1,4 +1,6 @@
-﻿namespace ComfyBot.Bot.ChatBot;
+﻿using Microsoft.Extensions.Logging;
+
+namespace ComfyBot.Bot.ChatBot;
 
 using System;
 using System.Collections.Generic;
@@ -46,7 +48,7 @@ public class ChatBot : IComfyBot
         }
     }
 
-    private bool IsBotReady()
+    private static bool IsBotReady()
     {
         ApplicationSettings applicationSettings = ApplicationSettings.Default;
         return !string.IsNullOrEmpty(applicationSettings.Channel)
