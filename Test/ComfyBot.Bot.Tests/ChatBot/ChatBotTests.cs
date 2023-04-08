@@ -1,19 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ComfyBot.Bot.ChatBot.Commands;
+using ComfyBot.Bot.ChatBot.Messages;
+using ComfyBot.Bot.Initialization;
+using ComfyBot.Settings;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using TwitchLib.Client.Interfaces;
 
 namespace ComfyBot.Bot.Tests.ChatBot;
-
-using ComfyBot.Bot.ChatBot;
-using ComfyBot.Bot.ChatBot.Chatters;
-using ComfyBot.Bot.ChatBot.Commands;
-using ComfyBot.Bot.ChatBot.Messages;
-using Initialization;
-using Settings;
-
-using Moq;
-
-using NUnit.Framework;
-
-using TwitchLib.Client.Interfaces;
 
 [TestFixture]
 public class ChatBotTests
@@ -27,7 +21,7 @@ public class ChatBotTests
     private Mock<IMessageHandler> messageHandler1;
     private Mock<IMessageHandler> messageHandler2;
 
-    private ChatBot chatBot;
+    private Bot.ChatBot.ChatBot chatBot;
 
     [SetUp]
     public void Setup()
@@ -44,9 +38,9 @@ public class ChatBotTests
         messageHandler1 = new Mock<IMessageHandler>();
         messageHandler2 = new Mock<IMessageHandler>();
         IMessageHandler[] messageHandlers = { messageHandler1.Object, messageHandler2.Object };
-        var logger = new Mock<ILogger<ChatBot>>();
+        var logger = new Mock<ILogger<Bot.ChatBot.ChatBot>>();
 
-        chatBot = new ChatBot(clientFactory.Object, commandHandlers, messageHandlers, chattersCache.Object, logger.Object);
+        chatBot = new Bot.ChatBot.ChatBot(clientFactory.Object, commandHandlers, messageHandlers, chattersCache.Object, logger.Object);
     }
 
     [TestCase("user1", "password1", "channel1")]

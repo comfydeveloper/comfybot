@@ -1,15 +1,13 @@
-﻿namespace ComfyBot.Bot.Initialization;
-
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
-
-using Settings;
-
+using ComfyBot.Settings;
 using TwitchLib.Client;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Models;
+
+namespace ComfyBot.Bot.Initialization;
 
 [ExcludeFromCodeCoverage]
 public class TwitchClientFactory : ITwitchClientFactory

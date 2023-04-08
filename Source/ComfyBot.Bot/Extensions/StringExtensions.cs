@@ -1,7 +1,7 @@
-﻿namespace ComfyBot.Bot.Extensions;
-
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
+
+namespace ComfyBot.Bot.Extensions;
 
 public static class StringExtensions
 {

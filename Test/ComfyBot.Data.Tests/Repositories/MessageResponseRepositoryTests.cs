@@ -1,20 +1,16 @@
-﻿using LiteDB;
-
-namespace ComfyBot.Data.Tests.Repositories;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-
-using Database;
-using Models;
+using ComfyBot.Data.Database;
+using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Wrappers;
-
+using ComfyBot.Data.Wrappers;
+using LiteDB;
 using Moq;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Data.Tests.Repositories;
 
 public class MessageResponseRepositoryTests
 {

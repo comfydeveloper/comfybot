@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Application.TextCommands;
+﻿using System.Linq;
+using ComfyBot.Application.Shared.Contracts;
+using ComfyBot.Application.Shared.Extensions;
+using ComfyBot.Data.Models;
 
-using System.Linq;
-
-using Shared.Contracts;
-using Shared.Extensions;
-using Data.Models;
+namespace ComfyBot.Application.TextCommands;
 
 public class TextCommandMapper : IMapper<TextCommand, TextCommandModel>
 {

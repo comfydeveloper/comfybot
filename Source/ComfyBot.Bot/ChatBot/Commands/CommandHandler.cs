@@ -1,9 +1,8 @@
-﻿namespace ComfyBot.Bot.ChatBot.Commands;
-
-using Wrappers;
-using Settings;
-
+﻿using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Settings;
 using TwitchLib.Client.Interfaces;
+
+namespace ComfyBot.Bot.ChatBot.Commands;
 
 public abstract class CommandHandler : ICommandHandler
 {

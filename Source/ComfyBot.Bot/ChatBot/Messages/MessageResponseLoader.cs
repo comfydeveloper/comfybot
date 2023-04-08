@@ -1,13 +1,12 @@
-﻿namespace ComfyBot.Bot.ChatBot.Messages;
-
-using System;
+﻿using System;
 using System.Linq;
+using ComfyBot.Bot.ChatBot.Services;
+using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Bot.Extensions;
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
 
-using Services;
-using Wrappers;
-using Extensions;
-using Data.Models;
-using Data.Repositories;
+namespace ComfyBot.Bot.ChatBot.Messages;
 
 public class MessageResponseLoader : IMessageResponseLoader
 {

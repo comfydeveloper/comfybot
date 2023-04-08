@@ -1,9 +1,8 @@
-﻿namespace ComfyBot.Bot.ChatBot.Wrappers;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
 using TwitchLib.Client.Models;
+
+namespace ComfyBot.Bot.ChatBot.Wrappers;
 
 [ExcludeFromCodeCoverage]
 public class ChatCommandWrapper : IChatCommand

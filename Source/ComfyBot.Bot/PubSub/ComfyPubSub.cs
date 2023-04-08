@@ -1,13 +1,13 @@
-﻿namespace ComfyBot.Bot.PubSub;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Extensions;
-using RewardRedeems;
-using Wrappers;
-using Settings;
+using ComfyBot.Bot.PubSub.Extensions;
+using ComfyBot.Bot.PubSub.RewardRedeems;
+using ComfyBot.Bot.PubSub.Wrappers;
+using ComfyBot.Settings;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
+
+namespace ComfyBot.Bot.PubSub;
 
 public class ComfyPubSub : IComfyPubSub
 {

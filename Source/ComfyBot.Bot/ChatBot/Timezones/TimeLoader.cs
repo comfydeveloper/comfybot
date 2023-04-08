@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Bot.ChatBot.Timezones;
+﻿using ComfyBot.Common.Http;
 
-using Common.Http;
+namespace ComfyBot.Bot.ChatBot.Timezones;
 
 public class TimeLoader : ITimeLoader
 {

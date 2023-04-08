@@ -1,9 +1,8 @@
-﻿namespace ComfyBot.Application.Shared;
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using ComfyBot.Application.Annotations;
 
-using Annotations;
+namespace ComfyBot.Application.Shared;
 
 public abstract class NotifyingModel : INotifyPropertyChanged
 {

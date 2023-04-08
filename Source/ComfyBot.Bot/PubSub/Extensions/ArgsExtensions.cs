@@ -1,10 +1,8 @@
-﻿namespace ComfyBot.Bot.PubSub.Extensions;
-
-using System.Diagnostics.CodeAnalysis;
-
-using Wrappers;
-
+﻿using System.Diagnostics.CodeAnalysis;
+using ComfyBot.Bot.PubSub.Wrappers;
 using TwitchLib.PubSub.Events;
+
+namespace ComfyBot.Bot.PubSub.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class OnChannelPointsRewardRedeemedArgsExtensions

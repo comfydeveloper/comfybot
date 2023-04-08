@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Bot.Initialization;
+﻿using TwitchLib.Client.Interfaces;
 
-using TwitchLib.Client.Interfaces;
+namespace ComfyBot.Bot.Initialization;
 
 public interface ITwitchClientFactory
 {

@@ -1,13 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows;
+using ComfyBot.Application.Main;
+using ComfyBot.Application.Output;
+using ComfyBot.Settings;
 
 namespace ComfyBot.Application;
-
-using System;
-using System.Diagnostics.CodeAnalysis;
-
-using Main;
-using Output;
-using Settings;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml

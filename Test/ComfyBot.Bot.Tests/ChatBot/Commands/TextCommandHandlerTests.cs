@@ -1,16 +1,13 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Commands;
-
-using ComfyBot.Bot.ChatBot.Commands;
+﻿using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Wrappers;
-using Data.Models;
-using Data.Repositories;
-using Settings;
-
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
+using ComfyBot.Settings;
 using Moq;
-
 using NUnit.Framework;
-
 using TwitchLib.Client.Interfaces;
+
+namespace ComfyBot.Bot.Tests.ChatBot.Commands;
 
 [TestFixture]
 public class TextCommandHandlerTests

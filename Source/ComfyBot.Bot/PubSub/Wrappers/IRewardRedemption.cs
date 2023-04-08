@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Bot.PubSub.Wrappers;
+﻿using System;
 
-using System;
+namespace ComfyBot.Bot.PubSub.Wrappers;
 
 public interface IRewardRedemption
 {

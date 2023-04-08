@@ -1,11 +1,9 @@
-﻿namespace ComfyBot.Application.Tests.TextCommands;
-
-using System.ComponentModel;
-
+﻿using System.ComponentModel;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.TextCommands;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Application.Tests.TextCommands;
 
 [TestFixture]
 public class TextCommandModelTests

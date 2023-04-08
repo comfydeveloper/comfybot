@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Bot.ChatBot.Chatters;
+﻿using System;
 
-using System;
+namespace ComfyBot.Bot.ChatBot.Chatters;
 
 public class Chatter
 {

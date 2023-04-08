@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Application.Responses;
+﻿using System.Linq;
+using ComfyBot.Application.Shared.Contracts;
+using ComfyBot.Application.Shared.Extensions;
+using ComfyBot.Data.Models;
 
-using System.Linq;
-
-using Shared.Contracts;
-using Shared.Extensions;
-using Data.Models;
+namespace ComfyBot.Application.Responses;
 
 public class MessageResponseMapper : IMapper<MessageResponse, MessageResponseModel>
 {

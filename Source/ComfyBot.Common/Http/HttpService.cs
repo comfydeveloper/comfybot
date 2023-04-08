@@ -1,11 +1,10 @@
-﻿namespace ComfyBot.Common.Http;
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ComfyBot.Common.Idioms;
 
-using Idioms;
+namespace ComfyBot.Common.Http;
 
 [ExcludeFromCodeCoverage]
 public class HttpService : Singleton<IHttpService, HttpService>, IHttpService

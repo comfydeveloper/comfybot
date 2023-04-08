@@ -1,27 +1,22 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace ComfyBot.Bot.ChatBot;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
-using Chatters;
-using Commands;
-using Messages;
-using Extensions;
-using Initialization;
-using Settings;
-
+using ComfyBot.Bot.ChatBot.Commands;
+using ComfyBot.Bot.ChatBot.Messages;
+using ComfyBot.Bot.Extensions;
+using ComfyBot.Bot.Initialization;
+using ComfyBot.Settings;
+using Microsoft.Extensions.Logging;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
+
+namespace ComfyBot.Bot.ChatBot;
 
 public class ChatBot : IComfyBot
 {
     private readonly ITwitchClientFactory twitchClientFactory;
     private readonly IEnumerable<ICommandHandler> commandHandlers;
     private readonly IEnumerable<IMessageHandler> messageHandlers;
-    private readonly IChattersCache chattersCache;
     private readonly ILogger<ChatBot> logger;
 
     private ITwitchClient twitchClient;
@@ -29,13 +24,11 @@ public class ChatBot : IComfyBot
     public ChatBot(ITwitchClientFactory twitchClientFactory,
         IEnumerable<ICommandHandler> commandHandlers,
         IEnumerable<IMessageHandler> messageHandlers,
-        IChattersCache chattersCache,
         ILogger<ChatBot> logger)
     {
         this.twitchClientFactory = twitchClientFactory;
         this.commandHandlers = commandHandlers;
         this.messageHandlers = messageHandlers;
-        this.chattersCache = chattersCache;
         this.logger = logger;
     }
 
@@ -87,39 +80,11 @@ public class ChatBot : IComfyBot
         twitchClient.OnLog += OnLog;
         twitchClient.OnConnected += OnConnected;
         twitchClient.OnJoinedChannel += OnJoinedChannel;
-        twitchClient.OnUserJoined += OnUserJoined;
-        twitchClient.OnUserLeft += OnUserLeft;
     }
 
     private void Logon()
     {
         twitchClient = twitchClientFactory.Create();
-    }
-
-    [ExcludeFromCodeCoverage]
-    private void OnUserLeft(object sender, OnUserLeftArgs e)
-    {
-        try
-        {
-            chattersCache.Remove(e.Username);
-        }
-        catch (Exception ex)
-        {
-            Log($"Failed to remove user from chatters cache - {ex.Message}");
-        }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private void OnUserJoined(object sender, OnUserJoinedArgs e)
-    {
-        try
-        {
-            chattersCache.Add(e.Username);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Failed to remove user from chatters cache");
-        }
     }
 
     [ExcludeFromCodeCoverage]

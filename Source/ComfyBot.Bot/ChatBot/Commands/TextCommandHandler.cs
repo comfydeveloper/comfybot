@@ -1,12 +1,10 @@
-﻿namespace ComfyBot.Bot.ChatBot.Commands;
-
-using System.Collections.Generic;
-
-using Wrappers;
-using Data.Models;
-using Data.Repositories;
-
+﻿using System.Collections.Generic;
+using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
 using TwitchLib.Client.Interfaces;
+
+namespace ComfyBot.Bot.ChatBot.Commands;
 
 public class TextCommandHandler : CommandHandler
 {

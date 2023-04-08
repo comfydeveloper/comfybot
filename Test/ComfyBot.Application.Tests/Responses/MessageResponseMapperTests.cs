@@ -1,12 +1,10 @@
-﻿namespace ComfyBot.Application.Tests.Responses;
-
-using System.Linq;
-
+﻿using System.Linq;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared;
-using Data.Models;
-
+using ComfyBot.Data.Models;
 using NUnit.Framework;
+
+namespace ComfyBot.Application.Tests.Responses;
 
 [TestFixture]
 public class MessageResponseMapperTests

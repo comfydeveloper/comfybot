@@ -1,17 +1,14 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
+using ComfyBot.Application.Shared.Contracts;
 using ComfyBot.Application.Shared.Wrappers;
+using ComfyBot.Application.TextCommands;
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
+using Moq;
+using NUnit.Framework;
 
 namespace ComfyBot.Application.Tests.TextCommands;
-
-using System.Linq;
-using ComfyBot.Application.Shared.Contracts;
-using ComfyBot.Application.TextCommands;
-using Data.Models;
-using Data.Repositories;
-
-using Moq;
-
-using NUnit.Framework;
 
 [TestFixture]
 public class TextCommandsTabViewModelTests

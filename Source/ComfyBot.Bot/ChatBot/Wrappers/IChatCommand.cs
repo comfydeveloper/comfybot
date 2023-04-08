@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Bot.ChatBot.Wrappers;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
+namespace ComfyBot.Bot.ChatBot.Wrappers;
 
 public interface IChatCommand
 {

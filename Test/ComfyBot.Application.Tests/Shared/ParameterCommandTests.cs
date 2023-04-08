@@ -1,8 +1,7 @@
-﻿namespace ComfyBot.Application.Tests.Shared;
-
-using ComfyBot.Application.Shared;
-
+﻿using ComfyBot.Application.Shared;
 using NUnit.Framework;
+
+namespace ComfyBot.Application.Tests.Shared;
 
 [TestFixture]
 public class ParameterCommandTests

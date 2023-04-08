@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Data.Models;
+﻿using System;
 
-using System;
+namespace ComfyBot.Data.Models;
 
 public abstract class Entity
 {

@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Application.Main;
+﻿using System.Diagnostics.CodeAnalysis;
 
-using System.Diagnostics.CodeAnalysis;
+namespace ComfyBot.Application.Main;
 
 [ExcludeFromCodeCoverage]
 public class MainWindowViewModel

@@ -1,12 +1,10 @@
-﻿namespace ComfyBot.Application.Tests.TextCommands;
-
-using System.Linq;
-
+﻿using System.Linq;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.TextCommands;
-using Data.Models;
-
+using ComfyBot.Data.Models;
 using NUnit.Framework;
+
+namespace ComfyBot.Application.Tests.TextCommands;
 
 [TestFixture]
 public class TextCommandMapperTests

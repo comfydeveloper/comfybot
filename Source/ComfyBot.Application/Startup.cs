@@ -6,6 +6,7 @@ using ComfyBot.Application.Shared.Contracts;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Common.Http;
 using ComfyBot.Data.Database;
+using ComfyBot.Settings.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +16,7 @@ public class Startup
 {
     public static void RegisterDependencies(IServiceCollection collection)
     {
-        var configBuilder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+        var configBuilder = new ConfigurationBuilder().SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
             .AddJsonFile("appsettings.json", false, true);
         var configuration = configBuilder.Build();
         var appSettings = new AppSettings();
@@ -65,5 +66,16 @@ public class Startup
         {
             collection.AddTransient(registration.service, registration.implementation);
         }
+    }
+
+    public static void Initialize()
+    {
+        AssertDatabaseDirectoryExists();
+    }
+
+    private static void AssertDatabaseDirectoryExists()
+    {
+        var databasePath = EnvironmentExtensions.GetDatabasePath();
+        Directory.CreateDirectory(Path.GetDirectoryName(databasePath)!);
     }
 }

@@ -1,8 +1,8 @@
-﻿namespace ComfyBot.Bot.Extensions;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+namespace ComfyBot.Bot.Extensions;
 
 public static class StringCollectionExtensions
 {

@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Application.Configuration;
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
+using ComfyBot.Application.Shared;
+using ComfyBot.Settings;
 
-using Shared;
-using Settings;
+namespace ComfyBot.Application.Configuration;
 
 //TODO [comfy] Uncovered because application.tests project would simply not want to use the System.Configuration.ConfigurationManager.
 [ExcludeFromCodeCoverage]

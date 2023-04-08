@@ -1,8 +1,8 @@
-﻿namespace ComfyBot.Application.Shared;
-
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
+
+namespace ComfyBot.Application.Shared;
 
 public class DelegateCommand : ICommand
 {

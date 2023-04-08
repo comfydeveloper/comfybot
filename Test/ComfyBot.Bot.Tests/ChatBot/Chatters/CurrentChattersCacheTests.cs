@@ -1,11 +1,9 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Chatters;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-
 using ComfyBot.Bot.ChatBot.Chatters;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Bot.Tests.ChatBot.Chatters;
 
 [TestFixture]
 public class CurrentChattersCacheTests

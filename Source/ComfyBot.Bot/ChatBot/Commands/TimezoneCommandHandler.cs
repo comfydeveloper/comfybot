@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Bot.ChatBot.Commands;
-
-using Timezones;
-using Wrappers;
-using Extensions;
-
+﻿using ComfyBot.Bot.ChatBot.Timezones;
+using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Bot.Extensions;
 using TwitchLib.Client.Interfaces;
+
+namespace ComfyBot.Bot.ChatBot.Commands;
 
 public class TimezoneCommandHandler : CommandHandler
 {

@@ -1,16 +1,14 @@
-﻿namespace ComfyBot.Application.Tests.Shared.Extensions;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-
-using Annotations;
+using ComfyBot.Application.Annotations;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.Shared.Extensions;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Application.Tests.Shared.Extensions;
 
 [TestFixture]
 public class CollectionExtensionsTests

@@ -1,14 +1,13 @@
-﻿namespace ComfyBot.Data.Repositories;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-
-using Database;
-using Models;
-using Wrappers;
+using ComfyBot.Data.Database;
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Wrappers;
 using LiteDB;
+
+namespace ComfyBot.Data.Repositories;
 
 public abstract class Repository<T> : IRepository<T>
     where T : Entity

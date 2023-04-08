@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Data.Database;
+﻿using ComfyBot.Data.Wrappers;
 
-using Wrappers;
+namespace ComfyBot.Data.Database;
 
 public interface IDatabaseFactory
 {

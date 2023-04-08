@@ -1,12 +1,12 @@
-﻿namespace ComfyBot.Bot.ChatBot.Commands;
-
-using System;
+﻿using System;
 using System.Linq;
-using Services;
-using Wrappers;
-using Extensions;
-using Data.Models;
-using Data.Repositories;
+using ComfyBot.Bot.ChatBot.Services;
+using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Bot.Extensions;
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
+
+namespace ComfyBot.Bot.ChatBot.Commands;
 
 public class TextCommandReplyLoader : ITextCommandReplyLoader
 {

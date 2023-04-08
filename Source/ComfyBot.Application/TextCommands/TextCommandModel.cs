@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Application.TextCommands;
-
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using ComfyBot.Application.Shared;
+using ComfyBot.Application.Shared.Extensions;
 
-using Shared;
-using Shared.Extensions;
+namespace ComfyBot.Application.TextCommands;
 
 public class TextCommandModel : NotifyingModel
 {

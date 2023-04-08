@@ -1,25 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
+using ComfyBot.Bot.ChatBot;
+using ComfyBot.Bot.PubSub;
+using ComfyBot.Common.Initialization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Exceptions;
 
 namespace ComfyBot.Application;
 
-using System.Windows;
-using System;
-using Application = System.Windows.Application;
-using ComfyBot.Common.Initialization;
-using System.Collections.Generic;
-using ComfyBot.Bot.ChatBot;
-using ComfyBot.Bot.PubSub;
-
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
     public static IHost? AppHost { get; private set; }
 
@@ -35,7 +31,7 @@ public partial class App : Application
             .CreateLogger();
 
         AppHost = Host.CreateDefaultBuilder()
-            .ConfigureServices(ComfyBot.Application.Startup.RegisterDependencies)
+            .ConfigureServices(Application.Startup.RegisterDependencies)
             .UseSerilog()
             .Build();
 
@@ -48,6 +44,8 @@ public partial class App : Application
         try
         {
             Log.Debug("OnStartup started.");
+
+            Application.Startup.Initialize();
             await AppHost!.StartAsync();
 
             var startupForm = AppHost.Services.GetRequiredService<MainWindow>();

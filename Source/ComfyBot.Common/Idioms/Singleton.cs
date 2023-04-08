@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Common.Idioms;
+﻿using System.Diagnostics.CodeAnalysis;
 
-using System.Diagnostics.CodeAnalysis;
+namespace ComfyBot.Common.Idioms;
 
 [ExcludeFromCodeCoverage]
 public abstract class Singleton<TInterface, TImplementation>

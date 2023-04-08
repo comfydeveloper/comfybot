@@ -1,13 +1,10 @@
 ﻿using System;
+using ComfyBot.Bot.ChatBot.Timezones;
+using ComfyBot.Common.Http;
+using Moq;
+using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
-
-using ComfyBot.Bot.ChatBot.Timezones;
-using Common.Http;
-
-using Moq;
-
-using NUnit.Framework;
 
 [TestFixture]
 public class TimezoneLoaderTests

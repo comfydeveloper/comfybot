@@ -1,16 +1,13 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Messages;
-
-using System;
-
+﻿using System;
 using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
-using Data.Models;
-using Data.Repositories;
-
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
 using Moq;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 
 [TestFixture]
 public class MessageResponseLoaderTests

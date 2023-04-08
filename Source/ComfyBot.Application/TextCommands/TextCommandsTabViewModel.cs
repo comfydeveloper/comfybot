@@ -1,8 +1,4 @@
-﻿using ComfyBot.Application.Shared.Wrappers;
-
-namespace ComfyBot.Application.TextCommands;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,11 +6,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using Shared;
-using Shared.Contracts;
-using Shared.Extensions;
-using Data.Models;
-using Data.Repositories;
+using ComfyBot.Application.Shared;
+using ComfyBot.Application.Shared.Contracts;
+using ComfyBot.Application.Shared.Extensions;
+using ComfyBot.Application.Shared.Wrappers;
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
+
+namespace ComfyBot.Application.TextCommands;
 
 public class TextCommandsTabViewModel : InitializableTab
 {

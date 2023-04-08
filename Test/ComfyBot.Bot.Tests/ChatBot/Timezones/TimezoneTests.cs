@@ -1,8 +1,7 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
-
-using ComfyBot.Bot.ChatBot.Timezones;
-
+﻿using ComfyBot.Bot.ChatBot.Timezones;
 using NUnit.Framework;
+
+namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
 
 [TestFixture]
 public class TimezoneTests

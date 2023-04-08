@@ -1,9 +1,8 @@
-﻿namespace ComfyBot.Bot.PubSub.Wrappers;
-
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
-
 using TwitchLib.PubSub.Events;
+
+namespace ComfyBot.Bot.PubSub.Wrappers;
 
 [ExcludeFromCodeCoverage]
 public class OnChannelPointsRewardRedeemedArgsWrapper : IRewardRedemption

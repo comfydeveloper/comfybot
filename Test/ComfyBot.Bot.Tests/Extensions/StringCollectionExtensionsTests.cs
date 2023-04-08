@@ -1,10 +1,8 @@
-﻿namespace ComfyBot.Bot.Tests.Extensions;
-
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
 using ComfyBot.Bot.Extensions;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Bot.Tests.Extensions;
 
 [TestFixture]
 public class StringCollectionExtensionsTests

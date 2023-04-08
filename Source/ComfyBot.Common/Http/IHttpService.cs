@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Common.Http;
+﻿using System.Threading.Tasks;
 
-using System.Threading.Tasks;
+namespace ComfyBot.Common.Http;
 
 public interface IHttpService
 {

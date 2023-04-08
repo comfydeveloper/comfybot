@@ -1,6 +1,6 @@
-﻿namespace ComfyBot.Bot.ChatBot.Chatters;
+﻿using System.Text.Json.Serialization;
 
-using System.Text.Json.Serialization;
+namespace ComfyBot.Bot.ChatBot.Chatters;
 
 public class ChattersCollection
 {

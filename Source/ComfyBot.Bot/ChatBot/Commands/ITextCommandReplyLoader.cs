@@ -1,7 +1,7 @@
-﻿namespace ComfyBot.Bot.ChatBot.Commands;
+﻿using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Data.Models;
 
-using Wrappers;
-using Data.Models;
+namespace ComfyBot.Bot.ChatBot.Commands;
 
 public interface ITextCommandReplyLoader
 {

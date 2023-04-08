@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Data.Repositories;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using ComfyBot.Data.Models;
 
-using Models;
+namespace ComfyBot.Data.Repositories;
 
 public interface IRepository<T> where T : Entity
 {

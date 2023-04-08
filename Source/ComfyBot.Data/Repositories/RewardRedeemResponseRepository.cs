@@ -1,9 +1,8 @@
-﻿namespace ComfyBot.Data.Repositories;
+﻿using System;
+using ComfyBot.Data.Database;
+using ComfyBot.Data.Models;
 
-using System;
-
-using Database;
-using Models;
+namespace ComfyBot.Data.Repositories;
 
 public class RewardRedeemResponseRepository : Repository<RewardRedeemResponse>
 {

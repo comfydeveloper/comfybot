@@ -1,11 +1,9 @@
-﻿namespace ComfyBot.Application.Tests.Responses;
-
-using System.ComponentModel;
-
+﻿using System.ComponentModel;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Application.Tests.Responses;
 
 [TestFixture]
 public class MessageResponseModelTests

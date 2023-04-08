@@ -1,17 +1,14 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Commands;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
-using Data.Models;
-using Data.Repositories;
-
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
 using Moq;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Bot.Tests.ChatBot.Commands;
 
 [TestFixture]
 public class TextCommandReplyLoaderTests

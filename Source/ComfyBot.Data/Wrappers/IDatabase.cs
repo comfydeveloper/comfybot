@@ -1,7 +1,7 @@
-﻿namespace ComfyBot.Data.Wrappers;
-
+﻿using System;
 using LiteDB;
-using System;
+
+namespace ComfyBot.Data.Wrappers;
 
 public interface IDatabase : IDisposable
 {

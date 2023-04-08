@@ -1,16 +1,14 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Commands;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Timezones;
 using ComfyBot.Bot.ChatBot.Wrappers;
-
+using ComfyBot.Settings;
 using Moq;
-
 using NUnit.Framework;
-
 using TwitchLib.Client.Interfaces;
+
+namespace ComfyBot.Bot.Tests.ChatBot.Commands;
 
 [TestFixture]
 public class TimezoneCommandHandlerTests
@@ -40,7 +38,7 @@ public class TimezoneCommandHandlerTests
     [Test]
     public void HandleShouldLoadTimeForTimezone()
     {
-        Settings.ApplicationSettings.Default.Channel = "channel";
+        ApplicationSettings.Default.Channel = "channel";
         chatCommand.Setup(c => c.CommandText).Returns("timezone");
         chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "zone" });
         chatCommand.Setup(c => c.ArgumentsAsString).Returns("zone");
@@ -62,7 +60,7 @@ public class TimezoneCommandHandlerTests
     [Test]
     public void HandleShouldNotifyUserWhenTimezoneWasNotFound()
     {
-        Settings.ApplicationSettings.Default.Channel = "channel";
+        ApplicationSettings.Default.Channel = "channel";
         chatCommand.Setup(c => c.CommandText).Returns("timezone");
         chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "zone" });
         chatCommand.Setup(c => c.ArgumentsAsString).Returns("zone");

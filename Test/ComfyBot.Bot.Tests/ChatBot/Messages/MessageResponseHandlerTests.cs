@@ -1,16 +1,13 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Messages;
-
-using ComfyBot.Bot.ChatBot.Messages;
+﻿using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.ChatBot.Wrappers;
-using Data.Models;
-using Data.Repositories;
-using Settings;
-
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
+using ComfyBot.Settings;
 using Moq;
-
 using NUnit.Framework;
-
 using TwitchLib.Client.Interfaces;
+
+namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 
 [TestFixture]
 public class MessageResponseHandlerTests

@@ -1,10 +1,8 @@
-﻿namespace ComfyBot.Bot.Extensions;
-
-using System.Diagnostics.CodeAnalysis;
-
-using ChatBot.Wrappers;
-
+﻿using System.Diagnostics.CodeAnalysis;
+using ComfyBot.Bot.ChatBot.Wrappers;
 using TwitchLib.Client.Models;
+
+namespace ComfyBot.Bot.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class ArgsExtensions

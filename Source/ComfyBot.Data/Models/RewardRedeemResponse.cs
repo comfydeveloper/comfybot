@@ -1,7 +1,7 @@
-﻿namespace ComfyBot.Data.Models;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+namespace ComfyBot.Data.Models;
 
 public class RewardRedeemResponse : Entity
 {

@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Bot.ChatBot.Timezones;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ComfyBot.Common.Http;
 
-using Common.Http;
+namespace ComfyBot.Bot.ChatBot.Timezones;
 
 public class TimezoneLoader : ITimezoneLoader
 {

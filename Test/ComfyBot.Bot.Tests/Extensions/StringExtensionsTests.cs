@@ -1,8 +1,7 @@
-﻿namespace ComfyBot.Bot.Tests.Extensions;
-
-using ComfyBot.Bot.Extensions;
-
+﻿using ComfyBot.Bot.Extensions;
 using NUnit.Framework;
+
+namespace ComfyBot.Bot.Tests.Extensions;
 
 [TestFixture]
 public class StringExtensionsTests

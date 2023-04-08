@@ -1,14 +1,12 @@
-﻿namespace ComfyBot.Bot.ChatBot.Messages;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-
-using Wrappers;
-using Data.Models;
-using Data.Repositories;
-using Settings;
-
+using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
+using ComfyBot.Settings;
 using TwitchLib.Client.Interfaces;
+
+namespace ComfyBot.Bot.ChatBot.Messages;
 
 public class MessageResponseHandler : IMessageHandler
 {

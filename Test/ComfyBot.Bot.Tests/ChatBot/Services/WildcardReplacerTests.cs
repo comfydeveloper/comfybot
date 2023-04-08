@@ -1,11 +1,8 @@
-﻿namespace ComfyBot.Bot.Tests.ChatBot.Services;
-
-using ComfyBot.Bot.ChatBot.Chatters;
-using ComfyBot.Bot.ChatBot.Services;
-
+﻿using ComfyBot.Bot.ChatBot.Services;
 using Moq;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Bot.Tests.ChatBot.Services;
 
 public class WildcardReplacerTests
 {

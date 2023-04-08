@@ -1,8 +1,7 @@
-﻿namespace ComfyBot.Bot.ChatBot.Wrappers;
-
-using System.Diagnostics.CodeAnalysis;
-
+﻿using System.Diagnostics.CodeAnalysis;
 using TwitchLib.Client.Models;
+
+namespace ComfyBot.Bot.ChatBot.Wrappers;
 
 [ExcludeFromCodeCoverage]
 public class ChatMessageWrapper : IChatMessage

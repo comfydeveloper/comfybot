@@ -1,11 +1,12 @@
-﻿namespace ComfyBot.Application.Output;
-
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
+
+namespace ComfyBot.Application.Output;
 
 [ExcludeFromCodeCoverage]
 public class ConsoleOutputWriter : TextWriter
@@ -28,7 +29,7 @@ public class ConsoleOutputWriter : TextWriter
 
     public override void Write(string value)
     {
-        textBox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
+        textBox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), value);
     }
 
     public override Encoding Encoding => Encoding.ASCII;
@@ -42,6 +43,6 @@ public class ConsoleOutputWriter : TextWriter
             lastOutput.RemoveAt(0);
         }
 
-        textBox.Text = string.Join(System.Environment.NewLine, lastOutput.Reverse<string>());
+        textBox.Text = string.Join(Environment.NewLine, lastOutput.Reverse<string>());
     }
 }

@@ -1,7 +1,7 @@
-﻿namespace ComfyBot.Bot.ChatBot.Chatters;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
+namespace ComfyBot.Bot.ChatBot.Chatters;
 
 public static class ChattersExtensions
 {

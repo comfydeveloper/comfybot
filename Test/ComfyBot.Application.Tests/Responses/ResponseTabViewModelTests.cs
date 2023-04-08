@@ -1,15 +1,12 @@
-﻿namespace ComfyBot.Application.Tests.Responses;
-
-using System.Linq;
-
+﻿using System.Linq;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared.Contracts;
-using Data.Models;
-using Data.Repositories;
-
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
 using Moq;
-
 using NUnit.Framework;
+
+namespace ComfyBot.Application.Tests.Responses;
 
 [TestFixture]
 public class ResponseTabViewModelTests

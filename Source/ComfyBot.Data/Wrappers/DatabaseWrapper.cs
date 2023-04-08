@@ -1,15 +1,15 @@
-﻿namespace ComfyBot.Data.Wrappers;
-
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
-
 using LiteDB;
+
+namespace ComfyBot.Data.Wrappers;
 
 [ExcludeFromCodeCoverage]
 public class DatabaseWrapper : IDatabase
 {
-    private readonly LiteDatabase liteDatabase;
+    private readonly ILiteDatabase liteDatabase;
 
-    public DatabaseWrapper(LiteDatabase liteDatabase)
+    public DatabaseWrapper(ILiteDatabase liteDatabase)
     {
         this.liteDatabase = liteDatabase;
     }
@@ -21,6 +21,13 @@ public class DatabaseWrapper : IDatabase
 
     public void Dispose()
     {
-        liteDatabase?.Dispose();
+        try
+        {
+            liteDatabase?.Dispose();
+        }
+        catch(ObjectDisposedException disposedException)
+        {
+            Console.WriteLine($"Failed to dispose database {disposedException.Message} - {disposedException.StackTrace}");
+        }
     }
 }

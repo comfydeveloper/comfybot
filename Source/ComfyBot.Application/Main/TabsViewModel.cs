@@ -1,10 +1,9 @@
-﻿namespace ComfyBot.Application.Main;
+﻿using System.Diagnostics.CodeAnalysis;
+using ComfyBot.Application.Configuration;
+using ComfyBot.Application.Responses;
+using ComfyBot.Application.TextCommands;
 
-using System.Diagnostics.CodeAnalysis;
-
-using Configuration;
-using Responses;
-using TextCommands;
+namespace ComfyBot.Application.Main;
 
 [ExcludeFromCodeCoverage]
 public class TabsViewModel
