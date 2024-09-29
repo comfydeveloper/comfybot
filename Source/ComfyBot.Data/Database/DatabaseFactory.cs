@@ -2,9 +2,11 @@
 using ComfyBot.Data.Wrappers;
 using ComfyBot.Settings.Extensions;
 using LiteDB;
+using System;
 
 namespace ComfyBot.Data.Database;
 
+[Obsolete]
 [ExcludeFromCodeCoverage]
 public class DatabaseFactory : IDatabaseFactory
 {

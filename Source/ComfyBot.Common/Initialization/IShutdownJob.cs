@@ -1,6 +1,6 @@
 ﻿namespace ComfyBot.Common.Initialization;
 
-public interface ICompletableJob
+public interface IShutdownJob
 {
     void Complete();
 }

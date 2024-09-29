@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Windows;
 using ComfyBot.Bot.ChatBot;
 using ComfyBot.Bot.PubSub;
 using ComfyBot.Common.Initialization;
+using ComfyBot.Data.Repositories;
+using ComfyBot.Data.Scaffolding;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -15,9 +19,9 @@ namespace ComfyBot.Application;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : System.Windows.Application
+public partial class App
 {
-    public static IHost? AppHost { get; private set; }
+    public static IHost AppHost { get; private set; }
 
     public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
@@ -30,12 +34,26 @@ public partial class App : System.Windows.Application
             .Enrich.WithExceptionDetails()
             .CreateLogger();
 
-        AppHost = Host.CreateDefaultBuilder()
-            .ConfigureServices(Application.Startup.RegisterDependencies)
-            .UseSerilog()
-            .Build();
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder();
 
+        Application.Startup.RegisterDependencies(builder.Services);
+        Application.Startup.Initialize();
+
+        builder.Logging.AddSerilog();
+
+        SetupConfiguration(builder);
+
+        AppHost = builder.Build();
         ServiceProvider = AppHost.Services;
+    }
+
+    private static void SetupConfiguration(IHostApplicationBuilder builder)
+    {
+        builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        builder.Configuration.AddJsonFile("appsettings.user.json", optional: true, reloadOnChange: true);
+        builder.Configuration.AddEnvironmentVariables();
+
+        builder.Services.Configure<DataSettings>(builder.Configuration.GetSection(DataSettings.SectionName));
     }
 
     [STAThread]
@@ -58,6 +76,9 @@ public partial class App : System.Windows.Application
                 job.Execute();
             }
 
+            var a = AppHost.Services.GetRequiredService<DataSettings>();
+            var b = AppHost.Services.GetRequiredService<IQueryableRepository>();
+
             IComfyBot comfyBot = AppHost.Services.GetService<IComfyBot>();
             comfyBot.Run();
             IComfyPubSub service = AppHost.Services.GetService<IComfyPubSub>();
@@ -77,9 +98,9 @@ public partial class App : System.Windows.Application
 
     protected override async void OnExit(ExitEventArgs e)
     {
-        IEnumerable<ICompletableJob> completableTask = AppHost!.Services.GetServices<ICompletableJob>();
+        IEnumerable<IShutdownJob> completableTask = AppHost!.Services.GetServices<IShutdownJob>();
 
-        foreach (ICompletableJob job in completableTask)
+        foreach (IShutdownJob job in completableTask)
         {
             job.Complete();
         }

@@ -2,27 +2,22 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ComfyBot.Application.Shared.Contracts;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Common.Http;
+using ComfyBot.Common.Scaffolding;
 using ComfyBot.Data.Database;
+using ComfyBot.Data.Scaffolding;
 using ComfyBot.Settings.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 
 namespace ComfyBot.Application;
 
 public class Startup
 {
-    public static void RegisterDependencies(IServiceCollection collection)
+    public static void RegisterDependencies(IServiceCollection services)
     {
-        var configBuilder = new ConfigurationBuilder().SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
-            .AddJsonFile("appsettings.json", false, true);
-        var configuration = configBuilder.Build();
-        var appSettings = new AppSettings();
-        configuration.Bind(appSettings);
-        collection.AddSingleton(appSettings);
-
         Assembly[] assemblies =
         [
             typeof(Startup).Assembly,
@@ -31,10 +26,20 @@ public class Startup
             typeof(IHttpService).Assembly
         ];
 
+        List<IProjectModule> modules =
+        [
+            new DataProjectModule()
+        ];
+
+        foreach (IProjectModule projectModule in modules)
+        {
+            projectModule.RegisterServices(services);
+        }
+
         foreach (Assembly assembly in assemblies)
         {
-            RegisterImplementations(collection, assembly);
-            RegisterImplementationsWithoutInterfaces(collection, assembly);
+            RegisterImplementations(services, assembly);
+            RegisterImplementationsWithoutInterfaces(services, assembly);
         }
     }
 
