@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace ComfyBot.Bot.ChatBot.Services;
+﻿namespace ComfyBot.Bot.ChatBot.Services;
 
 public class WildcardReplacerOptions
 {
-    public string[] Parameters { get; set; } = Array.Empty<string>();
+    public string[] Parameters { get; set; } = [];
 
     public string UserName { get; set; }
 }

@@ -33,7 +33,7 @@ public class ResponseTabViewModel : InitializableTab
 
     public ParameterCommand RemoveResponseCommand { get; }
 
-    public ObservableCollection<MessageResponseModel> Responses { get; set; } = new();
+    public ObservableCollection<MessageResponseModel> Responses { get; set; } = [];
 
     protected override void Initialize()
     {
@@ -41,7 +41,7 @@ public class ResponseTabViewModel : InitializableTab
 
         foreach (MessageResponse entity in messageResponses)
         {
-            MessageResponseModel model = new MessageResponseModel();
+            MessageResponseModel model = new();
             mapper.MapToModel(entity, model);
             Responses.Add(model);
         }
@@ -51,7 +51,7 @@ public class ResponseTabViewModel : InitializableTab
 
     private void AddResponse()
     {
-        MessageResponseModel messageResponse = new MessageResponseModel { Id = Guid.NewGuid().ToString() };
+        MessageResponseModel messageResponse = new() { Id = Guid.NewGuid().ToString() };
         Responses.Add(messageResponse);
     }
 
@@ -66,7 +66,7 @@ public class ResponseTabViewModel : InitializableTab
     private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
     {
         MessageResponseModel model = (MessageResponseModel)sender;
-        MessageResponse entity = new MessageResponse();
+        MessageResponse entity = new();
 
         mapper.MapToEntity(model, entity);
         repository.Write(entity);

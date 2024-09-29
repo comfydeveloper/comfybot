@@ -22,9 +22,9 @@ public class TwitchClientFactory : ITwitchClientFactory
             string password = ApplicationSettings.Default.AuthKey;
             string channel = ApplicationSettings.Default.Channel;
 
-            ConnectionCredentials credentials = new ConnectionCredentials(userName, password);
-            ClientOptions clientOptions = new ClientOptions { MessagesAllowedInPeriod = 100, ThrottlingPeriod = TimeSpan.FromSeconds(30) };
-            WebSocketClient websocketClient = new WebSocketClient(clientOptions);
+            ConnectionCredentials credentials = new(userName, password);
+            ClientOptions clientOptions = new() { MessagesAllowedInPeriod = 100, ThrottlingPeriod = TimeSpan.FromSeconds(30) };
+            WebSocketClient websocketClient = new(clientOptions);
             twitchClient = new TwitchClient(websocketClient);
             twitchClient.Initialize(credentials, channel);
         }

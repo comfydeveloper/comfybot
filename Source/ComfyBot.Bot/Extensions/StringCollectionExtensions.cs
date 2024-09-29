@@ -15,7 +15,7 @@ public static class StringCollectionExtensions
             return strings[0];
         }
 
-        Random random = new Random();
+        Random random = new();
         int index = random.Next(0, strings.Length);
 
         return strings[index];

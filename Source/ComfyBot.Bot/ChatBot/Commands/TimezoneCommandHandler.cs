@@ -23,15 +23,15 @@ public class TimezoneCommandHandler : CommandHandler
 
     protected override void HandleInternal(ITwitchClient client, IChatCommand command)
     {
-        if (zoneLoader.TryLoad(command.ArgumentsAsString, out Timezone timezone))
+        if (this.zoneLoader.TryLoad(command.ArgumentsAsString, out Timezone timezone))
         {
-            TimezoneInfo timezoneInfo = timeLoader.GetTime(timezone);
+            TimezoneInfo timezoneInfo = this.timeLoader.GetTime(timezone);
 
-            SendMessage(client, $"{command.ChatMessage.UserName}: {timezoneInfo.Timezone} {timezoneInfo.DateTime:G}");
+            this.SendMessage(client, $"{command.ChatMessage.UserName}: {timezoneInfo.Timezone} {timezoneInfo.DateTime:G}");
         }
         else
         {
-            SendMessage(client, $"Sorry {command.ChatMessage.UserName}, can't find timezone info for '{command.ArgumentsAsString}'.");
+            this.SendMessage(client, $"Sorry {command.ChatMessage.UserName}, can't find timezone info for '{command.ArgumentsAsString}'.");
         }
     }
 }

@@ -35,10 +35,10 @@ public class MessageResponseLoader : IMessageResponseLoader
 
         if (response.ReplyAlways || MatchesLooseKeyword(response, message) || MatchesAllKeywords(response, message) || MatchesExactKeyword(response, message))
         {
-            UpdateUsageInfo(response);
+            this.UpdateUsageInfo(response);
             responseText = response.Replies.GetRandom();
             responseText = responseText.Replace("{{user}}", message.UserName);
-            responseText = wildcardReplacerObject.Replace(responseText);
+            responseText = this.wildcardReplacerObject.Replace(responseText);
             return true;
         }
         return false;
@@ -48,7 +48,7 @@ public class MessageResponseLoader : IMessageResponseLoader
     {
         response.UseCount++;
         response.LastUsed = DateTime.Now;
-        repository.Write(response);
+        this.repository.Write(response);
     }
 
     private static bool HasOngoingTimeout(MessageResponse response)
@@ -60,7 +60,7 @@ public class MessageResponseLoader : IMessageResponseLoader
     {
         foreach (string keyword in messageResponse.LooseKeywords)
         {
-            if (message.Text.ToLower().Contains(keyword.ToLower()))
+            if (message.Text.ToLower().Contains(keyword.ToLower(), StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -77,7 +77,7 @@ public class MessageResponseLoader : IMessageResponseLoader
 
         foreach (string keyword in messageResponse.AllKeywords)
         {
-            if (!message.Text.ToLower().Contains(keyword.ToLower()))
+            if (!message.Text.ToLower().Contains(keyword.ToLower(), StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }

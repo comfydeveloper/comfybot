@@ -42,7 +42,7 @@ public class TextCommandsTabViewModelTests
     [TestCase("00000000-0000-0000-0000-000000000001")]
     public void RemoveTextCommandCommandShouldRemoveResponse(string id)
     {
-        TextCommandModel model = new TextCommandModel { Id = id };
+        TextCommandModel model = new() { Id = id };
         viewModel.Commands.Add(model);
         messageBox.Setup(b => b.Show(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButton>())).Returns(MessageBoxResult.Yes);
 
@@ -69,7 +69,7 @@ public class TextCommandsTabViewModelTests
     [Test]
     public void UpdatingATextModelShouldUpdateEntity()
     {
-        TextCommandModel model = new TextCommandModel();
+        TextCommandModel model = new();
         viewModel.Commands.Add(model);
         viewModel.IsSelected = true;
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using ComfyBot.Data.Database;
@@ -21,8 +20,8 @@ public class MessageResponseRepositoryTests
     [SetUp]
     public void Setup()
     {
-        Mock<IDatabaseFactory> databaseFactory = new Mock<IDatabaseFactory>();
-        Mock<IDatabase> database = new Mock<IDatabase>();
+        Mock<IDatabaseFactory> databaseFactory = new();
+        Mock<IDatabase> database = new();
         entities = new Mock<ILiteCollection<MessageResponse>>();
         database.Setup(d => d.GetCollection<MessageResponse>("messageResponses")).Returns(entities.Object);
         databaseFactory.Setup(f => f.Create()).Returns(database.Object);
@@ -34,7 +33,7 @@ public class MessageResponseRepositoryTests
     [TestCase("key2")]
     public void GetShouldReturnElement(string id)
     {
-        MessageResponse entity = new MessageResponse { Id = id };
+        MessageResponse entity = new() { Id = id };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
 
         MessageResponse shoutout = repository.Get(s => s.Id == id);
@@ -46,7 +45,7 @@ public class MessageResponseRepositoryTests
     [TestCase("key2")]
     public void AddOrUpdateShouldAddNewElement(string id)
     {
-        MessageResponse model = new MessageResponse();
+        MessageResponse model = new();
 
         repository.Write(model);
 
@@ -58,8 +57,8 @@ public class MessageResponseRepositoryTests
     [TestCase(2)]
     public void AddOrUpdateShouldUpdateTimeOut(int timeOutInSeconds)
     {
-        MessageResponse entity = new MessageResponse();
-        MessageResponse model = new MessageResponse { TimeoutInSeconds = timeOutInSeconds };
+        MessageResponse entity = new();
+        MessageResponse model = new() { TimeoutInSeconds = timeOutInSeconds };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
 
         repository.Write(model);
@@ -73,8 +72,8 @@ public class MessageResponseRepositoryTests
     [TestCase(2)]
     public void AddOrUpdateShouldUpdatePriority(int priority)
     {
-        MessageResponse entity = new MessageResponse();
-        MessageResponse model = new MessageResponse { Priority = priority };
+        MessageResponse entity = new();
+        MessageResponse model = new() { Priority = priority };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
 
         repository.Write(model);
@@ -88,8 +87,8 @@ public class MessageResponseRepositoryTests
     [TestCase(4, 3, 4)]
     public void AddOrUpdateShouldUpdateUseCount(int newCount, int oldCount, int expected)
     {
-        MessageResponse entity = new MessageResponse { UseCount = oldCount };
-        MessageResponse model = new MessageResponse { UseCount = newCount };
+        MessageResponse entity = new() { UseCount = oldCount };
+        MessageResponse model = new() { UseCount = newCount };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
 
         repository.Write(model);
@@ -101,20 +100,21 @@ public class MessageResponseRepositoryTests
     [TestCase("value2")]
     public void AddOrUpdateShouldUpdateCollections(string value)
     {
-        MessageResponse entity = new MessageResponse
+        MessageResponse entity = new()
         {
-            Users = new List<string> { "otherValue", value},
-            AllKeywords = new List<string> { "otherValue", value},
-            ExactKeywords = new List<string> { "otherValue", value},
-            LooseKeywords = new List<string> { "otherValue", value},
-            Replies = new List<string> { "otherValue", value}
+            Users = ["otherValue", value],
+            AllKeywords = ["otherValue", value],
+            ExactKeywords = ["otherValue", value],
+            LooseKeywords = ["otherValue", value],
+            Replies = ["otherValue", value]
         };
-        MessageResponse model = new MessageResponse {
-            Users = new List<string> { value },
-            AllKeywords = new List<string> { value },
-            ExactKeywords = new List<string> { value },
-            LooseKeywords = new List<string> { value },
-            Replies = new List<string> { value }
+        MessageResponse model = new()
+        {
+            Users = [value],
+            AllKeywords = [value],
+            ExactKeywords = [value],
+            LooseKeywords = [value],
+            Replies = [value]
         };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
 

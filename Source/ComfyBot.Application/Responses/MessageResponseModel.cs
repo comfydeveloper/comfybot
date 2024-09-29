@@ -53,15 +53,15 @@ public class MessageResponseModel : NotifyingModel
 
     public string Id { get; set; }
 
-    public ObservableCollection<TextModel> Users { get; set; } = new();
+    public ObservableCollection<TextModel> Users { get; set; } = [];
 
-    public ObservableCollection<TextModel> ExactKeywords { get; set; } = new();
+    public ObservableCollection<TextModel> ExactKeywords { get; set; } = [];
 
-    public ObservableCollection<TextModel> LooseKeywords { get; set; } = new();
+    public ObservableCollection<TextModel> LooseKeywords { get; set; } = [];
 
-    public ObservableCollection<TextModel> AllKeywords { get; set; } = new();
+    public ObservableCollection<TextModel> AllKeywords { get; set; } = [];
 
-    public ObservableCollection<TextModel> Replies { get; set; } = new();
+    public ObservableCollection<TextModel> Replies { get; set; } = [];
 
     public int Timeout
     {

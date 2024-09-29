@@ -24,13 +24,13 @@ public class TextCommandHandler : CommandHandler
 
     protected override void HandleInternal(ITwitchClient client, IChatCommand command)
     {
-        IEnumerable<TextCommand> textCommands = repository.GetAll();
+        IEnumerable<TextCommand> textCommands = this.repository.GetAll();
 
         foreach (TextCommand textCommand in textCommands)
         {
-            if (replyLoader.TryGetReply(textCommand, command, out string reply))
+            if (this.replyLoader.TryGetReply(textCommand, command, out string reply))
             {
-                SendMessage(client, reply);
+                this.SendMessage(client, reply);
                 return;
             }
         }

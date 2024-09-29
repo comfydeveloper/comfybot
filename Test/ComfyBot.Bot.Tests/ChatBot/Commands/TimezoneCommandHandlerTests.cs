@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Timezones;
 using ComfyBot.Bot.ChatBot.Wrappers;
@@ -24,52 +23,52 @@ public class TimezoneCommandHandlerTests
     [SetUp]
     public void Setup()
     {
-        chatMessage = new Mock<IChatMessage>();
-        chatCommand = new Mock<IChatCommand>();
-        twitchClient = new Mock<ITwitchClient>();
-        timezoneLoader = new Mock<ITimezoneLoader>();
-        timeLoader = new Mock<ITimeLoader>();
+        this.chatMessage = new Mock<IChatMessage>();
+        this.chatCommand = new Mock<IChatCommand>();
+        this.twitchClient = new Mock<ITwitchClient>();
+        this.timezoneLoader = new Mock<ITimezoneLoader>();
+        this.timeLoader = new Mock<ITimeLoader>();
 
-        chatCommand.Setup(c => c.ChatMessage).Returns(chatMessage.Object);
+        this.chatCommand.Setup(c => c.ChatMessage).Returns(this.chatMessage.Object);
 
-        commandHandler = new TimezoneCommandHandler(timezoneLoader.Object, timeLoader.Object);
+        this.commandHandler = new TimezoneCommandHandler(this.timezoneLoader.Object, this.timeLoader.Object);
     }
 
     [Test]
     public void HandleShouldLoadTimeForTimezone()
     {
         ApplicationSettings.Default.Channel = "channel";
-        chatCommand.Setup(c => c.CommandText).Returns("timezone");
-        chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "zone" });
-        chatCommand.Setup(c => c.ArgumentsAsString).Returns("zone");
-        chatMessage.Setup(m => m.UserName).Returns("user");
-        Timezone zone = new Timezone();
-        timezoneLoader.Setup(l => l.TryLoad("zone", out zone)).Returns(true);
-        TimezoneInfo timezoneInfo = new TimezoneInfo
+        this.chatCommand.Setup(c => c.CommandText).Returns("timezone");
+        this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(["zone"]);
+        this.chatCommand.Setup(c => c.ArgumentsAsString).Returns("zone");
+        this.chatMessage.Setup(m => m.UserName).Returns("user");
+        Timezone zone = new();
+        this.timezoneLoader.Setup(l => l.TryLoad("zone", out zone)).Returns(true);
+        TimezoneInfo timezoneInfo = new()
         {
             Timezone = "area/location/region",
             DateTime = new DateTime(2020, 01, 01)
         };
-        timeLoader.Setup(l => l.GetTime(zone)).Returns(timezoneInfo);
+        this.timeLoader.Setup(l => l.GetTime(zone)).Returns(timezoneInfo);
 
-        commandHandler.Handle(twitchClient.Object, chatCommand.Object);
+        this.commandHandler.Handle(this.twitchClient.Object, this.chatCommand.Object);
 
-        twitchClient.Verify(c => c.SendMessage("channel", $@"user: area/location/region {timezoneInfo.DateTime:G}", false));
+        this.twitchClient.Verify(c => c.SendMessage("channel", $@"user: area/location/region {timezoneInfo.DateTime:G}", false));
     }
 
     [Test]
     public void HandleShouldNotifyUserWhenTimezoneWasNotFound()
     {
         ApplicationSettings.Default.Channel = "channel";
-        chatCommand.Setup(c => c.CommandText).Returns("timezone");
-        chatCommand.Setup(c => c.ArgumentsAsList).Returns(new List<string> { "zone" });
-        chatCommand.Setup(c => c.ArgumentsAsString).Returns("zone");
-        chatMessage.Setup(m => m.UserName).Returns("user");
-        Timezone zone = new Timezone();
-        timezoneLoader.Setup(l => l.TryLoad("zone", out zone)).Returns(false);
+        this.chatCommand.Setup(c => c.CommandText).Returns("timezone");
+        this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(["zone"]);
+        this.chatCommand.Setup(c => c.ArgumentsAsString).Returns("zone");
+        this.chatMessage.Setup(m => m.UserName).Returns("user");
+        Timezone zone = new();
+        this.timezoneLoader.Setup(l => l.TryLoad("zone", out zone)).Returns(false);
 
-        commandHandler.Handle(twitchClient.Object, chatCommand.Object);
+        this.commandHandler.Handle(this.twitchClient.Object, this.chatCommand.Object);
 
-        twitchClient.Verify(c => c.SendMessage("channel", @"Sorry user, can't find timezone info for 'zone'.", false));
+        this.twitchClient.Verify(c => c.SendMessage("channel", @"Sorry user, can't find timezone info for 'zone'.", false));
     }
 }

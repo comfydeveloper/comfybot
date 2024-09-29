@@ -9,7 +9,7 @@ public class NumberRangeStrategy : IReplacementStrategy
     public string Replace(string text, WildcardReplacerOptions options)
     {
         MatchCollection matches = Regex.Matches(text, @"\[n:(.*?)\]");
-        Random random = new Random();
+        Random random = new();
 
         foreach (Match match in matches)
         {

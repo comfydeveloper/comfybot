@@ -21,9 +21,9 @@ public class TextCommandReplyLoader : ITextCommandReplyLoader
 
     public bool TryGetReply(TextCommand textCommand, IChatCommand command, out string reply)
     {
-        if (!HasOngoingTimeout(textCommand) && CommandMatches(textCommand, command))
+        if (!this.HasOngoingTimeout(textCommand) && CommandMatches(textCommand, command))
         {
-            UpdateCommandUsageInfo(textCommand);
+            this.UpdateCommandUsageInfo(textCommand);
 
             if (command.ArgumentsAsList.Any())
             {
@@ -43,13 +43,13 @@ public class TextCommandReplyLoader : ITextCommandReplyLoader
                     {
                         reply = reply.Replace($"{{{{parameter{parameter.Index + 1}}}}}", parameter.Text);
                     }
-                    reply = wildcardReplacer.Replace(reply);
+                    reply = this.wildcardReplacer.Replace(reply, new WildcardReplacerOptions { Parameters = command.ArgumentsAsList.ToArray(), UserName = command.ChatMessage.UserName });
                     return true;
                 }
             }
             reply = textCommand.Replies.Where(r => !r.Contains("{{parameter")).GetRandom();
             reply = reply.Replace("{{user}}", command.ChatMessage.UserName);
-            reply = wildcardReplacer.Replace(reply);
+            reply = this.wildcardReplacer.Replace(reply);
             return true;
         }
         reply = null;
@@ -65,7 +65,7 @@ public class TextCommandReplyLoader : ITextCommandReplyLoader
     {
         textCommand.UseCount++;
         textCommand.LastUsed = DateTime.Now;
-        repository.Write(textCommand);
+        this.repository.Write(textCommand);
     }
 
     private static bool CommandMatches(TextCommand textCommand, IChatCommand command)

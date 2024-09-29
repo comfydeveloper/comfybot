@@ -5,9 +5,9 @@ namespace ComfyBot.Data.Models;
 
 public class TextCommand : Entity
 {
-    public List<string> Replies { get; set; } = new();
+    public List<string> Replies { get; set; } = [];
 
-    public List<string> Commands { get; set; } = new();
+    public List<string> Commands { get; set; } = [];
 
     public DateTime? LastUsed { get; set; }
 

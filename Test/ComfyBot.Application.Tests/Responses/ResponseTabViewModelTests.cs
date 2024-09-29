@@ -37,7 +37,7 @@ public class ResponseTabViewModelTests
     [TestCase("00000000-0000-0000-0000-000000000001")]
     public void RemoveResponseCommandShouldRemoveResponse(string id)
     {
-        MessageResponseModel model = new MessageResponseModel { Id = id };
+        MessageResponseModel model = new() { Id = id };
         viewModel.Responses.Add(model);
 
         viewModel.RemoveResponseCommand.Execute(model);
@@ -63,7 +63,7 @@ public class ResponseTabViewModelTests
     [Test]
     public void UpdatingATextModelShouldUpdateEntity()
     {
-        MessageResponseModel model = new MessageResponseModel();
+        MessageResponseModel model = new();
         viewModel.Responses.Add(model);
         viewModel.IsSelected = true;
 

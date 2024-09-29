@@ -27,11 +27,11 @@ public class MessageResponseHandler : IMessageHandler
             return;
         }
 
-        IEnumerable<MessageResponse> messageResponses = repository.GetAll().OrderBy(r => r.Priority);
+        IEnumerable<MessageResponse> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
 
         foreach (MessageResponse messageResponse in messageResponses)
         {
-            if (responseLoader.TryGetResponse(messageResponse, message, out string response))
+            if (this.responseLoader.TryGetResponse(messageResponse, message, out string response))
             {
                 client.SendMessage(ApplicationSettings.Default.Channel, response);
                 return;
@@ -41,6 +41,6 @@ public class MessageResponseHandler : IMessageHandler
 
     private static bool IsCommand(IChatMessage message)
     {
-        return message.Text.StartsWith("!");
+        return message.Text.StartsWith('!');
     }
 }

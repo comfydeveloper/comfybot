@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using ComfyBot.Data.Database;
@@ -22,8 +21,8 @@ public class TextCommandRepositoryTests
     [SetUp]
     public void Setup()
     {
-        Mock<IDatabaseFactory> databaseFactory = new Mock<IDatabaseFactory>();
-        Mock<IDatabase> database = new Mock<IDatabase>();
+        Mock<IDatabaseFactory> databaseFactory = new();
+        Mock<IDatabase> database = new();
         entities = new Mock<ILiteCollection<TextCommand>>();
         database.Setup(d => d.GetCollection<TextCommand>("textCommands")).Returns(entities.Object);
         databaseFactory.Setup(f => f.Create()).Returns(database.Object);
@@ -35,7 +34,7 @@ public class TextCommandRepositoryTests
     [TestCase("key2")]
     public void GetShouldReturnElement(string id)
     {
-        TextCommand entity = new TextCommand { Id = id };
+        TextCommand entity = new() { Id = id };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
         TextCommand shoutout = repository.Get(s => s.Id == id);
@@ -47,7 +46,7 @@ public class TextCommandRepositoryTests
     [TestCase("key2")]
     public void AddOrUpdateShouldAddNewElement(string id)
     {
-        TextCommand model = new TextCommand();
+        TextCommand model = new();
 
         repository.Write(model);
 
@@ -59,8 +58,8 @@ public class TextCommandRepositoryTests
     [TestCase(2)]
     public void AddOrUpdateShouldUpdateTimeOut(int timeOutInSeconds)
     {
-        TextCommand entity = new TextCommand();
-        TextCommand model = new TextCommand { TimeoutInSeconds = timeOutInSeconds };
+        TextCommand entity = new();
+        TextCommand model = new() { TimeoutInSeconds = timeOutInSeconds };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
         repository.Write(model);
@@ -74,13 +73,13 @@ public class TextCommandRepositoryTests
     [TestCase("value2")]
     public void AddOrUpdateShouldUpdateCommandsCollection(string value)
     {
-        TextCommand entity = new TextCommand
+        TextCommand entity = new()
         {
-            Commands = new List<string> { "otherValue", value }
+            Commands = ["otherValue", value]
         };
-        TextCommand model = new TextCommand
+        TextCommand model = new()
         {
-            Commands = new List<string> { value }
+            Commands = [value]
         };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
@@ -96,8 +95,8 @@ public class TextCommandRepositoryTests
     [TestCase("2020-01-02")]
     public void AddOrUpdateShouldUpdateUsedTime(DateTime lastUsedTime)
     {
-        TextCommand entity = new TextCommand();
-        TextCommand model = new TextCommand { LastUsed = lastUsedTime };
+        TextCommand entity = new();
+        TextCommand model = new() { LastUsed = lastUsedTime };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
         repository.Write(model);
@@ -111,8 +110,8 @@ public class TextCommandRepositoryTests
     [TestCase(2)]
     public void AddOrUpdateShouldUpdateUseCount(int count)
     {
-        TextCommand entity = new TextCommand();
-        TextCommand model = new TextCommand { UseCount = count };
+        TextCommand entity = new();
+        TextCommand model = new() { UseCount = count };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 
         repository.Write(model);
@@ -124,13 +123,13 @@ public class TextCommandRepositoryTests
     [TestCase("value2")]
     public void AddOrUpdateShouldUpdateCollection(string value)
     {
-        TextCommand entity = new TextCommand
+        TextCommand entity = new()
         {
-            Replies = new List<string> { "otherValue", value }
+            Replies = ["otherValue", value]
         };
-        TextCommand model = new TextCommand
+        TextCommand model = new()
         {
-            Replies = new List<string> { value }
+            Replies = [value]
         };
         entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
 

@@ -5,15 +5,15 @@ namespace ComfyBot.Data.Models;
 
 public class MessageResponse : Entity
 {
-    public List<string> Users { get; set; } = new();
+    public List<string> Users { get; set; } = [];
 
-    public List<string> LooseKeywords { get; set; } = new();
+    public List<string> LooseKeywords { get; set; } = [];
 
-    public List<string> AllKeywords { get; set; } = new();
+    public List<string> AllKeywords { get; set; } = [];
 
-    public List<string> ExactKeywords { get; set; } = new();
+    public List<string> ExactKeywords { get; set; } = [];
 
-    public List<string> Replies { get; set; } = new();
+    public List<string> Replies { get; set; } = [];
 
     public DateTime? LastUsed { get; set; }
 

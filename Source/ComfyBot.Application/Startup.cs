@@ -23,12 +23,13 @@ public class Startup
         configuration.Bind(appSettings);
         collection.AddSingleton(appSettings);
 
-        Assembly[] assemblies = {
+        Assembly[] assemblies =
+        [
             typeof(Startup).Assembly,
             typeof(ICommandHandler).Assembly,
             typeof(IDatabaseFactory).Assembly,
             typeof(IHttpService).Assembly
-        };
+        ];
 
         foreach (Assembly assembly in assemblies)
         {

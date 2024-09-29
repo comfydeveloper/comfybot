@@ -7,7 +7,7 @@ namespace ComfyBot.Bot.ChatBot.Timezones;
 
 public class TimezoneLoader : ITimezoneLoader
 {
-    private static readonly List<Timezone> areas = new();
+    private static readonly List<Timezone> areas = [];
 
     public bool TryLoad(string zone, out Timezone result)
     {
@@ -33,7 +33,7 @@ public class TimezoneLoader : ITimezoneLoader
     {
         string[] parts = availableZone.Split('/');
 
-        Timezone area = new Timezone
+        Timezone area = new()
         {
             Area = parts[0],
             Location = parts.Length > 1 ? parts[1] : string.Empty,

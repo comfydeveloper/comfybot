@@ -22,9 +22,9 @@ public class TextCommandModel : NotifyingModel
 
     public string Id { get; set; }
 
-    public ObservableCollection<TextModel> Replies { get; set; } = new();
+    public ObservableCollection<TextModel> Replies { get; set; } = [];
 
-    public ObservableCollection<TextModel> Commands { get; set; } = new();
+    public ObservableCollection<TextModel> Commands { get; set; } = [];
 
     public int Timeout
     {

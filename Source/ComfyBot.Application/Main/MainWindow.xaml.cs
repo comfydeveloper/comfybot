@@ -18,7 +18,7 @@ public partial class MainWindow : Window
         DataContext = viewModel;
 
         InitializeComponent();
-        ConsoleOutputWriter writer = new ConsoleOutputWriter(ConsoleTextBox);
+        ConsoleOutputWriter writer = new(ConsoleTextBox);
         Console.SetOut(writer);
 
         StreamKey.Password = ApplicationSettings.Default.AuthKey;

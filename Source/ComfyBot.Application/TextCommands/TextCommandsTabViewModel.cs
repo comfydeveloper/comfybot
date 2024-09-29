@@ -38,7 +38,7 @@ public class TextCommandsTabViewModel : InitializableTab
 
     public ParameterCommand RemoveTextCommandCommand { get; set; }
 
-    public ObservableCollection<TextCommandModel> Commands { get; set; } = new();
+    public ObservableCollection<TextCommandModel> Commands { get; set; } = [];
 
     protected override void Initialize()
     {
@@ -46,7 +46,7 @@ public class TextCommandsTabViewModel : InitializableTab
 
         foreach (TextCommand entity in textCommands)
         {
-            TextCommandModel model = new TextCommandModel();
+            TextCommandModel model = new();
             mapper.MapToModel(entity, model);
             Commands.Add(model);
         }
@@ -84,7 +84,7 @@ public class TextCommandsTabViewModel : InitializableTab
     private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
     {
         TextCommandModel model = (TextCommandModel)sender;
-        TextCommand entity = new TextCommand();
+        TextCommand entity = new();
         mapper.MapToEntity(model, entity);
 
         repository.Write(entity);

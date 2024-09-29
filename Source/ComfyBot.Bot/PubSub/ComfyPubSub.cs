@@ -27,18 +27,18 @@ public class ComfyPubSub : IComfyPubSub
             return;
         }
 
-        client = new TwitchPubSub();
+        this.client = new TwitchPubSub();
 
-        client.OnPubSubServiceConnected += ClientOnOnPubSubServiceConnected;
-        client.OnChannelPointsRewardRedeemed += OnChannelPointsRewardRedeemed;
+        this.client.OnPubSubServiceConnected += this.ClientOnOnPubSubServiceConnected;
+        this.client.OnChannelPointsRewardRedeemed += this.OnChannelPointsRewardRedeemed;
 
-        client.ListenToChannelPoints(ApplicationSettings.Default.ChannelId);
-        client.Connect();
+        this.client.ListenToChannelPoints(ApplicationSettings.Default.ChannelId);
+        this.client.Connect();
     }
 
     private void ClientOnOnPubSubServiceConnected(object sender, EventArgs e)
     {
-        client.SendTopics();
+        this.client.SendTopics();
     }
 
     private void OnChannelPointsRewardRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
@@ -46,7 +46,7 @@ public class ComfyPubSub : IComfyPubSub
         try
         {
             IRewardRedemption rewardRedemption = e.ToRewardRedemption();
-            foreach (IRewardRedeemHandler rewardRedeemHandler in rewardRedeemHandlers)
+            foreach (IRewardRedeemHandler rewardRedeemHandler in this.rewardRedeemHandlers)
             {
                 rewardRedeemHandler.Handle(rewardRedemption);
             }

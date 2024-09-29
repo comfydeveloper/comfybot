@@ -25,20 +25,20 @@ public class ChatBotTests
     [SetUp]
     public void Setup()
     {
-        clientFactory = new Mock<ITwitchClientFactory>();
-        client = new Mock<ITwitchClient>();
-        clientFactory.Setup(f => f.Create()).Returns(client.Object);
+        this.clientFactory = new Mock<ITwitchClientFactory>();
+        this.client = new Mock<ITwitchClient>();
+        this.clientFactory.Setup(f => f.Create()).Returns(this.client.Object);
 
-        commandHandler1 = new Mock<ICommandHandler>();
-        commandHandler2 = new Mock<ICommandHandler>();
-        ICommandHandler[] commandHandlers = { commandHandler1.Object, commandHandler2.Object };
+        this.commandHandler1 = new Mock<ICommandHandler>();
+        this.commandHandler2 = new Mock<ICommandHandler>();
+        ICommandHandler[] commandHandlers = [this.commandHandler1.Object, this.commandHandler2.Object];
 
-        messageHandler1 = new Mock<IMessageHandler>();
-        messageHandler2 = new Mock<IMessageHandler>();
-        IMessageHandler[] messageHandlers = { messageHandler1.Object, messageHandler2.Object };
+        this.messageHandler1 = new Mock<IMessageHandler>();
+        this.messageHandler2 = new Mock<IMessageHandler>();
+        IMessageHandler[] messageHandlers = [this.messageHandler1.Object, this.messageHandler2.Object];
         var logger = new Mock<ILogger<Bot.ChatBot.ChatBot>>();
 
-        chatBot = new Bot.ChatBot.ChatBot(clientFactory.Object, commandHandlers, messageHandlers, logger.Object);
+        this.chatBot = new Bot.ChatBot.ChatBot(this.clientFactory.Object, commandHandlers, messageHandlers, logger.Object);
     }
 
     [TestCase("user1", "password1", "channel1")]
@@ -49,10 +49,10 @@ public class ChatBotTests
         ApplicationSettings.Default.AuthKey = password;
         ApplicationSettings.Default.Channel = channel;
 
-        chatBot.Run();
+        this.chatBot.Run();
 
-        clientFactory.Verify(f => f.Create());
-        client.Verify(c => c.Connect());
+        this.clientFactory.Verify(f => f.Create());
+        this.client.Verify(c => c.Connect());
     }
 
     [Test]
@@ -62,8 +62,8 @@ public class ChatBotTests
         ApplicationSettings.Default.AuthKey = string.Empty;
         ApplicationSettings.Default.User = string.Empty;
 
-        chatBot.Run();
+        this.chatBot.Run();
 
-        clientFactory.Verify(f => f.Create(), Times.Never);
+        this.clientFactory.Verify(f => f.Create(), Times.Never);
     }
 }

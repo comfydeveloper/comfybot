@@ -8,9 +8,9 @@ public abstract class CommandHandler : ICommandHandler
 {
     public void Handle(ITwitchClient client, IChatCommand command)
     {
-        if (CanHandle(command))
+        if (this.CanHandle(command))
         {
-            HandleInternal(client, command);
+            this.HandleInternal(client, command);
         }
     }
 

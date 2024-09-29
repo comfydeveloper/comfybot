@@ -10,7 +10,7 @@ public class StringCollectionExtensionsTests
     [Test]
     public void GetRandomShouldReturnRandomElementFromCollection()
     {
-        List<string> collection = new List<string> { "random1", "random2" };
+        List<string> collection = ["random1", "random2"];
         int elementCount1 = 0;
         int elementCount2 = 0;
 
@@ -36,7 +36,7 @@ public class StringCollectionExtensionsTests
     [TestCase("string2")]
     public void GetRandomShouldReturnOnlyElement(string text)
     {
-        List<string> collection = new List<string> { text };
+        List<string> collection = [text];
 
         string result = collection.GetRandom();
 

@@ -1,5 +1,4 @@
 ﻿using ComfyBot.Bot.ChatBot.Services;
-using Moq;
 using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Services;

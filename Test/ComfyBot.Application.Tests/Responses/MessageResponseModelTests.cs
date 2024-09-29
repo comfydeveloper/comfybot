@@ -59,7 +59,7 @@ public class MessageResponseModelTests
     [Test]
     public void RemoveUserShouldRemoveItem()
     {
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.Users.Add(textModel);
 
         model.RemoveUserCommand.Execute(textModel);
@@ -70,7 +70,7 @@ public class MessageResponseModelTests
     [Test]
     public void RemoveAllKeywordShouldRemoveItem()
     {
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.AllKeywords.Add(textModel);
 
         model.RemoveAllKeywordCommand.Execute(textModel);
@@ -81,7 +81,7 @@ public class MessageResponseModelTests
     [Test]
     public void RemoveLooseKeywordShouldRemoveItem()
     {
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.LooseKeywords.Add(textModel);
 
         model.RemoveLooseKeywordCommand.Execute(textModel);
@@ -92,7 +92,7 @@ public class MessageResponseModelTests
     [Test]
     public void RemoveExactKeywordShouldRemoveItem()
     {
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.ExactKeywords.Add(textModel);
 
         model.RemoveExactKeywordCommand.Execute(textModel);
@@ -103,7 +103,7 @@ public class MessageResponseModelTests
     [Test]
     public void RemoveReplyShouldRemoveItem()
     {
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.Replies.Add(textModel);
 
         model.RemoveReplyCommand.Execute(textModel);
@@ -122,7 +122,7 @@ public class MessageResponseModelTests
             result = true;
         }
         model.PropertyChanged += TestMethod;
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.Users.Add(textModel);
 
         textModel.Text = text;

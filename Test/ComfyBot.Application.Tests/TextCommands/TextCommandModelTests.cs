@@ -27,7 +27,7 @@ public class TextCommandModelTests
     [Test]
     public void RemoveReplyShouldRemoveItem()
     {
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.Replies.Add(textModel);
 
         model.RemoveReplyCommand.Execute(textModel);
@@ -46,7 +46,7 @@ public class TextCommandModelTests
             result = true;
         }
         model.PropertyChanged += TestMethod;
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.Replies.Add(textModel);
 
         textModel.Text = text;
@@ -65,7 +65,7 @@ public class TextCommandModelTests
     [Test]
     public void RemoveTextShouldRemoveItem()
     {
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.Commands.Add(textModel);
 
         model.RemoveTextCommand.Execute(textModel);
@@ -84,7 +84,7 @@ public class TextCommandModelTests
             result = true;
         }
         model.PropertyChanged += TestMethod;
-        TextModel textModel = new TextModel();
+        TextModel textModel = new();
         model.Commands.Add(textModel);
 
         textModel.Text = text;

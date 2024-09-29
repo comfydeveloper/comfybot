@@ -11,7 +11,7 @@ namespace ComfyBot.Application.Output;
 [ExcludeFromCodeCoverage]
 public class ConsoleOutputWriter : TextWriter
 {
-    private readonly List<string> lastOutput = new();
+    private readonly List<string> lastOutput = [];
 
     public delegate void UpdateTextCallback(string message);
 

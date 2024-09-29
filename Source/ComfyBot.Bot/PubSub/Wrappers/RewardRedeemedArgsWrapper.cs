@@ -14,15 +14,15 @@ public class OnChannelPointsRewardRedeemedArgsWrapper : IRewardRedemption
         this.onRewardRedeemedArgs = onRewardRedeemedArgs;
     }
 
-    public Guid RewardId => Guid.Parse(onRewardRedeemedArgs.RewardRedeemed.Redemption.Id);
+    public Guid RewardId => Guid.Parse(this.onRewardRedeemedArgs.RewardRedeemed.Redemption.Id);
 
-    public string DisplayName => onRewardRedeemedArgs.RewardRedeemed.Redemption.User.DisplayName;
+    public string DisplayName => this.onRewardRedeemedArgs.RewardRedeemed.Redemption.User.DisplayName;
 
-    public string Message => onRewardRedeemedArgs.RewardRedeemed.Redemption.UserInput;
+    public string Message => this.onRewardRedeemedArgs.RewardRedeemed.Redemption.UserInput;
 
-    public string RewardTitle => onRewardRedeemedArgs.RewardRedeemed.Redemption.Reward.Title;
+    public string RewardTitle => this.onRewardRedeemedArgs.RewardRedeemed.Redemption.Reward.Title;
 
-    public string RewardPrompt => onRewardRedeemedArgs.RewardRedeemed.Redemption.Reward.Prompt;
+    public string RewardPrompt => this.onRewardRedeemedArgs.RewardRedeemed.Redemption.Reward.Prompt;
 
-    public int RewardCost => onRewardRedeemedArgs.RewardRedeemed.Redemption.Reward.Cost;
+    public int RewardCost => this.onRewardRedeemedArgs.RewardRedeemed.Redemption.Reward.Cost;
 }

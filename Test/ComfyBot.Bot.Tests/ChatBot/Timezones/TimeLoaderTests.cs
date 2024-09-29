@@ -15,25 +15,25 @@ public class TimeLoaderTests
     [SetUp]
     public void Setup()
     {
-        httpService = new Mock<IHttpService>();
-        timeLoader = new TimeLoader();
+        this.httpService = new Mock<IHttpService>();
+        this.timeLoader = new TimeLoader();
 
-        HttpService.OverrideInstance(httpService.Object);
+        HttpService.OverrideInstance(this.httpService.Object);
     }
 
     [Test]
     public void GetTimeShouldMapTimezone()
     {
-        Timezone timezone = new Timezone
+        Timezone timezone = new()
         {
             Area = "area",
             Location = "location",
             Region = "region"
         };
 
-        TimezoneInfo timezoneInfo = timeLoader.GetTime(timezone);
+        TimezoneInfo timezoneInfo = this.timeLoader.GetTime(timezone);
 
-        httpService.Verify(s => s.GetAsync<TimezoneInfo>($"http://worldtimeapi.org/api/timezone/{timezone}"));
+        this.httpService.Verify(s => s.GetAsync<TimezoneInfo>($"http://worldtimeapi.org/api/timezone/{timezone}"));
     }
 
     [TearDown]
