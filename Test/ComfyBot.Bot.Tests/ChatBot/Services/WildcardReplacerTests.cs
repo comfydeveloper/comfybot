@@ -6,16 +6,13 @@ namespace ComfyBot.Bot.Tests.ChatBot.Services;
 
 public class WildcardReplacerTests
 {
-    private Mock<IChattersCache> chattersCache;
-
     private WildcardReplacer replacer;
 
     [SetUp]
     public void Setup()
     {
-        chattersCache = new Mock<IChattersCache>();
 
-        replacer = new WildcardReplacer(chattersCache.Object);
+        replacer = new WildcardReplacer();
     }
 
     [Test]
@@ -37,16 +34,5 @@ public class WildcardReplacerTests
 
         int resultNumber = int.Parse(result);
         Assert.That(resultNumber is > 0 and < 10);
-    }
-
-    [Test]
-    public void ReplaceShouldReplaceRandomChatter()
-    {
-        chattersCache.Setup(c => c.GetRandom()).Returns("user");
-        const string original = "{{chatter}}";
-
-        string result = replacer.Replace(original);
-
-        Assert.AreEqual("user", result);
     }
 }

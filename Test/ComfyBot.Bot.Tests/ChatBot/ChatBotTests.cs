@@ -14,7 +14,6 @@ public class ChatBotTests
 {
     private Mock<ITwitchClientFactory> clientFactory;
     private Mock<ITwitchClient> client;
-    private Mock<IChattersCache> chattersCache;
 
     private Mock<ICommandHandler> commandHandler1;
     private Mock<ICommandHandler> commandHandler2;
@@ -29,7 +28,6 @@ public class ChatBotTests
         clientFactory = new Mock<ITwitchClientFactory>();
         client = new Mock<ITwitchClient>();
         clientFactory.Setup(f => f.Create()).Returns(client.Object);
-        chattersCache = new Mock<IChattersCache>();
 
         commandHandler1 = new Mock<ICommandHandler>();
         commandHandler2 = new Mock<ICommandHandler>();
@@ -40,7 +38,7 @@ public class ChatBotTests
         IMessageHandler[] messageHandlers = { messageHandler1.Object, messageHandler2.Object };
         var logger = new Mock<ILogger<Bot.ChatBot.ChatBot>>();
 
-        chatBot = new Bot.ChatBot.ChatBot(clientFactory.Object, commandHandlers, messageHandlers, chattersCache.Object, logger.Object);
+        chatBot = new Bot.ChatBot.ChatBot(clientFactory.Object, commandHandlers, messageHandlers, logger.Object);
     }
 
     [TestCase("user1", "password1", "channel1")]
