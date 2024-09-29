@@ -11,8 +11,7 @@ public class WildcardReplacerTests
     [SetUp]
     public void Setup()
     {
-
-        replacer = new WildcardReplacer();
+        this.replacer = new WildcardReplacer();
     }
 
     [Test]
@@ -20,7 +19,7 @@ public class WildcardReplacerTests
     {
         const string original = "[w:test2,test1] and [w:test3]";
 
-        string result = replacer.Replace(original);
+        string result = this.replacer.Replace(original);
 
         Assert.That(result is "test2 and test3" or "test1 and test3");
     }
@@ -30,7 +29,7 @@ public class WildcardReplacerTests
     {
         const string original = "[n:1-9]";
 
-        string result = replacer.Replace(original);
+        string result = this.replacer.Replace(original);
 
         int resultNumber = int.Parse(result);
         Assert.That(resultNumber is > 0 and < 10);

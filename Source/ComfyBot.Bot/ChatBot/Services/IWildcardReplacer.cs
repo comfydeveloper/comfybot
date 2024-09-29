@@ -2,5 +2,7 @@
 
 public interface IWildcardReplacer
 {
+    string Replace(string original, WildcardReplacerOptions options);
+
     string Replace(string original);
 }
