@@ -28,8 +28,6 @@ public class ConfigurationTabViewModel
 
     public ParameterCommand UpdateConfigurationCommand { get; }
 
-    public ParameterCommand UpdateWeatherApiKeyCommand { get; }
-
     private void UpdateConfiguration(object parameter)
     {
         ApplicationSettings.Default.ChannelId = this.ChannelId;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComfyBot.Application.Scaffolding;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using ComfyBot.Bot.ChatBot;
@@ -40,6 +41,7 @@ public partial class App
 
         List<IProjectModule> modules =
         [
+            new ApplicationProjectModule(),
             new DataProjectModule(),
             new BotProjectModule()
         ];

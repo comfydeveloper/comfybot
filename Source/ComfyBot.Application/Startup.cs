@@ -19,7 +19,6 @@ public class Startup
     {
         Assembly[] assemblies =
         [
-            typeof(Startup).Assembly,
             typeof(ICommandHandler).Assembly,
             typeof(IDatabaseFactory).Assembly,
             typeof(IHttpService).Assembly
