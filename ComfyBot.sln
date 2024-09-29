@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{00D98460-BEAB-48B2-B9BA-5C4E895D97B8}"
 EndProject
@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Data.Tests", "Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Application.Tests", "Test\ComfyBot.Application.Tests\ComfyBot.Application.Tests.csproj", "{3A959438-13B2-426C-BF14-CFFFCA627611}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComfyBot.Common", "Source\ComfyBot.Common\ComfyBot.Common.csproj", "{1E6891F8-B540-482C-87AC-D18188C55114}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComfyBot.Common", "Source\ComfyBot.Common\ComfyBot.Common.csproj", "{1E6891F8-B540-482C-87AC-D18188C55114}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
