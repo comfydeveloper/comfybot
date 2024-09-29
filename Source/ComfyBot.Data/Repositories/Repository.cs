@@ -23,9 +23,9 @@ public abstract class Repository<T> : IRepository<T>
 
     public T Get(Expression<Func<T, bool>> predicate)
     {
-        using IDatabase database = databaseFactory.Create();
+        using IDatabase database = this.databaseFactory.Create();
 
-        ILiteCollection<T> collection = database.GetCollection<T>(table);
+        ILiteCollection<T> collection = database.GetCollection<T>(this.table);
         T model = collection.FindOne(predicate);
 
         return model;
@@ -33,9 +33,9 @@ public abstract class Repository<T> : IRepository<T>
 
     public void Write(T model)
     {
-        using IDatabase database = databaseFactory.Create();
+        using IDatabase database = this.databaseFactory.Create();
 
-        ILiteCollection<T> collection = database.GetCollection<T>(table);
+        ILiteCollection<T> collection = database.GetCollection<T>(this.table);
         T entity = collection.FindOne(x => x.Id == model.Id);
 
         if (entity == null)
@@ -45,24 +45,24 @@ public abstract class Repository<T> : IRepository<T>
         }
         else
         {
-            Update(model, entity);
+            this.Update(model, entity);
             collection.Update(entity);
         }
     }
 
     public void Remove(string id)
     {
-        using IDatabase database = databaseFactory.Create();
+        using IDatabase database = this.databaseFactory.Create();
 
-        ILiteCollection<T> collection = database.GetCollection<T>(table);
+        ILiteCollection<T> collection = database.GetCollection<T>(this.table);
         collection.DeleteMany(t => t.Id == id);
     }
 
     public IEnumerable<T> GetAll()
     {
-        using IDatabase database = databaseFactory.Create();
+        using IDatabase database = this.databaseFactory.Create();
 
-        ILiteCollection<T> collection = database.GetCollection<T>(table);
+        ILiteCollection<T> collection = database.GetCollection<T>(this.table);
         return collection.FindAll().ToList();
     }
 

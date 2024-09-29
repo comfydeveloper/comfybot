@@ -15,12 +15,12 @@ public partial class MainWindow : Window
 {
     public MainWindow(MainWindowViewModel viewModel)
     {
-        DataContext = viewModel;
+        this.DataContext = viewModel;
 
-        InitializeComponent();
-        ConsoleOutputWriter writer = new(ConsoleTextBox);
+        this.InitializeComponent();
+        ConsoleOutputWriter writer = new(this.ConsoleTextBox);
         Console.SetOut(writer);
 
-        StreamKey.Password = ApplicationSettings.Default.AuthKey;
+        this.StreamKey.Password = ApplicationSettings.Default.AuthKey;
     }
 }

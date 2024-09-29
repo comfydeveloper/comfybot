@@ -12,9 +12,9 @@ public class TabsViewModel
         ConfigurationTabViewModel configuration,
         TextCommandsTabViewModel textCommands)
     {
-        Responses = responses;
-        Configuration = configuration;
-        TextCommands = textCommands;
+        this.Responses = responses;
+        this.Configuration = configuration;
+        this.TextCommands = textCommands;
     }
 
     public ConfigurationTabViewModel Configuration { get; }

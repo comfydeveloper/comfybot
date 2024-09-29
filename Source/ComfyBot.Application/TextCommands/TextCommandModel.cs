@@ -11,13 +11,13 @@ public class TextCommandModel : NotifyingModel
 
     public TextCommandModel()
     {
-        AddTextCommand = new DelegateCommand(AddText);
-        AddReplyCommand = new DelegateCommand(AddReply);
-        RemoveTextCommand = new ParameterCommand(RemoveText);
-        RemoveReplyCommand = new ParameterCommand(RemoveReply);
+        this.AddTextCommand = new DelegateCommand(this.AddText);
+        this.AddReplyCommand = new DelegateCommand(this.AddReply);
+        this.RemoveTextCommand = new ParameterCommand(this.RemoveText);
+        this.RemoveReplyCommand = new ParameterCommand(this.RemoveReply);
 
-        Replies.RegisterCollectionItemChanged(OnReplyUpdate);
-        Commands.RegisterCollectionItemChanged(OnReplyUpdate);
+        this.Replies.RegisterCollectionItemChanged(this.OnReplyUpdate);
+        this.Commands.RegisterCollectionItemChanged(this.OnReplyUpdate);
     }
 
     public string Id { get; set; }
@@ -28,8 +28,10 @@ public class TextCommandModel : NotifyingModel
 
     public int Timeout
     {
-        get => timeout;
-        set { timeout = value; OnPropertyChanged(); }
+        get => this.timeout;
+        set {
+            this.timeout = value;
+            this.OnPropertyChanged(); }
     }
 
     public DelegateCommand AddReplyCommand { get; }
@@ -42,24 +44,24 @@ public class TextCommandModel : NotifyingModel
 
     private void AddText()
     {
-        Commands.Add(new TextModel());
+        this.Commands.Add(new TextModel());
     }
 
     private void RemoveText(object parameter)
     {
-        Commands.Remove((TextModel)parameter);
-        OnPropertyChanged();
+        this.Commands.Remove((TextModel)parameter);
+        this.OnPropertyChanged();
     }
 
     private void AddReply()
     {
-        Replies.Add(new TextModel());
+        this.Replies.Add(new TextModel());
     }
 
     private void RemoveReply(object parameter)
     {
-        Replies.Remove((TextModel)parameter);
-        OnPropertyChanged();
+        this.Replies.Remove((TextModel)parameter);
+        this.OnPropertyChanged();
     }
 
     private void OnReplyUpdate(object sender, PropertyChangedEventArgs e)
@@ -70,6 +72,7 @@ public class TextCommandModel : NotifyingModel
         {
             return;
         }
-        OnPropertyChanged();
+
+        this.OnPropertyChanged();
     }
 }

@@ -30,8 +30,8 @@ public class TextCommandsTabViewModel : InitializableTab
         this.mapper = mapper;
         this.messageBox = messageBox;
 
-        AddTextCommandCommand = new DelegateCommand(AddTextCommand);
-        RemoveTextCommandCommand = new ParameterCommand(RemoveTextCommand);
+        this.AddTextCommandCommand = new DelegateCommand(this.AddTextCommand);
+        this.RemoveTextCommandCommand = new ParameterCommand(this.RemoveTextCommand);
     }
 
     public DelegateCommand AddTextCommandCommand { get; }
@@ -42,33 +42,33 @@ public class TextCommandsTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        IEnumerable<TextCommand> textCommands = repository.GetAll().OrderBy(c => c.Commands.OrderBy(text => text).FirstOrDefault());
+        IEnumerable<TextCommand> textCommands = this.repository.GetAll().OrderBy(c => c.Commands.OrderBy(text => text).FirstOrDefault());
 
         foreach (TextCommand entity in textCommands)
         {
             TextCommandModel model = new();
-            mapper.MapToModel(entity, model);
-            Commands.Add(model);
+            this.mapper.MapToModel(entity, model);
+            this.Commands.Add(model);
         }
 
-        Commands.RegisterCollectionItemChanged(OnResponseUpdate);
+        this.Commands.RegisterCollectionItemChanged(this.OnResponseUpdate);
     }
 
     private void AddTextCommand()
     {
-        Commands.Add(new TextCommandModel { Id = Guid.NewGuid().ToString() });
+        this.Commands.Add(new TextCommandModel { Id = Guid.NewGuid().ToString() });
     }
 
     private void RemoveTextCommand(object parameter)
     {
         TextCommandModel model = (TextCommandModel)parameter;
 
-        if (messageBox.Show(GetDeletionMessage(model),
+        if (this.messageBox.Show(GetDeletionMessage(model),
                 "Delete command",
                 MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
-            Commands.Remove(model);
-            repository.Remove(model.Id);
+            this.Commands.Remove(model);
+            this.repository.Remove(model.Id);
         }
     }
 
@@ -85,24 +85,26 @@ public class TextCommandsTabViewModel : InitializableTab
     {
         TextCommandModel model = (TextCommandModel)sender;
         TextCommand entity = new();
-        mapper.MapToEntity(model, entity);
+        this.mapper.MapToEntity(model, entity);
 
-        repository.Write(entity);
+        this.repository.Write(entity);
     }
 
     [ExcludeFromCodeCoverage]
     public string SearchText
     {
-        get => searchText;
-        set { searchText = value; UpdateSearch(); }
+        get => this.searchText;
+        set {
+            this.searchText = value;
+            this.UpdateSearch(); }
     }
 
     [ExcludeFromCodeCoverage]
     private void UpdateSearch()
     {
-        ICollectionView collectionView = CollectionViewSource.GetDefaultView(Commands);
+        ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Commands);
 
-        if (string.IsNullOrEmpty(SearchText))
+        if (string.IsNullOrEmpty(this.SearchText))
         {
             collectionView.Filter = o => true;
         }
@@ -112,8 +114,8 @@ public class TextCommandsTabViewModel : InitializableTab
             {
                 TextCommandModel response = (TextCommandModel)o;
 
-                return response.Commands.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                       || response.Replies.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+                return response.Commands.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.Replies.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase));
             };
         }
 

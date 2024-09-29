@@ -16,14 +16,14 @@ public class DatabaseWrapper : IDatabase
 
     public ILiteCollection<T> GetCollection<T>(string name)
     {
-        return liteDatabase.GetCollection<T>(name);
+        return this.liteDatabase.GetCollection<T>(name);
     }
 
     public void Dispose()
     {
         try
         {
-            liteDatabase?.Dispose();
+            this.liteDatabase?.Dispose();
         }
         catch(ObjectDisposedException disposedException)
         {

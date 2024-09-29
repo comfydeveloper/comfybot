@@ -25,8 +25,8 @@ public class ResponseTabViewModel : InitializableTab
         this.repository = repository;
         this.mapper = mapper;
 
-        AddResponseCommand = new DelegateCommand(AddResponse);
-        RemoveResponseCommand = new ParameterCommand(RemoveResponse);
+        this.AddResponseCommand = new DelegateCommand(this.AddResponse);
+        this.RemoveResponseCommand = new ParameterCommand(this.RemoveResponse);
     }
 
     public DelegateCommand AddResponseCommand { get; }
@@ -37,30 +37,30 @@ public class ResponseTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        IEnumerable<MessageResponse> messageResponses = repository.GetAll().OrderBy(r => r.Priority);
+        IEnumerable<MessageResponse> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
 
         foreach (MessageResponse entity in messageResponses)
         {
             MessageResponseModel model = new();
-            mapper.MapToModel(entity, model);
-            Responses.Add(model);
+            this.mapper.MapToModel(entity, model);
+            this.Responses.Add(model);
         }
 
-        Responses.RegisterCollectionItemChanged(OnResponseUpdate);
+        this.Responses.RegisterCollectionItemChanged(this.OnResponseUpdate);
     }
 
     private void AddResponse()
     {
         MessageResponseModel messageResponse = new() { Id = Guid.NewGuid().ToString() };
-        Responses.Add(messageResponse);
+        this.Responses.Add(messageResponse);
     }
 
     private void RemoveResponse(object parameter)
     {
         MessageResponseModel response = (MessageResponseModel) parameter;
 
-        Responses.Remove(response);
-        repository.Remove(response.Id);
+        this.Responses.Remove(response);
+        this.repository.Remove(response.Id);
     }
 
     private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
@@ -68,23 +68,25 @@ public class ResponseTabViewModel : InitializableTab
         MessageResponseModel model = (MessageResponseModel)sender;
         MessageResponse entity = new();
 
-        mapper.MapToEntity(model, entity);
-        repository.Write(entity);
+        this.mapper.MapToEntity(model, entity);
+        this.repository.Write(entity);
     }
 
     [ExcludeFromCodeCoverage]
     public string SearchText
     {
-        get => searchText;
-        set { searchText = value; UpdateSearch(); }
+        get => this.searchText;
+        set {
+            this.searchText = value;
+            this.UpdateSearch(); }
     }
 
     [ExcludeFromCodeCoverage]
     private void UpdateSearch()
     {
-        ICollectionView collectionView = CollectionViewSource.GetDefaultView(Responses);
+        ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Responses);
 
-        if (string.IsNullOrEmpty(SearchText))
+        if (string.IsNullOrEmpty(this.SearchText))
         {
             collectionView.Filter = o => true;
         }
@@ -94,10 +96,10 @@ public class ResponseTabViewModel : InitializableTab
             {
                 MessageResponseModel response = (MessageResponseModel) o;
 
-                return response.Replies.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                       || response.AllKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                       || response.ExactKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                       || response.LooseKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+                return response.Replies.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.AllKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.ExactKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.LooseKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase));
             };
         }
 

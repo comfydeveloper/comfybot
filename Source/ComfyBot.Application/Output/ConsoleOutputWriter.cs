@@ -24,25 +24,25 @@ public class ConsoleOutputWriter : TextWriter
 
     public override void Write(char value)
     {
-        textBox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), new[] { value });
+        this.textBox.Dispatcher.Invoke(new UpdateTextCallback(this.UpdateText), new[] { value });
     }
 
     public override void Write(string value)
     {
-        textBox.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), value);
+        this.textBox.Dispatcher.Invoke(new UpdateTextCallback(this.UpdateText), value);
     }
 
     public override Encoding Encoding => Encoding.ASCII;
 
     private void UpdateText(string message)
     {
-        lastOutput.Add(message);
+        this.lastOutput.Add(message);
 
-        if (lastOutput.Count > 100)
+        if (this.lastOutput.Count > 100)
         {
-            lastOutput.RemoveAt(0);
+            this.lastOutput.RemoveAt(0);
         }
 
-        textBox.Text = string.Join(Environment.NewLine, lastOutput.Reverse<string>());
+        this.textBox.Text = string.Join(Environment.NewLine, this.lastOutput.Reverse<string>());
     }
 }

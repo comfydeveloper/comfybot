@@ -82,12 +82,12 @@ public class CollectionExtensionsTests
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void Test()
         {
-            OnPropertyChanged();
+            this.OnPropertyChanged();
         }
     }
 }

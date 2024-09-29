@@ -13,12 +13,12 @@ public class HttpService : Singleton<IHttpService, HttpService>, IHttpService
 
     public HttpService()
     {
-        httpClient = new HttpClient();
+        this.httpClient = new HttpClient();
     }
 
     public async Task<T> GetAsync<T>(string url)
     {
-        string result = await httpClient.GetAsync(url).Result.Content.ReadAsStringAsync();
+        string result = await this.httpClient.GetAsync(url).Result.Content.ReadAsStringAsync();
 
         return JsonSerializer.Deserialize<T>(result);
     }

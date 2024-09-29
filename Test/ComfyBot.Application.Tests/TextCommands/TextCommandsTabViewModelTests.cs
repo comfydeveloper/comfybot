@@ -22,20 +22,20 @@ public class TextCommandsTabViewModelTests
     [SetUp]
     public void Setup()
     {
-        repository = new Mock<IRepository<TextCommand>>();
-        mapper = new Mock<IMapper<TextCommand, TextCommandModel>>();
-        messageBox = new Mock<IMessageBox>();
+        this.repository = new Mock<IRepository<TextCommand>>();
+        this.mapper = new Mock<IMapper<TextCommand, TextCommandModel>>();
+        this.messageBox = new Mock<IMessageBox>();
 
 
-        viewModel = new TextCommandsTabViewModel(repository.Object, mapper.Object, messageBox.Object);
+        this.viewModel = new TextCommandsTabViewModel(this.repository.Object, this.mapper.Object, this.messageBox.Object);
     }
 
     [Test]
     public void AddTextCommandCommandShouldAddNewTextCommand()
     {
-        viewModel.AddTextCommandCommand.Execute();
+        this.viewModel.AddTextCommandCommand.Execute();
 
-        Assert.AreEqual(1, viewModel.Commands.Count);
+        Assert.AreEqual(1, this.viewModel.Commands.Count);
     }
 
     [TestCase("00000000-0000-0000-0000-000000000000")]
@@ -43,13 +43,13 @@ public class TextCommandsTabViewModelTests
     public void RemoveTextCommandCommandShouldRemoveResponse(string id)
     {
         TextCommandModel model = new() { Id = id };
-        viewModel.Commands.Add(model);
-        messageBox.Setup(b => b.Show(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButton>())).Returns(MessageBoxResult.Yes);
+        this.viewModel.Commands.Add(model);
+        this.messageBox.Setup(b => b.Show(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButton>())).Returns(MessageBoxResult.Yes);
 
-        viewModel.RemoveTextCommandCommand.Execute(model);
+        this.viewModel.RemoveTextCommandCommand.Execute(model);
 
-        Assert.AreEqual(0, viewModel.Commands.Count);
-        repository.Verify(r => r.Remove(id));
+        Assert.AreEqual(0, this.viewModel.Commands.Count);
+        this.repository.Verify(r => r.Remove(id));
     }
 
     [TestCase(5)]
@@ -57,25 +57,25 @@ public class TextCommandsTabViewModelTests
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
         TextCommand[] entities = Enumerable.Repeat(new TextCommand(), count).ToArray();
-        repository.Setup(r => r.GetAll()).Returns(entities);
+        this.repository.Setup(r => r.GetAll()).Returns(entities);
 
-        viewModel.IsSelected = true;
-        viewModel.IsSelected = true;
+        this.viewModel.IsSelected = true;
+        this.viewModel.IsSelected = true;
 
-        Assert.AreEqual(count, viewModel.Commands.Count);
-        mapper.Verify(m => m.MapToModel(It.IsAny<TextCommand>(), It.IsAny<TextCommandModel>()), () => Times.Exactly(count));
+        Assert.AreEqual(count, this.viewModel.Commands.Count);
+        this.mapper.Verify(m => m.MapToModel(It.IsAny<TextCommand>(), It.IsAny<TextCommandModel>()), () => Times.Exactly(count));
     }
 
     [Test]
     public void UpdatingATextModelShouldUpdateEntity()
     {
         TextCommandModel model = new();
-        viewModel.Commands.Add(model);
-        viewModel.IsSelected = true;
+        this.viewModel.Commands.Add(model);
+        this.viewModel.IsSelected = true;
 
         model.Timeout = 1;
 
-        repository.Verify(r => r.Write(It.IsAny<TextCommand>()));
-        mapper.Verify(r => r.MapToEntity(model, It.IsAny<TextCommand>()));
+        this.repository.Verify(r => r.Write(It.IsAny<TextCommand>()));
+        this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<TextCommand>()));
     }
 }

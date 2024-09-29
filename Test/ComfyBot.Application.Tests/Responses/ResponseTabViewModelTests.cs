@@ -19,18 +19,18 @@ public class ResponseTabViewModelTests
     [SetUp]
     public void Setup()
     {
-        repository = new Mock<IRepository<MessageResponse>>();
-        mapper = new Mock<IMapper<MessageResponse, MessageResponseModel>>();
+        this.repository = new Mock<IRepository<MessageResponse>>();
+        this.mapper = new Mock<IMapper<MessageResponse, MessageResponseModel>>();
 
-        viewModel = new ResponseTabViewModel(repository.Object, mapper.Object);
+        this.viewModel = new ResponseTabViewModel(this.repository.Object, this.mapper.Object);
     }
 
     [Test]
     public void AddResponseCommandShouldAddResponse()
     {
-        viewModel.AddResponseCommand.Execute();
+        this.viewModel.AddResponseCommand.Execute();
 
-        Assert.AreEqual(1, viewModel.Responses.Count);
+        Assert.AreEqual(1, this.viewModel.Responses.Count);
     }
 
     [TestCase("00000000-0000-0000-0000-000000000000")]
@@ -38,12 +38,12 @@ public class ResponseTabViewModelTests
     public void RemoveResponseCommandShouldRemoveResponse(string id)
     {
         MessageResponseModel model = new() { Id = id };
-        viewModel.Responses.Add(model);
+        this.viewModel.Responses.Add(model);
 
-        viewModel.RemoveResponseCommand.Execute(model);
+        this.viewModel.RemoveResponseCommand.Execute(model);
 
-        Assert.AreEqual(0, viewModel.Responses.Count);
-        repository.Verify(r => r.Remove(id));
+        Assert.AreEqual(0, this.viewModel.Responses.Count);
+        this.repository.Verify(r => r.Remove(id));
     }
 
     [TestCase(5)]
@@ -51,25 +51,25 @@ public class ResponseTabViewModelTests
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
         MessageResponse[] entities = Enumerable.Repeat(new MessageResponse(), count).ToArray();
-        repository.Setup(r => r.GetAll()).Returns(entities);
+        this.repository.Setup(r => r.GetAll()).Returns(entities);
 
-        viewModel.IsSelected = true;
-        viewModel.IsSelected = true;
+        this.viewModel.IsSelected = true;
+        this.viewModel.IsSelected = true;
 
-        Assert.AreEqual(count, viewModel.Responses.Count);
-        mapper.Verify(m => m.MapToModel(It.IsAny<MessageResponse>(), It.IsAny<MessageResponseModel>()), () => Times.Exactly(count));
+        Assert.AreEqual(count, this.viewModel.Responses.Count);
+        this.mapper.Verify(m => m.MapToModel(It.IsAny<MessageResponse>(), It.IsAny<MessageResponseModel>()), () => Times.Exactly(count));
     }
 
     [Test]
     public void UpdatingATextModelShouldUpdateEntity()
     {
         MessageResponseModel model = new();
-        viewModel.Responses.Add(model);
-        viewModel.IsSelected = true;
+        this.viewModel.Responses.Add(model);
+        this.viewModel.IsSelected = true;
 
         model.Timeout = 1;
 
-        repository.Verify(r => r.Write(It.IsAny<MessageResponse>()));
-        mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponse>()));
+        this.repository.Verify(r => r.Write(It.IsAny<MessageResponse>()));
+        this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponse>()));
     }
 }

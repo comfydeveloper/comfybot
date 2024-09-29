@@ -7,14 +7,14 @@ public abstract class InitializableTab
 
     public bool IsSelected
     {
-        get => isSelected;
+        get => this.isSelected;
         set
         {
-            isSelected = value;
-            if (!isInitialized && value)
+            this.isSelected = value;
+            if (!this.isInitialized && value)
             {
-                isInitialized = true;
-                Initialize();
+                this.isInitialized = true;
+                this.Initialize();
             }
         }
     }

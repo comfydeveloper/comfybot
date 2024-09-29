@@ -13,9 +13,9 @@ public class ParameterCommandTests
     [Test]
     public void CanExecuteShouldReturnTrueWhenInjectedPredicateIsNull()
     {
-        command = new ParameterCommand(TestAction);
+        this.command = new ParameterCommand(this.TestAction);
 
-        bool result = command.CanExecute(new object());
+        bool result = this.command.CanExecute(new object());
 
         Assert.IsTrue(result);
     }
@@ -25,9 +25,9 @@ public class ParameterCommandTests
     public void CanExecuteShouldEvaluatePredicate(bool parameter)
     {
         bool Predicate(object b) => (bool)b;
-        command = new ParameterCommand(TestAction, Predicate);
+        this.command = new ParameterCommand(this.TestAction, Predicate);
 
-        bool result = command.CanExecute(parameter);
+        bool result = this.command.CanExecute(parameter);
 
         Assert.AreEqual(parameter, result);
     }
@@ -35,21 +35,21 @@ public class ParameterCommandTests
     [Test]
     public void ExecuteShouldExecuteAction()
     {
-        command = new ParameterCommand(TestAction);
+        this.command = new ParameterCommand(this.TestAction);
 
-        command.Execute(new object());
+        this.command.Execute(new object());
 
-        Assert.IsTrue(actionHasBeenExecuted);
+        Assert.IsTrue(this.actionHasBeenExecuted);
     }
 
     private void TestAction(object parameter)
     {
-        actionHasBeenExecuted = true;
+        this.actionHasBeenExecuted = true;
     }
 
     [TearDown]
     public void TearDown()
     {
-        actionHasBeenExecuted = false;
+        this.actionHasBeenExecuted = false;
     }
 }

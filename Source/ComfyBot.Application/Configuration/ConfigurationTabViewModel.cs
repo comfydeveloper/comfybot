@@ -19,11 +19,11 @@ public class ConfigurationTabViewModel
 
     public ConfigurationTabViewModel()
     {
-        UpdateConfigurationCommand = new ParameterCommand(UpdateConfiguration);
-        UserName = ApplicationSettings.Default.User;
-        Channel = ApplicationSettings.Default.Channel;
-        DatabasePath = ApplicationSettings.Default.DatabasePath;
-        ChannelId = ApplicationSettings.Default.ChannelId;
+        this.UpdateConfigurationCommand = new ParameterCommand(this.UpdateConfiguration);
+        this.UserName = ApplicationSettings.Default.User;
+        this.Channel = ApplicationSettings.Default.Channel;
+        this.DatabasePath = ApplicationSettings.Default.DatabasePath;
+        this.ChannelId = ApplicationSettings.Default.ChannelId;
     }
 
     public ParameterCommand UpdateConfigurationCommand { get; }
@@ -32,11 +32,11 @@ public class ConfigurationTabViewModel
 
     private void UpdateConfiguration(object parameter)
     {
-        ApplicationSettings.Default.ChannelId = ChannelId;
+        ApplicationSettings.Default.ChannelId = this.ChannelId;
         ApplicationSettings.Default.AuthKey = ((PasswordBox)parameter).Password;
-        ApplicationSettings.Default.User = UserName;
-        ApplicationSettings.Default.Channel = Channel;
-        ApplicationSettings.Default.DatabasePath = DatabasePath;
+        ApplicationSettings.Default.User = this.UserName;
+        ApplicationSettings.Default.Channel = this.Channel;
+        ApplicationSettings.Default.DatabasePath = this.DatabasePath;
         ApplicationSettings.Default.Save();
     }
 }
