@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Windows;
 using ComfyBot.Bot.ChatBot;
 using ComfyBot.Bot.PubSub;
 using ComfyBot.Common.Initialization;
-using ComfyBot.Data.Repositories;
 using ComfyBot.Data.Scaffolding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
+using ComfyBot.Common.Scaffolding;
 
 namespace ComfyBot.Application;
 
@@ -36,6 +35,13 @@ public partial class App
 
         HostApplicationBuilder builder = Host.CreateApplicationBuilder();
 
+        List<IProjectModule> modules =
+        [
+            new DataProjectModule()
+        ];
+
+        RegisterModules(builder, modules);
+
         Application.Startup.RegisterDependencies(builder.Services);
         Application.Startup.Initialize();
 
@@ -44,7 +50,26 @@ public partial class App
         SetupConfiguration(builder);
 
         AppHost = builder.Build();
+
+        ConfigureModules(AppHost, modules);
+
         ServiceProvider = AppHost.Services;
+    }
+
+    private static void ConfigureModules(IHost host, List<IProjectModule> modules)
+    {
+        foreach (IProjectModule projectModule in modules)
+        {
+            projectModule.Configure(host);
+        }
+    }
+
+    private static void RegisterModules(IHostApplicationBuilder builder, List<IProjectModule> modules)
+    {
+        foreach (IProjectModule projectModule in modules)
+        {
+            projectModule.RegisterServices(builder.Services);
+        }
     }
 
     private static void SetupConfiguration(IHostApplicationBuilder builder)
@@ -75,9 +100,6 @@ public partial class App
             {
                 job.Execute();
             }
-
-            var a = AppHost.Services.GetRequiredService<DataSettings>();
-            var b = AppHost.Services.GetRequiredService<IQueryableRepository>();
 
             IComfyBot comfyBot = AppHost.Services.GetService<IComfyBot>();
             comfyBot.Run();

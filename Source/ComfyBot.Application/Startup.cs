@@ -8,7 +8,6 @@ using ComfyBot.Common.Scaffolding;
 using ComfyBot.Data.Database;
 using ComfyBot.Data.Scaffolding;
 using ComfyBot.Settings.Extensions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
@@ -25,16 +24,6 @@ public class Startup
             typeof(IDatabaseFactory).Assembly,
             typeof(IHttpService).Assembly
         ];
-
-        List<IProjectModule> modules =
-        [
-            new DataProjectModule()
-        ];
-
-        foreach (IProjectModule projectModule in modules)
-        {
-            projectModule.RegisterServices(services);
-        }
 
         foreach (Assembly assembly in assemblies)
         {
