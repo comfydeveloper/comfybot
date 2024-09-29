@@ -288,3 +288,5 @@ __pycache__/
 *.xsd.cs
 *.ncrunchsolution
 Source/ComfyBot.Application/appsettings.user.json
+Source/ComfyBot.Application/appsettings.user.json
+Source/ComfyBot.Application/appsettings.user.json

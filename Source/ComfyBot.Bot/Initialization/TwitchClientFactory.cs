@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ComfyBot.Bot.Scaffolding;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using ComfyBot.Settings;
+using Microsoft.Extensions.Options;
 using TwitchLib.Client;
 using TwitchLib.Client.Interfaces;
 using TwitchLib.Client.Models;
@@ -13,14 +15,20 @@ namespace ComfyBot.Bot.Initialization;
 public class TwitchClientFactory : ITwitchClientFactory
 {
     private static TwitchClient twitchClient;
+    private readonly BotSettings settings;
+
+    public TwitchClientFactory(IOptions<BotSettings> settings)
+    {
+        this.settings = settings.Value;
+    }
 
     public ITwitchClient Create()
     {
         if (twitchClient == null)
         {
-            string userName = ApplicationSettings.Default.User;
-            string password = ApplicationSettings.Default.AuthKey;
-            string channel = ApplicationSettings.Default.Channel;
+            string userName = this.settings.User;
+            string password = this.settings.AuthKey;
+            string channel = this.settings.Channel;
 
             ConnectionCredentials credentials = new(userName, password);
             ClientOptions clientOptions = new() { MessagesAllowedInPeriod = 100, ThrottlingPeriod = TimeSpan.FromSeconds(30) };

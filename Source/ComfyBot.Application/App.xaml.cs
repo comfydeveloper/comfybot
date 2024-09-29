@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using ComfyBot.Bot.ChatBot;
 using ComfyBot.Bot.PubSub;
+using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Common.Initialization;
 using ComfyBot.Data.Scaffolding;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,8 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
 using ComfyBot.Common.Scaffolding;
+using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 namespace ComfyBot.Application;
 
@@ -37,7 +40,8 @@ public partial class App
 
         List<IProjectModule> modules =
         [
-            new DataProjectModule()
+            new DataProjectModule(),
+            new BotProjectModule()
         ];
 
         RegisterModules(builder, modules);
@@ -76,9 +80,11 @@ public partial class App
     {
         builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
         builder.Configuration.AddJsonFile("appsettings.user.json", optional: true, reloadOnChange: true);
+        builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
         builder.Configuration.AddEnvironmentVariables();
 
         builder.Services.Configure<DataSettings>(builder.Configuration.GetSection(DataSettings.SectionName));
+        builder.Services.Configure<BotSettings>(builder.Configuration.GetSection(BotSettings.SectionName));
     }
 
     [STAThread]

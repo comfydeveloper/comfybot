@@ -5,8 +5,10 @@ using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.Extensions;
 using ComfyBot.Bot.Initialization;
+using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
@@ -18,18 +20,21 @@ public class ChatBot : IComfyBot
     private readonly IEnumerable<ICommandHandler> commandHandlers;
     private readonly IEnumerable<IMessageHandler> messageHandlers;
     private readonly ILogger<ChatBot> logger;
+    private readonly BotSettings settings;
 
     private ITwitchClient twitchClient;
 
     public ChatBot(ITwitchClientFactory twitchClientFactory,
         IEnumerable<ICommandHandler> commandHandlers,
         IEnumerable<IMessageHandler> messageHandlers,
+        IOptions<BotSettings> botSettings,
         ILogger<ChatBot> logger)
     {
         this.twitchClientFactory = twitchClientFactory;
         this.commandHandlers = commandHandlers;
         this.messageHandlers = messageHandlers;
         this.logger = logger;
+        this.settings = botSettings.Value;
     }
 
     public void Run()
@@ -44,12 +49,11 @@ public class ChatBot : IComfyBot
         }
     }
 
-    private static bool IsBotReady()
+    private bool IsBotReady()
     {
-        ApplicationSettings applicationSettings = ApplicationSettings.Default;
-        return !string.IsNullOrEmpty(applicationSettings.Channel)
-               && !string.IsNullOrEmpty(applicationSettings.AuthKey)
-               && !string.IsNullOrEmpty(applicationSettings.User);
+        return !string.IsNullOrEmpty(this.settings.Channel)
+               && !string.IsNullOrEmpty(this.settings.AuthKey)
+               && !string.IsNullOrEmpty(this.settings.User);
     }
 
     private void InitializeClient()
