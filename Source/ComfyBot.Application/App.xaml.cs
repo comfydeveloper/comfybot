@@ -15,7 +15,6 @@ using Serilog.Events;
 using Serilog.Exceptions;
 using ComfyBot.Common.Scaffolding;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
 
 namespace ComfyBot.Application;
 
@@ -36,6 +35,8 @@ public partial class App
             .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
             .Enrich.WithExceptionDetails()
             .CreateLogger();
+
+        DotNetEnv.Env.Load();
 
         HostApplicationBuilder builder = Host.CreateApplicationBuilder();
 
