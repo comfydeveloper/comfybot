@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComfyBot.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240930043355_Initial")]
+    [Migration("20240930045705_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -70,7 +70,7 @@ namespace ComfyBot.Data.Migrations
                     b.HasKey("Id")
                         .HasAnnotation("DatabaseGeneratedOption", DatabaseGeneratedOption.None);
 
-                    b.ToTable("MessageResponseOld", (string)null);
+                    b.ToTable("MessageResponse", (string)null);
                 });
 
             modelBuilder.Entity("ComfyBot.Data.Models.TextCommand", b =>
@@ -103,7 +103,7 @@ namespace ComfyBot.Data.Migrations
                     b.HasKey("Id")
                         .HasAnnotation("DatabaseGeneratedOption", DatabaseGeneratedOption.None);
 
-                    b.ToTable("TextCommandOld", (string)null);
+                    b.ToTable("TextCommand", (string)null);
                 });
 #pragma warning restore 612, 618
         }

@@ -5,23 +5,23 @@ namespace ComfyBot.Data.Models;
 
 public class MessageResponse : Entity
 {
-    public List<string> Users { get; set; } = [];
+    public required List<string> Users { get; set; } = [];
 
-    public List<string> LooseKeywords { get; set; } = [];
+    public required List<string> LooseKeywords { get; set; } = [];
 
-    public List<string> AllKeywords { get; set; } = [];
+    public required List<string> AllKeywords { get; set; } = [];
 
-    public List<string> ExactKeywords { get; set; } = [];
+    public required List<string> ExactKeywords { get; set; } = [];
 
-    public List<string> Replies { get; set; } = [];
+    public required List<string> Replies { get; set; } = [];
 
-    public DateTime? LastUsedAt { get; set; }
+    public required DateTime? LastUsedAt { get; set; }
 
-    public int TimeoutInSeconds { get; set; } = 30;
+    public required int TimeoutInSeconds { get; set; } = 30;
 
-    public int UseCount { get; set; }
+    public required int UseCount { get; set; }
 
-    public int Priority { get; set; }
+    public required int Priority { get; set; }
 
-    public bool AlwaysReply { get; set; }
+    public required bool AlwaysReply { get; set; }
 }

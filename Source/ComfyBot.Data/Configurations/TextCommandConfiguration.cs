@@ -8,7 +8,7 @@ namespace ComfyBot.Data.Configurations;
 [ExcludeFromCodeCoverage]
 public class TextCommandConfiguration : EntityConfiguration<TextCommand>
 {
-    public TextCommandConfiguration() : base("TextCommandOld")
+    public TextCommandConfiguration() : base("TextCommand")
     {
     }
 

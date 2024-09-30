@@ -12,7 +12,7 @@ namespace ComfyBot.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "MessageResponseOld",
+                name: "MessageResponse",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -30,11 +30,11 @@ namespace ComfyBot.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MessageResponseOld", x => x.Id);
+                    table.PrimaryKey("PK_MessageResponse", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TextCommandOld",
+                name: "TextCommand",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -47,7 +47,7 @@ namespace ComfyBot.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TextCommandOld", x => x.Id);
+                    table.PrimaryKey("PK_TextCommand", x => x.Id);
                 });
         }
 
@@ -55,10 +55,10 @@ namespace ComfyBot.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MessageResponseOld");
+                name: "MessageResponse");
 
             migrationBuilder.DropTable(
-                name: "TextCommandOld");
+                name: "TextCommand");
         }
     }
 }

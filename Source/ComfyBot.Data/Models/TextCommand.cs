@@ -5,13 +5,13 @@ namespace ComfyBot.Data.Models;
 
 public class TextCommand : Entity
 {
-    public List<string> Replies { get; set; } = [];
+    public required List<string> Replies { get; set; } = [];
 
-    public List<string> Commands { get; set; } = [];
+    public required List<string> Commands { get; set; } = [];
 
-    public DateTime? LastUsedAt { get; set; }
+    public required DateTime? LastUsedAt { get; set; }
 
-    public int UseCount { get; set; }
+    public required int UseCount { get; set; }
 
-    public int TimeoutInSeconds { get; set; }
+    public required int TimeoutInSeconds { get; set; }
 }

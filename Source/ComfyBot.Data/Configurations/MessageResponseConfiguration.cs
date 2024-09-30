@@ -8,7 +8,7 @@ namespace ComfyBot.Data.Configurations;
 [ExcludeFromCodeCoverage]
 public class MessageResponseConfiguration : EntityConfiguration<MessageResponse>
 {
-    public MessageResponseConfiguration() : base("MessageResponseOld")
+    public MessageResponseConfiguration() : base("MessageResponse")
     {
     }
 
