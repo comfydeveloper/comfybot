@@ -10,7 +10,7 @@ using LiteDB;
 namespace ComfyBot.Data.Repositories;
 
 public abstract class Repository<T> : IRepository<T>
-    where T : Entity
+    where T : EntityOld
 {
     private readonly IDatabaseFactory databaseFactory;
     private readonly string table;

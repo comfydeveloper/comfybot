@@ -12,24 +12,24 @@ namespace ComfyBot.Bot.Tests.ChatBot.Commands;
 [TestFixture]
 public class TextCommandReplyLoaderTests
 {
-    private Mock<IRepository<TextCommand>> repository;
+    private Mock<IRepository<TextCommandOld>> repository;
     private Mock<IChatCommand> chatCommand;
     private Mock<IWildcardReplacer> wildcardReplacer;
 
-    private TextCommand textCommand;
+    private TextCommandOld textCommandOld;
 
     private TextCommandReplyLoader replyLoader;
 
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<TextCommand>>();
+        this.repository = new Mock<IRepository<TextCommandOld>>();
         this.wildcardReplacer = new Mock<IWildcardReplacer>();
         this.chatCommand = new Mock<IChatCommand>();
         this.chatCommand.Setup(c => c.ChatMessage).Returns(new Mock<IChatMessage>().Object);
         this.StubWildcardReplacer();
 
-        this.textCommand = new TextCommand();
+        this.textCommandOld = new TextCommandOld();
 
         this.replyLoader = new TextCommandReplyLoader(this.repository.Object, this.wildcardReplacer.Object);
     }
@@ -40,10 +40,10 @@ public class TextCommandReplyLoaderTests
     {
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns([]);
         this.chatCommand.Setup(c => c.CommandText).Returns(command);
-        this.textCommand.Commands.Add(textCommandText);
-        this.textCommand.Replies.Add(replyText);
+        this.textCommandOld.Commands.Add(textCommandText);
+        this.textCommandOld.Replies.Add(replyText);
 
-        bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
 
         Assert.IsTrue(result);
         Assert.AreEqual(replyText, resultText);
@@ -54,12 +54,12 @@ public class TextCommandReplyLoaderTests
     public void TryGetReplyShouldReplaceUser(string replyText, string userName, string expectedReply)
     {
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns([]);
-        this.chatCommand.Setup(c => c.CommandText).Returns("command");
+        this.chatCommand.Setup(c => c.CommandText).Returns("commandOld");
         this.chatCommand.Setup(c => c.ChatMessage.UserName).Returns(userName);
-        this.textCommand.Commands.Add("command");
-        this.textCommand.Replies.Add(replyText);
+        this.textCommandOld.Commands.Add("commandOld");
+        this.textCommandOld.Replies.Add(replyText);
 
-        bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
 
         Assert.IsTrue(result);
         Assert.AreEqual(expectedReply, resultText);
@@ -71,11 +71,11 @@ public class TextCommandReplyLoaderTests
     {
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(["parameters"]);
         this.chatCommand.Setup(c => c.ArgumentsAsString).Returns(parametersAsString);
-        this.chatCommand.Setup(c => c.CommandText).Returns("command");
-        this.textCommand.Replies.Add(commandText);
-        this.textCommand.Commands.Add("command");
+        this.chatCommand.Setup(c => c.CommandText).Returns("commandOld");
+        this.textCommandOld.Replies.Add(commandText);
+        this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
 
         Assert.AreEqual(expected, resultText);
     }
@@ -85,12 +85,12 @@ public class TextCommandReplyLoaderTests
     {
         this.chatCommand.Setup(c => c.ArgumentsAsString).Returns("parameters");
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(["parameter"]);
-        this.chatCommand.Setup(c => c.CommandText).Returns("command");
-        this.textCommand.Replies.Add("reply");
-        this.textCommand.Replies.Add("reply with {{parameters}}");
-        this.textCommand.Commands.Add("command");
+        this.chatCommand.Setup(c => c.CommandText).Returns("commandOld");
+        this.textCommandOld.Replies.Add("reply");
+        this.textCommandOld.Replies.Add("reply with {{parameters}}");
+        this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
 
         Assert.AreEqual("reply with parameters", resultText);
     }
@@ -99,13 +99,13 @@ public class TextCommandReplyLoaderTests
     public void TryGetReplyShouldIgnoreRepliesWithMorePlaceholdersThanActualParameters()
     {
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(["parameter"]);
-        this.chatCommand.Setup(c => c.CommandText).Returns("command");
-        this.textCommand.Replies.Add("reply with {{parameter2}}");
-        this.textCommand.Replies.Add("reply with {{parameter3}}");
-        this.textCommand.Replies.Add("reply");
-        this.textCommand.Commands.Add("command");
+        this.chatCommand.Setup(c => c.CommandText).Returns("commandOld");
+        this.textCommandOld.Replies.Add("reply with {{parameter2}}");
+        this.textCommandOld.Replies.Add("reply with {{parameter3}}");
+        this.textCommandOld.Replies.Add("reply");
+        this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
 
         Assert.AreEqual("reply", resultText);
     }
@@ -115,11 +115,11 @@ public class TextCommandReplyLoaderTests
     {
         this.chatCommand.Setup(c => c.ArgumentsAsString).Returns("parameters");
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns(["parameter"]);
-        this.chatCommand.Setup(c => c.CommandText).Returns("command");
-        this.textCommand.Replies.Add("reply");
-        this.textCommand.Commands.Add("command");
+        this.chatCommand.Setup(c => c.CommandText).Returns("commandOld");
+        this.textCommandOld.Replies.Add("reply");
+        this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
 
         Assert.AreEqual("reply", resultText);
     }
@@ -130,11 +130,11 @@ public class TextCommandReplyLoaderTests
     {
         this.StubWildcardReplacer();
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns([parameter1, parameter2]);
-        this.chatCommand.Setup(c => c.CommandText).Returns("command");
-        this.textCommand.Replies.Add(replyText);
-        this.textCommand.Commands.Add("command");
+        this.chatCommand.Setup(c => c.CommandText).Returns("commandOld");
+        this.textCommandOld.Replies.Add(replyText);
+        this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
 
         Assert.AreEqual(expected, resultText);
     }
@@ -144,9 +144,9 @@ public class TextCommandReplyLoaderTests
     public void TryGetReplyShouldReturnFalseWhenMismatchingCommand(string command, string textCommandText)
     {
         this.chatCommand.Setup(c => c.CommandText).Returns(command);
-        this.textCommand.Commands.Add(textCommandText);
+        this.textCommandOld.Commands.Add(textCommandText);
 
-        bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
 
         Assert.IsFalse(result);
         Assert.IsNull(resultText);
@@ -156,37 +156,37 @@ public class TextCommandReplyLoaderTests
     public void TryGetResponseShouldSetLastUsageDateIfMatchWasFound()
     {
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns([]);
-        this.chatCommand.Setup(m => m.CommandText).Returns("command");
-        this.textCommand.Commands.Add("command");
-        this.textCommand.Replies.Add("response");
+        this.chatCommand.Setup(m => m.CommandText).Returns("commandOld");
+        this.textCommandOld.Commands.Add("commandOld");
+        this.textCommandOld.Replies.Add("response");
 
-        this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string response);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string response);
 
-        Assert.That(this.textCommand.LastUsed, Is.EqualTo(DateTime.Now).Within(2).Seconds);
-        this.repository.Verify(r => r.Write(this.textCommand));
+        Assert.That(this.textCommandOld.LastUsed, Is.EqualTo(DateTime.Now).Within(2).Seconds);
+        this.repository.Verify(r => r.Write(this.textCommandOld));
     }
 
     [Test]
     public void TryGetResponseShouldIncreaseUseCount()
     {
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns([]);
-        this.chatCommand.Setup(m => m.CommandText).Returns("command");
-        this.textCommand.Commands.Add("command");
-        this.textCommand.Replies.Add("response");
+        this.chatCommand.Setup(m => m.CommandText).Returns("commandOld");
+        this.textCommandOld.Commands.Add("commandOld");
+        this.textCommandOld.Replies.Add("response");
 
-        this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string response);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string response);
 
-        Assert.AreEqual(1, this.textCommand.UseCount);
+        Assert.AreEqual(1, this.textCommandOld.UseCount);
     }
 
     [TestCase(10)]
     [TestCase(20)]
     public void TryGetResponseShouldReturnFalseWhenTheResponseTimeoutHasNotRunOutYet(int timeout)
     {
-        this.textCommand.LastUsed = DateTime.Now.AddSeconds(-timeout + 1);
-        this.textCommand.TimeoutInSeconds = timeout;
+        this.textCommandOld.LastUsed = DateTime.Now.AddSeconds(-timeout + 1);
+        this.textCommandOld.TimeoutInSeconds = timeout;
 
-        bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string response);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string response);
 
         Assert.IsNull(response);
         Assert.IsFalse(result);
@@ -196,11 +196,11 @@ public class TextCommandReplyLoaderTests
     public void TryGetResponseShouldUseWildCardReplacer()
     {
         this.chatCommand.Setup(c => c.ArgumentsAsList).Returns([]);
-        this.chatCommand.Setup(c => c.CommandText).Returns("command");
-        this.textCommand.Commands.Add("command");
-        this.textCommand.Replies.Add("reply");
+        this.chatCommand.Setup(c => c.CommandText).Returns("commandOld");
+        this.textCommandOld.Commands.Add("commandOld");
+        this.textCommandOld.Replies.Add("reply");
 
-        bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand.Object, out string resultText);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
 
         this.wildcardReplacer.Verify(r => r.Replace("reply"));
     }

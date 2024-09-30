@@ -10,33 +10,33 @@ namespace ComfyBot.Bot.ChatBot.Messages;
 
 public class MessageResponseLoader : IMessageResponseLoader
 {
-    private readonly IRepository<MessageResponse> repository;
+    private readonly IRepository<MessageResponseOld> repository;
     private readonly IWildcardReplacer wildcardReplacerObject;
 
-    public MessageResponseLoader(IRepository<MessageResponse> repository, IWildcardReplacer wildcardReplacerObject)
+    public MessageResponseLoader(IRepository<MessageResponseOld> repository, IWildcardReplacer wildcardReplacerObject)
     {
         this.repository = repository;
         this.wildcardReplacerObject = wildcardReplacerObject;
     }
 
-    public bool TryGetResponse(MessageResponse response, IChatMessage message, out string responseText)
+    public bool TryGetResponse(MessageResponseOld responseOld, IChatMessage message, out string responseText)
     {
         responseText = null;
 
-        if (HasOngoingTimeout(response))
+        if (HasOngoingTimeout(responseOld))
         {
             return false;
         }
 
-        if (response.Users.Any() && response.Users.Any(u => !string.Equals(u, message.UserName, StringComparison.CurrentCultureIgnoreCase)))
+        if (responseOld.Users.Any() && responseOld.Users.Any(u => !string.Equals(u, message.UserName, StringComparison.CurrentCultureIgnoreCase)))
         {
             return false;
         }
 
-        if (response.ReplyAlways || MatchesLooseKeyword(response, message) || MatchesAllKeywords(response, message) || MatchesExactKeyword(response, message))
+        if (responseOld.ReplyAlways || MatchesLooseKeyword(responseOld, message) || MatchesAllKeywords(responseOld, message) || MatchesExactKeyword(responseOld, message))
         {
-            this.UpdateUsageInfo(response);
-            responseText = response.Replies.GetRandom();
+            this.UpdateUsageInfo(responseOld);
+            responseText = responseOld.Replies.GetRandom();
             responseText = responseText.Replace("{{user}}", message.UserName);
             responseText = this.wildcardReplacerObject.Replace(responseText);
             return true;
@@ -44,21 +44,21 @@ public class MessageResponseLoader : IMessageResponseLoader
         return false;
     }
 
-    private void UpdateUsageInfo(MessageResponse response)
+    private void UpdateUsageInfo(MessageResponseOld responseOld)
     {
-        response.UseCount++;
-        response.LastUsed = DateTime.Now;
-        this.repository.Write(response);
+        responseOld.UseCount++;
+        responseOld.LastUsed = DateTime.Now;
+        this.repository.Write(responseOld);
     }
 
-    private static bool HasOngoingTimeout(MessageResponse response)
+    private static bool HasOngoingTimeout(MessageResponseOld responseOld)
     {
-        return response.LastUsed.HasValue && response.LastUsed > DateTime.Now.AddSeconds(-response.TimeoutInSeconds);
+        return responseOld.LastUsed.HasValue && responseOld.LastUsed > DateTime.Now.AddSeconds(-responseOld.TimeoutInSeconds);
     }
 
-    private static bool MatchesLooseKeyword(MessageResponse messageResponse, IChatMessage message)
+    private static bool MatchesLooseKeyword(MessageResponseOld messageResponseOld, IChatMessage message)
     {
-        foreach (string keyword in messageResponse.LooseKeywords)
+        foreach (string keyword in messageResponseOld.LooseKeywords)
         {
             if (message.Text.ToLower().Contains(keyword.ToLower(), StringComparison.OrdinalIgnoreCase))
             {
@@ -68,14 +68,14 @@ public class MessageResponseLoader : IMessageResponseLoader
         return false;
     }
 
-    private static bool MatchesAllKeywords(MessageResponse messageResponse, IChatMessage message)
+    private static bool MatchesAllKeywords(MessageResponseOld messageResponseOld, IChatMessage message)
     {
-        if (!messageResponse.AllKeywords.Any())
+        if (!messageResponseOld.AllKeywords.Any())
         {
             return false;
         }
 
-        foreach (string keyword in messageResponse.AllKeywords)
+        foreach (string keyword in messageResponseOld.AllKeywords)
         {
             if (!message.Text.ToLower().Contains(keyword.ToLower(), StringComparison.OrdinalIgnoreCase))
             {
@@ -85,9 +85,9 @@ public class MessageResponseLoader : IMessageResponseLoader
         return true;
     }
 
-    private static bool MatchesExactKeyword(MessageResponse messageResponse, IChatMessage message)
+    private static bool MatchesExactKeyword(MessageResponseOld messageResponseOld, IChatMessage message)
     {
-        foreach (string keyword in messageResponse.ExactKeywords)
+        foreach (string keyword in messageResponseOld.ExactKeywords)
         {
             if (string.Equals(message.Text, keyword, StringComparison.CurrentCultureIgnoreCase))
             {

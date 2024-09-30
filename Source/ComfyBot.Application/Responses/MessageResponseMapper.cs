@@ -5,9 +5,9 @@ using ComfyBot.Data.Models;
 
 namespace ComfyBot.Application.Responses;
 
-public class MessageResponseMapper : IMapper<MessageResponse, MessageResponseModel>
+public class MessageResponseMapper : IMapper<MessageResponseOld, MessageResponseModel>
 {
-    public void MapToModel(MessageResponse entity, MessageResponseModel model)
+    public void MapToModel(MessageResponseOld entity, MessageResponseModel model)
     {
         model.Id = entity.Id;
         model.Timeout = entity.TimeoutInSeconds;
@@ -20,7 +20,7 @@ public class MessageResponseMapper : IMapper<MessageResponse, MessageResponseMod
         model.Replies.AddRange(entity.Replies.ToTextModels().OrderBy(m => m.Text));
     }
 
-    public void MapToEntity(MessageResponseModel model, MessageResponse entity)
+    public void MapToEntity(MessageResponseModel model, MessageResponseOld entity)
     {
         entity.Id = model.Id;
         entity.TimeoutInSeconds = model.Timeout;

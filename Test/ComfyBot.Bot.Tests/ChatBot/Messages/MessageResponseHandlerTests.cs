@@ -12,7 +12,7 @@ namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 [TestFixture]
 public class MessageResponseHandlerTests
 {
-    private Mock<IRepository<MessageResponse>> repository;
+    private Mock<IRepository<MessageResponseOld>> repository;
     private Mock<IMessageResponseLoader> responseLoader;
     private Mock<ITwitchClient> twitchClient;
     private Mock<IChatMessage> chatMessage;
@@ -22,7 +22,7 @@ public class MessageResponseHandlerTests
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<MessageResponse>>();
+        this.repository = new Mock<IRepository<MessageResponseOld>>();
         this.twitchClient = new Mock<ITwitchClient>();
         this.responseLoader = new Mock<IMessageResponseLoader>();
         this.chatMessage = new Mock<IChatMessage>();
@@ -35,8 +35,8 @@ public class MessageResponseHandlerTests
     public void HandleShouldSendMessageIfSuitableMessageFound(string channel, string response)
     {
         ApplicationSettings.Default.Channel = channel;
-        MessageResponse messageResponse1 = new();
-        MessageResponse messageResponse2 = new();
+        MessageResponseOld messageResponse1 = new();
+        MessageResponseOld messageResponse2 = new();
         this.chatMessage.Setup(m => m.Text).Returns("message");
         this.repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2, messageResponse2 });
         this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response)).Returns(false);
@@ -55,8 +55,8 @@ public class MessageResponseHandlerTests
         string response1 = "response1";
         string response2 = "response2";
         ApplicationSettings.Default.Channel = "channel";
-        MessageResponse messageResponse1 = new() { Priority = 2 };
-        MessageResponse messageResponse2 = new() { Priority = 1 };
+        MessageResponseOld messageResponse1 = new() { Priority = 2 };
+        MessageResponseOld messageResponse2 = new() { Priority = 1 };
         this.chatMessage.Setup(m => m.Text).Returns("message");
         this.repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2 });
         this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response1)).Returns(true);

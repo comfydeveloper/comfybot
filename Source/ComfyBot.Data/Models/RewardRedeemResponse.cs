@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ComfyBot.Data.Models;
 
-public class RewardRedeemResponse : Entity
+public class RewardRedeemResponse : EntityOld
 {
     public string RewardTitle { get; set; }
 

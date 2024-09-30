@@ -3,13 +3,13 @@ using System;
 
 namespace ComfyBot.Data.Models;
 
-public class TextCommand : Entity
+public class TextCommandOld : EntityOld
 {
     public List<string> Replies { get; set; } = [];
 
     public List<string> Commands { get; set; } = [];
 
-    public DateTime? LastUsedAt { get; set; }
+    public DateTime? LastUsed { get; set; }
 
     public int UseCount { get; set; }
 

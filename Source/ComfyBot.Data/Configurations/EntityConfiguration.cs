@@ -27,7 +27,7 @@ public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TE
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
 
-        builder.Property(x => x.DateOfCreation)
+        builder.Property(x => x.CreatedAt)
             .IsRequired();
 
         this.ConfigureInternal(builder);

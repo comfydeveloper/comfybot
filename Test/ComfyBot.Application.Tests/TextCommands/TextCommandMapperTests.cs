@@ -9,7 +9,7 @@ namespace ComfyBot.Application.Tests.TextCommands;
 [TestFixture]
 public class TextCommandMapperTests
 {
-    private TextCommand entity;
+    private TextCommandOld entity;
     private TextCommandModel model;
 
     private TextCommandMapper mapper;
@@ -17,7 +17,7 @@ public class TextCommandMapperTests
     [SetUp]
     public void Setup()
     {
-        this.entity = new TextCommand();
+        this.entity = new TextCommandOld();
         this.model = new TextCommandModel();
 
         this.mapper = new TextCommandMapper();

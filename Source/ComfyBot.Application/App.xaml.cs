@@ -14,7 +14,11 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
 using ComfyBot.Common.Scaffolding;
+using ComfyBot.Data.Models;
+using ComfyBot.Data.Repositories;
 using Microsoft.Extensions.Options;
+using System.Linq;
+using System.Text;
 
 namespace ComfyBot.Application;
 
@@ -82,7 +86,6 @@ public partial class App
     private static void SetupConfiguration(IHostApplicationBuilder builder)
     {
         builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-        builder.Configuration.AddJsonFile("appsettings.user.json", optional: true, reloadOnChange: true);
         builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
         builder.Configuration.AddEnvironmentVariables();
 

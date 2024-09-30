@@ -8,10 +8,10 @@ namespace ComfyBot.Bot.ChatBot.Commands;
 
 public class TextCommandHandler : CommandHandler
 {
-    private readonly IRepository<TextCommand> repository;
+    private readonly IRepository<TextCommandOld> repository;
     private readonly ITextCommandReplyLoader replyLoader;
 
-    public TextCommandHandler(IRepository<TextCommand> repository, ITextCommandReplyLoader replyLoader)
+    public TextCommandHandler(IRepository<TextCommandOld> repository, ITextCommandReplyLoader replyLoader)
     {
         this.repository = repository;
         this.replyLoader = replyLoader;
@@ -24,9 +24,9 @@ public class TextCommandHandler : CommandHandler
 
     protected override void HandleInternal(ITwitchClient client, IChatCommand command)
     {
-        IEnumerable<TextCommand> textCommands = this.repository.GetAll();
+        IEnumerable<TextCommandOld> textCommands = this.repository.GetAll();
 
-        foreach (TextCommand textCommand in textCommands)
+        foreach (TextCommandOld textCommand in textCommands)
         {
             if (this.replyLoader.TryGetReply(textCommand, command, out string reply))
             {

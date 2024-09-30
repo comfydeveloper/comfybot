@@ -1,0 +1,64 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace ComfyBot.Data.Migrations
+{
+    /// <inheritdoc />
+    public partial class Initial : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "MessageResponseOld",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Users = table.Column<string>(type: "TEXT", nullable: true),
+                    LooseKeywords = table.Column<string>(type: "TEXT", nullable: true),
+                    AllKeywords = table.Column<string>(type: "TEXT", nullable: true),
+                    ExactKeywords = table.Column<string>(type: "TEXT", nullable: true),
+                    Replies = table.Column<string>(type: "TEXT", nullable: true),
+                    LastUsedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    TimeoutInSeconds = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 30),
+                    UseCount = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
+                    Priority = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
+                    AlwaysReply = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageResponseOld", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TextCommandOld",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Replies = table.Column<string>(type: "TEXT", nullable: true),
+                    Commands = table.Column<string>(type: "TEXT", nullable: true),
+                    LastUsedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UseCount = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
+                    TimeoutInSeconds = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TextCommandOld", x => x.Id);
+                });
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "MessageResponseOld");
+
+            migrationBuilder.DropTable(
+                name: "TextCommandOld");
+        }
+    }
+}

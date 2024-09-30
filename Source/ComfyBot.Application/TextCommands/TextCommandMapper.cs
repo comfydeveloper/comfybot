@@ -5,9 +5,9 @@ using ComfyBot.Data.Models;
 
 namespace ComfyBot.Application.TextCommands;
 
-public class TextCommandMapper : IMapper<TextCommand, TextCommandModel>
+public class TextCommandMapper : IMapper<TextCommandOld, TextCommandModel>
 {
-    public void MapToModel(TextCommand entity, TextCommandModel model)
+    public void MapToModel(TextCommandOld entity, TextCommandModel model)
     {
         model.Id = entity.Id;
         model.Timeout = entity.TimeoutInSeconds;
@@ -15,7 +15,7 @@ public class TextCommandMapper : IMapper<TextCommand, TextCommandModel>
         model.Commands.AddRange(entity.Commands.ToTextModels().OrderBy(m => m.Text));
     }
 
-    public void MapToEntity(TextCommandModel model, TextCommand entity)
+    public void MapToEntity(TextCommandModel model, TextCommandOld entity)
     {
         entity.Id = model.Id;
         entity.TimeoutInSeconds = model.Timeout;

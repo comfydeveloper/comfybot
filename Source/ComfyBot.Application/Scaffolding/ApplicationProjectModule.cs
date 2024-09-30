@@ -17,8 +17,8 @@ public class ApplicationProjectModule : IProjectModule
 {
     public void RegisterServices(IServiceCollection services)
     {
-        services.AddTransient<IMapper<MessageResponse, MessageResponseModel>, MessageResponseMapper>();
-        services.AddTransient<IMapper<TextCommand, TextCommandModel>, TextCommandMapper>();
+        services.AddTransient<IMapper<MessageResponseOld, MessageResponseModel>, MessageResponseMapper>();
+        services.AddTransient<IMapper<TextCommandOld, TextCommandModel>, TextCommandMapper>();
         services.AddTransient<IMessageBox, MessageBoxWrapper>();
 
         services.AddTransient<MainWindowViewModel>();

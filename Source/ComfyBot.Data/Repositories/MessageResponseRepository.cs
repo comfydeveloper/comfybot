@@ -4,13 +4,13 @@ using ComfyBot.Data.Models;
 
 namespace ComfyBot.Data.Repositories;
 
-public class MessageResponseRepository : Repository<MessageResponse>
+public class MessageResponseRepository : Repository<MessageResponseOld>
 {
     public MessageResponseRepository(IDatabaseFactory databaseFactory)
         : base(databaseFactory, "messageResponses")
     { }
 
-    protected override void Update(MessageResponse source, MessageResponse target)
+    protected override void Update(MessageResponseOld source, MessageResponseOld target)
     {
         target.Priority = source.Priority;
         target.UseCount = Math.Max(source.UseCount, target.UseCount);

@@ -9,7 +9,7 @@ namespace ComfyBot.Application.Tests.Responses;
 [TestFixture]
 public class MessageResponseMapperTests
 {
-    private MessageResponse entity;
+    private MessageResponseOld entity;
     private MessageResponseModel model;
 
     private MessageResponseMapper mapper;
@@ -17,7 +17,7 @@ public class MessageResponseMapperTests
     [SetUp]
     public void Setup()
     {
-        this.entity = new MessageResponse();
+        this.entity = new MessageResponseOld();
         this.model = new MessageResponseModel();
 
         this.mapper = new MessageResponseMapper();

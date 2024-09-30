@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ComfyBot.Data.Models;
 
-public class MessageResponse : Entity
+public class MessageResponseOld : EntityOld
 {
     public List<string> Users { get; set; } = [];
 
@@ -15,7 +15,7 @@ public class MessageResponse : Entity
 
     public List<string> Replies { get; set; } = [];
 
-    public DateTime? LastUsedAt { get; set; }
+    public DateTime? LastUsed { get; set; }
 
     public int TimeoutInSeconds { get; set; } = 30;
 
@@ -23,5 +23,5 @@ public class MessageResponse : Entity
 
     public int Priority { get; set; }
 
-    public bool AlwaysReply { get; set; }
+    public bool ReplyAlways { get; set; }
 }

@@ -13,8 +13,8 @@ namespace ComfyBot.Application.Tests.TextCommands;
 [TestFixture]
 public class TextCommandsTabViewModelTests
 {
-    private Mock<IRepository<TextCommand>> repository;
-    private Mock<IMapper<TextCommand, TextCommandModel>> mapper;
+    private Mock<IRepository<TextCommandOld>> repository;
+    private Mock<IMapper<TextCommandOld, TextCommandModel>> mapper;
     private Mock<IMessageBox> messageBox;
         
     private TextCommandsTabViewModel viewModel;
@@ -22,8 +22,8 @@ public class TextCommandsTabViewModelTests
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<TextCommand>>();
-        this.mapper = new Mock<IMapper<TextCommand, TextCommandModel>>();
+        this.repository = new Mock<IRepository<TextCommandOld>>();
+        this.mapper = new Mock<IMapper<TextCommandOld, TextCommandModel>>();
         this.messageBox = new Mock<IMessageBox>();
 
 
@@ -56,14 +56,14 @@ public class TextCommandsTabViewModelTests
     [TestCase(10)]
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
-        TextCommand[] entities = Enumerable.Repeat(new TextCommand(), count).ToArray();
+        TextCommandOld[] entities = Enumerable.Repeat(new TextCommandOld(), count).ToArray();
         this.repository.Setup(r => r.GetAll()).Returns(entities);
 
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
 
         Assert.AreEqual(count, this.viewModel.Commands.Count);
-        this.mapper.Verify(m => m.MapToModel(It.IsAny<TextCommand>(), It.IsAny<TextCommandModel>()), () => Times.Exactly(count));
+        this.mapper.Verify(m => m.MapToModel(It.IsAny<TextCommandOld>(), It.IsAny<TextCommandModel>()), () => Times.Exactly(count));
     }
 
     [Test]
@@ -75,7 +75,7 @@ public class TextCommandsTabViewModelTests
 
         model.Timeout = 1;
 
-        this.repository.Verify(r => r.Write(It.IsAny<TextCommand>()));
-        this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<TextCommand>()));
+        this.repository.Verify(r => r.Write(It.IsAny<TextCommandOld>()));
+        this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<TextCommandOld>()));
     }
 }

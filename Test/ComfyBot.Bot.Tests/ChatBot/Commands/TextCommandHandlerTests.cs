@@ -12,7 +12,7 @@ namespace ComfyBot.Bot.Tests.ChatBot.Commands;
 [TestFixture]
 public class TextCommandHandlerTests
 {
-    private Mock<IRepository<TextCommand>> repository;
+    private Mock<IRepository<TextCommandOld>> repository;
     private Mock<ITextCommandReplyLoader> replyLoader;
 
     private Mock<ITwitchClient> twitchClient;
@@ -23,7 +23,7 @@ public class TextCommandHandlerTests
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<TextCommand>>();
+        this.repository = new Mock<IRepository<TextCommandOld>>();
         this.replyLoader = new Mock<ITextCommandReplyLoader>();
 
         this.twitchClient = new Mock<ITwitchClient>();
@@ -37,8 +37,8 @@ public class TextCommandHandlerTests
     public void HandleShouldSendLoadedReply(string channel, string reply)
     {
         ApplicationSettings.Default.Channel = channel;
-        TextCommand command1 = new();
-        TextCommand command2 = new();
+        TextCommandOld command1 = new();
+        TextCommandOld command2 = new();
         this.repository.Setup(r => r.GetAll()).Returns(new[] { command1, command2 });
         this.replyLoader.Setup(l => l.TryGetReply(command1, this.chatCommand.Object, out reply)).Returns(false);
         this.replyLoader.Setup(l => l.TryGetReply(command1, this.chatCommand.Object, out reply)).Returns(true);
@@ -51,10 +51,10 @@ public class TextCommandHandlerTests
     [Test]
     public void HandleShouldSendNothingIfNoReplyFound()
     {
-        TextCommand command = new();
-        this.repository.Setup(r => r.GetAll()).Returns(new[] { command });
+        TextCommandOld commandOld = new();
+        this.repository.Setup(r => r.GetAll()).Returns(new[] { commandOld });
         string reply;
-        this.replyLoader.Setup(l => l.TryGetReply(command, this.chatCommand.Object, out reply)).Returns(false);
+        this.replyLoader.Setup(l => l.TryGetReply(commandOld, this.chatCommand.Object, out reply)).Returns(false);
 
         this.handler.Handle(this.twitchClient.Object, this.chatCommand.Object);
 

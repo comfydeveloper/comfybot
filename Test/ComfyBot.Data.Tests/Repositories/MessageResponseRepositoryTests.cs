@@ -13,7 +13,7 @@ namespace ComfyBot.Data.Tests.Repositories;
 
 public class MessageResponseRepositoryTests
 {
-    private Mock<ILiteCollection<MessageResponse>> entities;
+    private Mock<ILiteCollection<MessageResponseOld>> entities;
 
     private MessageResponseRepository repository;
 
@@ -22,8 +22,8 @@ public class MessageResponseRepositoryTests
     {
         Mock<IDatabaseFactory> databaseFactory = new();
         Mock<IDatabase> database = new();
-        this.entities = new Mock<ILiteCollection<MessageResponse>>();
-        database.Setup(d => d.GetCollection<MessageResponse>("messageResponses")).Returns(this.entities.Object);
+        this.entities = new Mock<ILiteCollection<MessageResponseOld>>();
+        database.Setup(d => d.GetCollection<MessageResponseOld>("messageResponses")).Returns(this.entities.Object);
         databaseFactory.Setup(f => f.Create()).Returns(database.Object);
 
         this.repository = new MessageResponseRepository(databaseFactory.Object);
@@ -33,10 +33,10 @@ public class MessageResponseRepositoryTests
     [TestCase("key2")]
     public void GetShouldReturnElement(string id)
     {
-        MessageResponse entity = new() { Id = id };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
+        MessageResponseOld entity = new() { Id = id };
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponseOld, bool>>>())).Returns(entity);
 
-        MessageResponse shoutout = this.repository.Get(s => s.Id == id);
+        MessageResponseOld shoutout = this.repository.Get(s => s.Id == id);
 
         Assert.AreEqual(entity, shoutout);
     }
@@ -45,7 +45,7 @@ public class MessageResponseRepositoryTests
     [TestCase("key2")]
     public void AddOrUpdateShouldAddNewElement(string id)
     {
-        MessageResponse model = new();
+        MessageResponseOld model = new();
 
         this.repository.Write(model);
 
@@ -57,9 +57,9 @@ public class MessageResponseRepositoryTests
     [TestCase(2)]
     public void AddOrUpdateShouldUpdateTimeOut(int timeOutInSeconds)
     {
-        MessageResponse entity = new();
-        MessageResponse model = new() { TimeoutInSeconds = timeOutInSeconds };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
+        MessageResponseOld entity = new();
+        MessageResponseOld model = new() { TimeoutInSeconds = timeOutInSeconds };
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponseOld, bool>>>())).Returns(entity);
 
         this.repository.Write(model);
 
@@ -72,9 +72,9 @@ public class MessageResponseRepositoryTests
     [TestCase(2)]
     public void AddOrUpdateShouldUpdatePriority(int priority)
     {
-        MessageResponse entity = new();
-        MessageResponse model = new() { Priority = priority };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
+        MessageResponseOld entity = new();
+        MessageResponseOld model = new() { Priority = priority };
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponseOld, bool>>>())).Returns(entity);
 
         this.repository.Write(model);
 
@@ -87,9 +87,9 @@ public class MessageResponseRepositoryTests
     [TestCase(4, 3, 4)]
     public void AddOrUpdateShouldUpdateUseCount(int newCount, int oldCount, int expected)
     {
-        MessageResponse entity = new() { UseCount = oldCount };
-        MessageResponse model = new() { UseCount = newCount };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
+        MessageResponseOld entity = new() { UseCount = oldCount };
+        MessageResponseOld model = new() { UseCount = newCount };
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponseOld, bool>>>())).Returns(entity);
 
         this.repository.Write(model);
 
@@ -100,7 +100,7 @@ public class MessageResponseRepositoryTests
     [TestCase("value2")]
     public void AddOrUpdateShouldUpdateCollections(string value)
     {
-        MessageResponse entity = new()
+        MessageResponseOld entity = new()
         {
             Users = ["otherValue", value],
             AllKeywords = ["otherValue", value],
@@ -108,7 +108,7 @@ public class MessageResponseRepositoryTests
             LooseKeywords = ["otherValue", value],
             Replies = ["otherValue", value]
         };
-        MessageResponse model = new()
+        MessageResponseOld model = new()
         {
             Users = [value],
             AllKeywords = [value],
@@ -116,7 +116,7 @@ public class MessageResponseRepositoryTests
             LooseKeywords = [value],
             Replies = [value]
         };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponse, bool>>>())).Returns(entity);
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<MessageResponseOld, bool>>>())).Returns(entity);
 
         this.repository.Write(model);
 
@@ -140,6 +140,6 @@ public class MessageResponseRepositoryTests
     {
         this.repository.Remove(key);
 
-        this.entities.Verify(e => e.DeleteMany(It.IsAny<Expression<Func<MessageResponse, bool>>>()));
+        this.entities.Verify(e => e.DeleteMany(It.IsAny<Expression<Func<MessageResponseOld, bool>>>()));
     }
 }

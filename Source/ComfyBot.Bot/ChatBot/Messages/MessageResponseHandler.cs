@@ -10,10 +10,10 @@ namespace ComfyBot.Bot.ChatBot.Messages;
 
 public class MessageResponseHandler : IMessageHandler
 {
-    private readonly IRepository<MessageResponse> repository;
+    private readonly IRepository<MessageResponseOld> repository;
     private readonly IMessageResponseLoader responseLoader;
 
-    public MessageResponseHandler(IRepository<MessageResponse> repository,
+    public MessageResponseHandler(IRepository<MessageResponseOld> repository,
         IMessageResponseLoader responseLoader)
     {
         this.repository = repository;
@@ -27,9 +27,9 @@ public class MessageResponseHandler : IMessageHandler
             return;
         }
 
-        IEnumerable<MessageResponse> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
+        IEnumerable<MessageResponseOld> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
 
-        foreach (MessageResponse messageResponse in messageResponses)
+        foreach (MessageResponseOld messageResponse in messageResponses)
         {
             if (this.responseLoader.TryGetResponse(messageResponse, message, out string response))
             {

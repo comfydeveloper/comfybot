@@ -455,7 +455,7 @@ public enum ImplicitUseTargetFlags
     Itself = 1,
     /// <summary>Members of entity marked with attribute are considered used.</summary>
     Members = 2,
-    /// <summary>Entity marked with attribute and all its members considered used.</summary>
+    /// <summary>EntityOld marked with attribute and all its members considered used.</summary>
     WithMembers = Itself | Members
 }
 
@@ -608,7 +608,7 @@ public sealed class SourceTemplateAttribute : Attribute { }
 /// Applying the attribute on a template method parameter:
 /// <code>
 /// [SourceTemplate]
-/// public static void something(this Entity x, [Macro(Expression = "guid()", Editable = -1)] string newguid) {
+/// public static void something(this EntityOld x, [Macro(Expression = "guid()", Editable = -1)] string newguid) {
 ///   /*$ var $x$Id = "$newguid$" + x.ToString();
 ///   x.DoSomething($x$Id); */
 /// }

@@ -15,12 +15,12 @@ namespace ComfyBot.Application.Responses;
 
 public class ResponseTabViewModel : InitializableTab
 {
-    private readonly IRepository<MessageResponse> repository;
-    private readonly IMapper<MessageResponse, MessageResponseModel> mapper;
+    private readonly IRepository<MessageResponseOld> repository;
+    private readonly IMapper<MessageResponseOld, MessageResponseModel> mapper;
     private string searchText;
 
-    public ResponseTabViewModel(IRepository<MessageResponse> repository,
-        IMapper<MessageResponse, MessageResponseModel> mapper)
+    public ResponseTabViewModel(IRepository<MessageResponseOld> repository,
+        IMapper<MessageResponseOld, MessageResponseModel> mapper)
     {
         this.repository = repository;
         this.mapper = mapper;
@@ -37,9 +37,9 @@ public class ResponseTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        IEnumerable<MessageResponse> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
+        IEnumerable<MessageResponseOld> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
 
-        foreach (MessageResponse entity in messageResponses)
+        foreach (MessageResponseOld entity in messageResponses)
         {
             MessageResponseModel model = new();
             this.mapper.MapToModel(entity, model);
@@ -66,7 +66,7 @@ public class ResponseTabViewModel : InitializableTab
     private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
     {
         MessageResponseModel model = (MessageResponseModel)sender;
-        MessageResponse entity = new();
+        MessageResponseOld entity = new();
 
         this.mapper.MapToEntity(model, entity);
         this.repository.Write(entity);

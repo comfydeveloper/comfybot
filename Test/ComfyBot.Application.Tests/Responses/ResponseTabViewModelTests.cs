@@ -11,16 +11,16 @@ namespace ComfyBot.Application.Tests.Responses;
 [TestFixture]
 public class ResponseTabViewModelTests
 {
-    private Mock<IRepository<MessageResponse>> repository;
-    private Mock<IMapper<MessageResponse, MessageResponseModel>> mapper;
+    private Mock<IRepository<MessageResponseOld>> repository;
+    private Mock<IMapper<MessageResponseOld, MessageResponseModel>> mapper;
 
     private ResponseTabViewModel viewModel;
 
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<MessageResponse>>();
-        this.mapper = new Mock<IMapper<MessageResponse, MessageResponseModel>>();
+        this.repository = new Mock<IRepository<MessageResponseOld>>();
+        this.mapper = new Mock<IMapper<MessageResponseOld, MessageResponseModel>>();
 
         this.viewModel = new ResponseTabViewModel(this.repository.Object, this.mapper.Object);
     }
@@ -50,14 +50,14 @@ public class ResponseTabViewModelTests
     [TestCase(10)]
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
-        MessageResponse[] entities = Enumerable.Repeat(new MessageResponse(), count).ToArray();
+        MessageResponseOld[] entities = Enumerable.Repeat(new MessageResponseOld(), count).ToArray();
         this.repository.Setup(r => r.GetAll()).Returns(entities);
 
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
 
         Assert.AreEqual(count, this.viewModel.Responses.Count);
-        this.mapper.Verify(m => m.MapToModel(It.IsAny<MessageResponse>(), It.IsAny<MessageResponseModel>()), () => Times.Exactly(count));
+        this.mapper.Verify(m => m.MapToModel(It.IsAny<MessageResponseOld>(), It.IsAny<MessageResponseModel>()), () => Times.Exactly(count));
     }
 
     [Test]
@@ -69,7 +69,7 @@ public class ResponseTabViewModelTests
 
         model.Timeout = 1;
 
-        this.repository.Verify(r => r.Write(It.IsAny<MessageResponse>()));
-        this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponse>()));
+        this.repository.Verify(r => r.Write(It.IsAny<MessageResponseOld>()));
+        this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponseOld>()));
     }
 }

@@ -5,5 +5,5 @@ namespace ComfyBot.Bot.ChatBot.Commands;
 
 public interface ITextCommandReplyLoader
 {
-    bool TryGetReply(TextCommand textCommand, IChatCommand command, out string reply);
+    bool TryGetReply(TextCommandOld textCommandOld, IChatCommand command, out string reply);
 }

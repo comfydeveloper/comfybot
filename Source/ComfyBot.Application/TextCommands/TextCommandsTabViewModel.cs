@@ -17,13 +17,13 @@ namespace ComfyBot.Application.TextCommands;
 
 public class TextCommandsTabViewModel : InitializableTab
 {
-    private readonly IRepository<TextCommand> repository;
-    private readonly IMapper<TextCommand, TextCommandModel> mapper;
+    private readonly IRepository<TextCommandOld> repository;
+    private readonly IMapper<TextCommandOld, TextCommandModel> mapper;
     private readonly IMessageBox messageBox;
     private string searchText;
 
-    public TextCommandsTabViewModel(IRepository<TextCommand> repository,
-        IMapper<TextCommand, TextCommandModel> mapper,
+    public TextCommandsTabViewModel(IRepository<TextCommandOld> repository,
+        IMapper<TextCommandOld, TextCommandModel> mapper,
         IMessageBox messageBox)
     {
         this.repository = repository;
@@ -42,9 +42,9 @@ public class TextCommandsTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        IEnumerable<TextCommand> textCommands = this.repository.GetAll().OrderBy(c => c.Commands.OrderBy(text => text).FirstOrDefault());
+        IEnumerable<TextCommandOld> textCommands = this.repository.GetAll().OrderBy(c => c.Commands.OrderBy(text => text).FirstOrDefault());
 
-        foreach (TextCommand entity in textCommands)
+        foreach (TextCommandOld entity in textCommands)
         {
             TextCommandModel model = new();
             this.mapper.MapToModel(entity, model);
@@ -84,7 +84,7 @@ public class TextCommandsTabViewModel : InitializableTab
     private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
     {
         TextCommandModel model = (TextCommandModel)sender;
-        TextCommand entity = new();
+        TextCommandOld entity = new();
         this.mapper.MapToEntity(model, entity);
 
         this.repository.Write(entity);

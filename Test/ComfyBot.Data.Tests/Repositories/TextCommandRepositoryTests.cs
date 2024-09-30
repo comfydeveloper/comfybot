@@ -14,7 +14,7 @@ namespace ComfyBot.Data.Tests.Repositories;
 [TestFixture]
 public class TextCommandRepositoryTests
 {
-    private Mock<ILiteCollection<TextCommand>> entities;
+    private Mock<ILiteCollection<TextCommandOld>> entities;
 
     private TextCommandRepository repository;
 
@@ -23,8 +23,8 @@ public class TextCommandRepositoryTests
     {
         Mock<IDatabaseFactory> databaseFactory = new();
         Mock<IDatabase> database = new();
-        this.entities = new Mock<ILiteCollection<TextCommand>>();
-        database.Setup(d => d.GetCollection<TextCommand>("textCommands")).Returns(this.entities.Object);
+        this.entities = new Mock<ILiteCollection<TextCommandOld>>();
+        database.Setup(d => d.GetCollection<TextCommandOld>("textCommands")).Returns(this.entities.Object);
         databaseFactory.Setup(f => f.Create()).Returns(database.Object);
 
         this.repository = new TextCommandRepository(databaseFactory.Object);
@@ -34,10 +34,10 @@ public class TextCommandRepositoryTests
     [TestCase("key2")]
     public void GetShouldReturnElement(string id)
     {
-        TextCommand entity = new() { Id = id };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+        TextCommandOld entity = new() { Id = id };
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommandOld, bool>>>())).Returns(entity);
 
-        TextCommand shoutout = this.repository.Get(s => s.Id == id);
+        TextCommandOld shoutout = this.repository.Get(s => s.Id == id);
 
         Assert.AreEqual(entity, shoutout);
     }
@@ -46,7 +46,7 @@ public class TextCommandRepositoryTests
     [TestCase("key2")]
     public void AddOrUpdateShouldAddNewElement(string id)
     {
-        TextCommand model = new();
+        TextCommandOld model = new();
 
         this.repository.Write(model);
 
@@ -58,9 +58,9 @@ public class TextCommandRepositoryTests
     [TestCase(2)]
     public void AddOrUpdateShouldUpdateTimeOut(int timeOutInSeconds)
     {
-        TextCommand entity = new();
-        TextCommand model = new() { TimeoutInSeconds = timeOutInSeconds };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+        TextCommandOld entity = new();
+        TextCommandOld model = new() { TimeoutInSeconds = timeOutInSeconds };
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommandOld, bool>>>())).Returns(entity);
 
         this.repository.Write(model);
 
@@ -73,15 +73,15 @@ public class TextCommandRepositoryTests
     [TestCase("value2")]
     public void AddOrUpdateShouldUpdateCommandsCollection(string value)
     {
-        TextCommand entity = new()
+        TextCommandOld entity = new()
         {
             Commands = ["otherValue", value]
         };
-        TextCommand model = new()
+        TextCommandOld model = new()
         {
             Commands = [value]
         };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommandOld, bool>>>())).Returns(entity);
 
         this.repository.Write(model);
 
@@ -95,9 +95,9 @@ public class TextCommandRepositoryTests
     [TestCase("2020-01-02")]
     public void AddOrUpdateShouldUpdateUsedTime(DateTime lastUsedTime)
     {
-        TextCommand entity = new();
-        TextCommand model = new() { LastUsed = lastUsedTime };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+        TextCommandOld entity = new();
+        TextCommandOld model = new() { LastUsed = lastUsedTime };
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommandOld, bool>>>())).Returns(entity);
 
         this.repository.Write(model);
 
@@ -110,9 +110,9 @@ public class TextCommandRepositoryTests
     [TestCase(2)]
     public void AddOrUpdateShouldUpdateUseCount(int count)
     {
-        TextCommand entity = new();
-        TextCommand model = new() { UseCount = count };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+        TextCommandOld entity = new();
+        TextCommandOld model = new() { UseCount = count };
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommandOld, bool>>>())).Returns(entity);
 
         this.repository.Write(model);
 
@@ -123,15 +123,15 @@ public class TextCommandRepositoryTests
     [TestCase("value2")]
     public void AddOrUpdateShouldUpdateCollection(string value)
     {
-        TextCommand entity = new()
+        TextCommandOld entity = new()
         {
             Replies = ["otherValue", value]
         };
-        TextCommand model = new()
+        TextCommandOld model = new()
         {
             Replies = [value]
         };
-        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommand, bool>>>())).Returns(entity);
+        this.entities.Setup(e => e.FindOne(It.IsAny<Expression<Func<TextCommandOld, bool>>>())).Returns(entity);
 
         this.repository.Write(model);
 
@@ -147,6 +147,6 @@ public class TextCommandRepositoryTests
     {
         this.repository.Remove(key);
 
-        this.entities.Verify(e => e.DeleteMany(It.IsAny<Expression<Func<TextCommand, bool>>>()));
+        this.entities.Verify(e => e.DeleteMany(It.IsAny<Expression<Func<TextCommandOld, bool>>>()));
     }
 }

@@ -4,13 +4,13 @@ using ComfyBot.Data.Models;
 
 namespace ComfyBot.Data.Repositories;
 
-public class TextCommandRepository : Repository<TextCommand>
+public class TextCommandRepository : Repository<TextCommandOld>
 {
     public TextCommandRepository(IDatabaseFactory databaseFactory)
         : base(databaseFactory, "textCommands")
     { }
 
-    protected override void Update(TextCommand source, TextCommand target)
+    protected override void Update(TextCommandOld source, TextCommandOld target)
     {
         target.TimeoutInSeconds = source.TimeoutInSeconds;
         target.UseCount = Math.Max(source.UseCount, target.UseCount);

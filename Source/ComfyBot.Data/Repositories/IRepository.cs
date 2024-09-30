@@ -5,7 +5,7 @@ using ComfyBot.Data.Models;
 
 namespace ComfyBot.Data.Repositories;
 
-public interface IRepository<T> where T : Entity
+public interface IRepository<T> where T : EntityOld
 {
     T Get(Expression<Func<T, bool>> predicate);
 
