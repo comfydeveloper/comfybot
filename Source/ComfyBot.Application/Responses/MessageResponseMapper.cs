@@ -10,7 +10,7 @@ public class MessageResponseMapper : IMapper<MessageResponse, MessageResponseMod
     public void MapToModel(MessageResponse entity, MessageResponseModel model)
     {
         model.Id = entity.Id.ToString();
-        model.Timeout = entity.TimeoutInSeconds;
+        model.TimeoutInSeconds = entity.TimeoutInSeconds;
         model.Priority = entity.Priority;
         model.ReplyAlways = entity.AlwaysReply;
         model.Users.AddRange(entity.Users.ToTextModels().OrderBy(m => m.Text));
@@ -22,7 +22,7 @@ public class MessageResponseMapper : IMapper<MessageResponse, MessageResponseMod
 
     public void MapToEntity(MessageResponseModel model, MessageResponse entity)
     {
-        entity.TimeoutInSeconds = model.Timeout;
+        entity.TimeoutInSeconds = model.TimeoutInSeconds;
         entity.Priority = model.Priority;
         entity.AlwaysReply = model.ReplyAlways;
         entity.Users = model.Users.Where(u => !string.IsNullOrEmpty(u.Text)).Select(u => u.Text).ToList();

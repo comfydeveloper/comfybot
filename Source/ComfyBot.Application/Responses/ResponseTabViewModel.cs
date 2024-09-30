@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ComfyBot.Application.Features.MessageResponses;
+using ComfyBot.Application.Features.Shared.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,15 +17,23 @@ namespace ComfyBot.Application.Responses;
 
 public class ResponseTabViewModel : InitializableTab
 {
-    private readonly IQueryableRepository repository;
-    private readonly IMapper<MessageResponse, MessageResponseModel> mapper;
+    private readonly IQueryHandler<GetResponses.Query, GetResponses.Result> getHandler;
+    private readonly ICommandHandler<AddResponse.Command> addHandler;
+    private readonly ICommandHandler<UpdateResponse.Command> updateHandler;
+    private readonly ICommandHandler<RemoveResponse.Command> removeHandler;
+
     private string searchText;
 
-    public ResponseTabViewModel(IQueryableRepository repository,
-        IMapper<MessageResponse, MessageResponseModel> mapper)
+    public ResponseTabViewModel(
+        IQueryHandler<GetResponses.Query, GetResponses.Result> getHandler,
+        ICommandHandler<AddResponse.Command> addHandler,
+        ICommandHandler<UpdateResponse.Command> updateHandler,
+        ICommandHandler<RemoveResponse.Command> removeHandler)
     {
-        this.repository = repository;
-        this.mapper = mapper;
+        this.getHandler = getHandler;
+        this.addHandler = addHandler;
+        this.updateHandler = updateHandler;
+        this.removeHandler = removeHandler;
 
         this.AddResponseCommand = new DelegateCommand(this.AddResponse);
         this.RemoveResponseCommand = new ParameterCommand(this.RemoveResponse);
@@ -37,12 +47,24 @@ public class ResponseTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        IEnumerable<MessageResponse> messageResponses = this.repository.Query<MessageResponse>().OrderBy(r => r.Priority).ToList();
+        GetResponses.Result result = this.getHandler.Handle(new GetResponses.Query()).Result;
 
-        foreach (MessageResponse entity in messageResponses)
+        foreach (GetResponses.MessageResponseEntry entry in result.Entries)
         {
-            MessageResponseModel model = new();
-            this.mapper.MapToModel(entity, model);
+            MessageResponseModel model = new()
+            {
+                Id = entry.Id.ToString(),
+                TimeoutInSeconds = entry.TimeoutInSeconds,
+                Priority = entry.Priority,
+                ReplyAlways = entry.AlwaysReply,
+            };
+
+            model.Users.AddRange(entry.Users.ToTextModels().OrderBy(m => m.Text));
+            model.LooseKeywords.AddRange(entry.LooseKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.AllKeywords.AddRange(entry.AllKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.ExactKeywords.AddRange(entry.ExactKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.Replies.AddRange(entry.Replies.ToTextModels().OrderBy(m => m.Text));
+
             this.Responses.Add(model);
         }
 
@@ -51,50 +73,36 @@ public class ResponseTabViewModel : InitializableTab
 
     private void AddResponse()
     {
-        MessageResponseModel messageResponse = new() { Id = Guid.NewGuid().ToString() };
+        Guid id = Guid.NewGuid();
+        MessageResponseModel messageResponse = new() { Id = id.ToString() };
         this.Responses.Add(messageResponse);
-    }
 
-    private void RemoveResponse(object parameter)
-    {
-        MessageResponseModel response = (MessageResponseModel) parameter;
-
-        this.Responses.Remove(response);
-        this.repository.Remove(response.Id);
+        this.addHandler.Handle(new AddResponse.Command(id));
     }
 
     private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
     {
         MessageResponseModel model = (MessageResponseModel)sender;
 
-        MessageResponse message = this.repository.Query<MessageResponse>().FirstOrDefault(x => x.Id == Guid.Parse(model.Id));
+        UpdateResponse.Command command = new(Guid.Parse(model.Id),
+                                             model.TimeoutInSeconds,
+                                             model.ReplyAlways,
+                                             model.Priority,
+                                             model.Users.ToStrings(),
+                                             model.ExactKeywords.ToStrings(),
+                                             model.LooseKeywords.ToStrings(),
+                                             model.AllKeywords.ToStrings(),
+                                             model.Replies.ToStrings());
 
-        if (message == null)
-        {
-            MessageResponse newResponse = new()
-            {
-                Users = model.Users.Where(u => !string.IsNullOrEmpty(u.Text)).Select(u => u.Text).ToList(),
-                LooseKeywords = model.LooseKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList(),
-                AllKeywords = model.AllKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList(),
-                ExactKeywords = model.ExactKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList(),
-                Replies = model.Replies.Where(r => !string.IsNullOrEmpty(r.Text)).Select(r => r.Text).ToList(),
-                LastUsedAt = null,
-                TimeoutInSeconds = 30,
-                UseCount = 0,
-                Priority = model.Priority,
-                AlwaysReply = model.ReplyAlways,
-                Id = Guid.Parse(model.Id),
-                CreatedAt = DateTime.Now
-            };
-            
-            this.repository.Add(newResponse);
-        }
-        else
-        {
-            this.mapper.MapToEntity(model, message);
-        }
+        this.updateHandler.Handle(command);
+    }
 
-        this.repository.SaveChanges();
+    private void RemoveResponse(object parameter)
+    {
+        MessageResponseModel response = (MessageResponseModel) parameter;
+        this.Responses.Remove(response);
+
+        this.removeHandler.Handle(new RemoveResponse.Command(Guid.Parse(response.Id)));
     }
 
     [ExcludeFromCodeCoverage]
@@ -105,7 +113,7 @@ public class ResponseTabViewModel : InitializableTab
             this.searchText = value;
             this.UpdateSearch(); }
     }
-
+    
     [ExcludeFromCodeCoverage]
     private void UpdateSearch()
     {

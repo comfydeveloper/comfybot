@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace ComfyBot.Data.Scaffolding;
 
-public class DataProjectModule : IProjectModule
+public class DataModule : IModule
 {
     public void RegisterServices(IServiceCollection services)
     {

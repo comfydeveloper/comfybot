@@ -13,6 +13,8 @@ using System.Collections.Generic;
 
 namespace ComfyBot.Application;
 
+// TODO [Shae] Remove this 
+[Obsolete]
 public class Startup
 {
     public static void RegisterDependencies(IServiceCollection services)

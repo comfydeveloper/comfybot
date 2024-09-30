@@ -16,8 +16,6 @@ using Serilog.Exceptions;
 using ComfyBot.Common.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Microsoft.Extensions.Options;
-using System.Linq;
 using System.Text;
 
 namespace ComfyBot.Application;
@@ -44,11 +42,11 @@ public partial class App
 
         HostApplicationBuilder builder = Host.CreateApplicationBuilder();
 
-        List<IProjectModule> modules =
+        List<IModule> modules =
         [
-            new ApplicationProjectModule(),
-            new DataProjectModule(),
-            new BotProjectModule()
+            new ApplicationModule(),
+            new DataModule(),
+            new BotModule()
         ];
 
         RegisterModules(builder, modules);
@@ -67,17 +65,17 @@ public partial class App
         ServiceProvider = AppHost.Services;
     }
 
-    private static void ConfigureModules(IHost host, List<IProjectModule> modules)
+    private static void ConfigureModules(IHost host, List<IModule> modules)
     {
-        foreach (IProjectModule projectModule in modules)
+        foreach (IModule projectModule in modules)
         {
             projectModule.Configure(host);
         }
     }
 
-    private static void RegisterModules(IHostApplicationBuilder builder, List<IProjectModule> modules)
+    private static void RegisterModules(IHostApplicationBuilder builder, List<IModule> modules)
     {
-        foreach (IProjectModule projectModule in modules)
+        foreach (IModule projectModule in modules)
         {
             projectModule.RegisterServices(builder.Services);
         }
@@ -113,6 +111,10 @@ public partial class App
                 job.Execute();
             }
 
+            // TODO [Shae] Remove
+            //Migrate();
+
+
             IComfyBot comfyBot = AppHost.Services.GetService<IComfyBot>();
             comfyBot.Run();
             IComfyPubSub service = AppHost.Services.GetService<IComfyPubSub>();
@@ -128,6 +130,62 @@ public partial class App
             Log.Fatal(ex, "Failed on startup");
         }
         
+    }
+
+    // TODO [Shae] Remove
+    private static void Migrate()
+    {
+        IRepository<MessageResponseOld> sourceRepoResponses = AppHost.Services.GetService<IRepository<MessageResponseOld>>();
+        IRepository<TextCommandOld> sourceRepoCommands = AppHost.Services.GetService<IRepository<TextCommandOld>>();
+        IEnumerable<MessageResponseOld> messageResponses = sourceRepoResponses.GetAll();
+        IEnumerable<TextCommandOld> textCommands = sourceRepoCommands.GetAll();
+
+        using IServiceScope serviceScope = ServiceProvider.CreateScope();
+        IQueryableRepository targetRepo = serviceScope.ServiceProvider.GetRequiredService<IQueryableRepository>();
+
+            
+        StringBuilder builder = new();
+        // TODO [Shae] Migration mechanism from one repo to the other
+        builder.AppendLine("INSERT INTO MessageResponseOld ()");
+
+        foreach (MessageResponseOld source in messageResponses)
+        {
+            MessageResponse response = new()
+            {
+                Id = Guid.Parse(source.Id),
+                AllKeywords = source.AllKeywords,
+                AlwaysReply = source.ReplyAlways,
+                CreatedAt = source.DateOfCreation,
+                ExactKeywords = source.ExactKeywords,
+                LastUsedAt = source.LastUsed,
+                LooseKeywords = source.LooseKeywords,
+                Priority = source.Priority,
+                Replies = source.Replies,
+                Users = source.Users,
+                TimeoutInSeconds = source.TimeoutInSeconds,
+                UseCount = source.UseCount
+            };
+
+            targetRepo.Add(response);
+        }
+
+        foreach (TextCommandOld source in textCommands)
+        {
+            TextCommand command = new()
+            {
+                Replies = source.Replies,
+                Commands = source.Commands,
+                LastUsedAt = source.LastUsed,
+                UseCount = source.UseCount,
+                TimeoutInSeconds = source.TimeoutInSeconds,
+                Id = Guid.Parse(source.Id),
+                CreatedAt = source.DateOfCreation
+            };
+
+            targetRepo.Add(command);
+        }
+
+        targetRepo.SaveChanges();
     }
 
     protected override async void OnExit(ExitEventArgs e)

@@ -367,7 +367,7 @@
                                             <StackPanel Grid.Column="4" Margin="5">
                                                 <DockPanel LastChildFill="False">
                                                     <Label Content="And I reply every" FontWeight="Bold" />
-                                                    <TextBox MinWidth="30" Text="{Binding Timeout}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <TextBox MinWidth="30" Text="{Binding TimeoutInSeconds}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                                     <Label Content="seconds and a priority of" FontWeight="Bold" />
                                                     <TextBox MinWidth="30" Text="{Binding Priority}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                                     <Label Content="with" FontWeight="Bold" />

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace ComfyBot.Bot.Scaffolding;
 
-public class BotProjectModule : IProjectModule
+public class BotModule : IModule
 {
     public void RegisterServices(IServiceCollection services)
     {

@@ -4,6 +4,7 @@ using ComfyBot.Application.Shared.Contracts;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace ComfyBot.Application.Tests.Responses;
@@ -11,18 +12,18 @@ namespace ComfyBot.Application.Tests.Responses;
 [TestFixture]
 public class ResponseTabViewModelTests
 {
-    private Mock<IRepository<MessageResponseOld>> repository;
-    private Mock<IMapper<MessageResponseOld, MessageResponseModel>> mapper;
+    private IQueryableRepository repository;
+    private Mock<IMapper<MessageResponse, MessageResponseModel>> mapper;
 
     private ResponseTabViewModel viewModel;
 
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<MessageResponseOld>>();
-        this.mapper = new Mock<IMapper<MessageResponseOld, MessageResponseModel>>();
+        this.repository = Substitute.For<IQueryableRepository>();
+        this.mapper = new Mock<IMapper<MessageResponse, MessageResponseModel>>();
 
-        this.viewModel = new ResponseTabViewModel(this.repository.Object, this.mapper.Object);
+        this.viewModel = new ResponseTabViewModel(this.repository, this.mapper.Object);
     }
 
     [Test]
@@ -67,7 +68,7 @@ public class ResponseTabViewModelTests
         this.viewModel.Responses.Add(model);
         this.viewModel.IsSelected = true;
 
-        model.Timeout = 1;
+        model.TimeoutInSeconds = 1;
 
         this.repository.Verify(r => r.Write(It.IsAny<MessageResponseOld>()));
         this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponseOld>()));

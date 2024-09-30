@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace ComfyBot.Common.Scaffolding;
 
-public interface IProjectModule
+public interface IModule
 {
     void RegisterServices(IServiceCollection services);
 

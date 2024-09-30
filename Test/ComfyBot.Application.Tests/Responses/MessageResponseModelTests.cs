@@ -135,9 +135,9 @@ public class MessageResponseModelTests
     [TestCase(2)]
     public void TimeoutSetterShouldSetValue(int timeout)
     {
-        this.model.Timeout = timeout;
+        this.model.TimeoutInSeconds = timeout;
 
-        Assert.AreEqual(timeout, this.model.Timeout);
+        Assert.AreEqual(timeout, this.model.TimeoutInSeconds);
     }
 
     [Test]
@@ -151,7 +151,7 @@ public class MessageResponseModelTests
 
         this.model.PropertyChanged += TestMethod;
 
-        this.model.Timeout = 1;
+        this.model.TimeoutInSeconds = 1;
 
         Assert.IsTrue(result);
     }
@@ -176,7 +176,7 @@ public class MessageResponseModelTests
 
         this.model.PropertyChanged += TestMethod;
 
-        this.model.Timeout = 1;
+        this.model.TimeoutInSeconds = 1;
 
         Assert.IsTrue(result);
     }

@@ -7,7 +7,7 @@ namespace ComfyBot.Application.Responses;
 
 public class MessageResponseModel : NotifyingModel
 {
-    private int timeout = 60;
+    private int timeoutInSeconds = 60;
     private int priority;
     private bool replyAlways;
 
@@ -63,11 +63,11 @@ public class MessageResponseModel : NotifyingModel
 
     public ObservableCollection<TextModel> Replies { get; set; } = [];
 
-    public int Timeout
+    public int TimeoutInSeconds
     {
-        get => this.timeout;
+        get => this.timeoutInSeconds;
         set {
-            this.timeout = value;
+            this.timeoutInSeconds = value;
             this.OnPropertyChanged(); }
     }
 
