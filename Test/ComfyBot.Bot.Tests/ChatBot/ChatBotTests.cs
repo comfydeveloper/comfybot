@@ -1,8 +1,10 @@
 ﻿using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.Initialization;
+using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using TwitchLib.Client.Interfaces;
@@ -20,6 +22,7 @@ public class ChatBotTests
     private Mock<IMessageHandler> messageHandler1;
     private Mock<IMessageHandler> messageHandler2;
 
+    private BotSettings settings;
     private Bot.ChatBot.ChatBot chatBot;
 
     [SetUp]
@@ -38,16 +41,20 @@ public class ChatBotTests
         IMessageHandler[] messageHandlers = [this.messageHandler1.Object, this.messageHandler2.Object];
         var logger = new Mock<ILogger<Bot.ChatBot.ChatBot>>();
 
-        this.chatBot = new Bot.ChatBot.ChatBot(this.clientFactory.Object, commandHandlers, messageHandlers, logger.Object);
+        this.settings = new BotSettings();
+        Mock<IOptions<BotSettings>> options = new();
+        options.Setup(x => x.Value).Returns(this.settings);
+
+        this.chatBot = new Bot.ChatBot.ChatBot(this.clientFactory.Object, commandHandlers, messageHandlers, options.Object, logger.Object);
     }
 
     [TestCase("user1", "password1", "channel1")]
     [TestCase("user2", "password2", "channel2")]
     public void RunShouldInitializeClient(string username, string password, string channel)
     {
-        ApplicationSettings.Default.User = username;
-        ApplicationSettings.Default.AuthKey = password;
-        ApplicationSettings.Default.Channel = channel;
+        this.settings.User = username;
+        this.settings.AuthKey = password;
+        this.settings.Channel = channel;
 
         this.chatBot.Run();
 
@@ -58,9 +65,9 @@ public class ChatBotTests
     [Test]
     public void RunShouldExitWhenSettingsAreNotReady()
     {
-        ApplicationSettings.Default.Channel = string.Empty;
-        ApplicationSettings.Default.AuthKey = string.Empty;
-        ApplicationSettings.Default.User = string.Empty;
+        this.settings.User = string.Empty;
+        this.settings.AuthKey = string.Empty;
+        this.settings.Channel = string.Empty;
 
         this.chatBot.Run();
 
