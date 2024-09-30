@@ -11,7 +11,7 @@ public class DataProjectModule : IProjectModule
 {
     public void RegisterServices(IServiceCollection services)
     {
-        services.AddDbContext<DataContext>();
+        services.AddDbContext<DataContext>(contextLifetime: ServiceLifetime.Transient, optionsLifetime: ServiceLifetime.Singleton);
         services.AddTransient<IQueryableRepository, QueryableRepository>();
     }
 

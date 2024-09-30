@@ -15,12 +15,12 @@ namespace ComfyBot.Application.Responses;
 
 public class ResponseTabViewModel : InitializableTab
 {
-    private readonly IRepository<MessageResponseOld> repository;
-    private readonly IMapper<MessageResponseOld, MessageResponseModel> mapper;
+    private readonly IQueryableRepository repository;
+    private readonly IMapper<MessageResponse, MessageResponseModel> mapper;
     private string searchText;
 
-    public ResponseTabViewModel(IRepository<MessageResponseOld> repository,
-        IMapper<MessageResponseOld, MessageResponseModel> mapper)
+    public ResponseTabViewModel(IQueryableRepository repository,
+        IMapper<MessageResponse, MessageResponseModel> mapper)
     {
         this.repository = repository;
         this.mapper = mapper;
@@ -37,9 +37,9 @@ public class ResponseTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        IEnumerable<MessageResponseOld> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
+        IEnumerable<MessageResponse> messageResponses = this.repository.Query<MessageResponse>().OrderBy(r => r.Priority).ToList();
 
-        foreach (MessageResponseOld entity in messageResponses)
+        foreach (MessageResponse entity in messageResponses)
         {
             MessageResponseModel model = new();
             this.mapper.MapToModel(entity, model);
@@ -66,10 +66,35 @@ public class ResponseTabViewModel : InitializableTab
     private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
     {
         MessageResponseModel model = (MessageResponseModel)sender;
-        MessageResponseOld entity = new();
 
-        this.mapper.MapToEntity(model, entity);
-        this.repository.Write(entity);
+        MessageResponse message = this.repository.Query<MessageResponse>().FirstOrDefault(x => x.Id == Guid.Parse(model.Id));
+
+        if (message == null)
+        {
+            MessageResponse newResponse = new()
+            {
+                Users = model.Users.Where(u => !string.IsNullOrEmpty(u.Text)).Select(u => u.Text).ToList(),
+                LooseKeywords = model.LooseKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList(),
+                AllKeywords = model.AllKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList(),
+                ExactKeywords = model.ExactKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList(),
+                Replies = model.Replies.Where(r => !string.IsNullOrEmpty(r.Text)).Select(r => r.Text).ToList(),
+                LastUsedAt = null,
+                TimeoutInSeconds = 30,
+                UseCount = 0,
+                Priority = model.Priority,
+                AlwaysReply = model.ReplyAlways,
+                Id = Guid.Parse(model.Id),
+                CreatedAt = DateTime.Now
+            };
+            
+            this.repository.Add(newResponse);
+        }
+        else
+        {
+            this.mapper.MapToEntity(model, message);
+        }
+
+        this.repository.SaveChanges();
     }
 
     [ExcludeFromCodeCoverage]

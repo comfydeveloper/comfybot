@@ -5,14 +5,14 @@ using ComfyBot.Data.Models;
 
 namespace ComfyBot.Application.Responses;
 
-public class MessageResponseMapper : IMapper<MessageResponseOld, MessageResponseModel>
+public class MessageResponseMapper : IMapper<MessageResponse, MessageResponseModel>
 {
-    public void MapToModel(MessageResponseOld entity, MessageResponseModel model)
+    public void MapToModel(MessageResponse entity, MessageResponseModel model)
     {
-        model.Id = entity.Id;
+        model.Id = entity.Id.ToString();
         model.Timeout = entity.TimeoutInSeconds;
         model.Priority = entity.Priority;
-        model.ReplyAlways = entity.ReplyAlways;
+        model.ReplyAlways = entity.AlwaysReply;
         model.Users.AddRange(entity.Users.ToTextModels().OrderBy(m => m.Text));
         model.LooseKeywords.AddRange(entity.LooseKeywords.ToTextModels().OrderBy(m => m.Text));
         model.AllKeywords.AddRange(entity.AllKeywords.ToTextModels().OrderBy(m => m.Text));
@@ -20,12 +20,11 @@ public class MessageResponseMapper : IMapper<MessageResponseOld, MessageResponse
         model.Replies.AddRange(entity.Replies.ToTextModels().OrderBy(m => m.Text));
     }
 
-    public void MapToEntity(MessageResponseModel model, MessageResponseOld entity)
+    public void MapToEntity(MessageResponseModel model, MessageResponse entity)
     {
-        entity.Id = model.Id;
         entity.TimeoutInSeconds = model.Timeout;
         entity.Priority = model.Priority;
-        entity.ReplyAlways = model.ReplyAlways;
+        entity.AlwaysReply = model.ReplyAlways;
         entity.Users = model.Users.Where(u => !string.IsNullOrEmpty(u.Text)).Select(u => u.Text).ToList();
         entity.LooseKeywords = model.LooseKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList();
         entity.AllKeywords = model.AllKeywords.Where(k => !string.IsNullOrEmpty(k.Text)).Select(k => k.Text).ToList();
