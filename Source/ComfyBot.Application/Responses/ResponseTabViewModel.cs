@@ -1,17 +1,16 @@
 ﻿using ComfyBot.Application.Features.MessageResponses;
 using ComfyBot.Application.Features.Shared.Contracts;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Data;
 using ComfyBot.Application.Shared;
-using ComfyBot.Application.Shared.Contracts;
 using ComfyBot.Application.Shared.Extensions;
-using ComfyBot.Data.Models;
-using ComfyBot.Data.Repositories;
+using ComfyBot.Application.Shared.Wrappers;
+using ComfyBot.Application.TextCommands;
+using System.Windows;
 
 namespace ComfyBot.Application.Responses;
 
@@ -21,6 +20,7 @@ public class ResponseTabViewModel : InitializableTab
     private readonly ICommandHandler<AddResponse.Command> addHandler;
     private readonly ICommandHandler<UpdateResponse.Command> updateHandler;
     private readonly ICommandHandler<RemoveResponse.Command> removeHandler;
+    private readonly IMessageBox messageBox;
 
     private string searchText;
 
@@ -28,12 +28,14 @@ public class ResponseTabViewModel : InitializableTab
         IQueryHandler<GetResponses.Query, GetResponses.Result> getHandler,
         ICommandHandler<AddResponse.Command> addHandler,
         ICommandHandler<UpdateResponse.Command> updateHandler,
-        ICommandHandler<RemoveResponse.Command> removeHandler)
+        ICommandHandler<RemoveResponse.Command> removeHandler,
+        IMessageBox messageBox)
     {
         this.getHandler = getHandler;
         this.addHandler = addHandler;
         this.updateHandler = updateHandler;
         this.removeHandler = removeHandler;
+        this.messageBox = messageBox;
 
         this.AddResponseCommand = new DelegateCommand(this.AddResponse);
         this.RemoveResponseCommand = new ParameterCommand(this.RemoveResponse);
@@ -100,9 +102,17 @@ public class ResponseTabViewModel : InitializableTab
     private void RemoveResponse(object parameter)
     {
         MessageResponseModel response = (MessageResponseModel) parameter;
-        this.Responses.Remove(response);
 
-        this.removeHandler.Handle(new RemoveResponse.Command(Guid.Parse(response.Id)));
+        if (this.messageBox.Show(GetDeletionMessage(response), "Delete response", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+        {
+            this.Responses.Remove(response);
+            this.removeHandler.Handle(new RemoveResponse.Command(Guid.Parse(response.Id)));
+        }
+    }
+
+    private static string GetDeletionMessage(MessageResponseModel model)
+    {
+        return $"Do you want to delete the response [{string.Join(",", model.Replies.Select(x => x.Text[..10]))}]?";
     }
 
     [ExcludeFromCodeCoverage]
