@@ -6,7 +6,6 @@ using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using ComfyBot.Data.Wrappers;
 using LiteDB;
-using Moq;
 using NUnit.Framework;
 
 namespace ComfyBot.Data.Tests.Repositories;

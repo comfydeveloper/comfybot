@@ -4,7 +4,6 @@ using ComfyBot.Bot.Initialization;
 using ComfyBot.Bot.Scaffolding;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moq;
 using NUnit.Framework;
 using TwitchLib.Client.Interfaces;
 
@@ -27,24 +26,24 @@ public class ChatBotTests
     [SetUp]
     public void Setup()
     {
-        this.clientFactory = new Mock<ITwitchClientFactory>();
-        this.client = new Mock<ITwitchClient>();
-        this.clientFactory.Setup(f => f.Create()).Returns(this.client.Object);
+        this.clientFactory = Substitute.For<ITwitchClientFactory>();
+        this.client = Substitute.For<ITwitchClient>();
+        this.clientFactory.Setup(f => f.Create()).Returns(this.client);
 
-        this.commandHandler1 = new Mock<ICommandHandler>();
-        this.commandHandler2 = new Mock<ICommandHandler>();
-        ICommandHandler[] commandHandlers = [this.commandHandler1.Object, this.commandHandler2.Object];
+        this.commandHandler1 = Substitute.For<ICommandHandler>();
+        this.commandHandler2 = Substitute.For<ICommandHandler>();
+        ICommandHandler[] commandHandlers = [this.commandHandler1, this.commandHandler2];
 
-        this.messageHandler1 = new Mock<IMessageHandler>();
-        this.messageHandler2 = new Mock<IMessageHandler>();
-        IMessageHandler[] messageHandlers = [this.messageHandler1.Object, this.messageHandler2.Object];
-        var logger = new Mock<ILogger<Bot.ChatBot.ChatBot>>();
+        this.messageHandler1 = Substitute.For<IMessageHandler>();
+        this.messageHandler2 = Substitute.For<IMessageHandler>();
+        IMessageHandler[] messageHandlers = [this.messageHandler1, this.messageHandler2];
+        var logger = Substitute.For<ILogger<Bot.ChatBot.ChatBot>>();
 
         this.settings = new BotSettings();
         Mock<IOptions<BotSettings>> options = new();
         options.Setup(x => x.Value).Returns(this.settings);
 
-        this.chatBot = new Bot.ChatBot.ChatBot(this.clientFactory.Object, commandHandlers, messageHandlers, options.Object, logger.Object);
+        this.chatBot = new Bot.ChatBot.ChatBot(this.clientFactory, commandHandlers, messageHandlers, options, logger);
     }
 
     [TestCase("user1", "password1", "channel1")]

@@ -4,7 +4,6 @@ using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Moq;
 using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Messages;
@@ -23,14 +22,14 @@ public class MessageResponseLoaderTests
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<MessageResponseOld>>();
-        this.wildcardReplacer = new Mock<IWildcardReplacer>();
-        this.chatMessage = new Mock<IChatMessage>();
+        this.repository = Substitute.For<IRepository<MessageResponseOld>>();
+        this.wildcardReplacer = Substitute.For<IWildcardReplacer>();
+        this.chatMessage = Substitute.For<IChatMessage>();
         this.wildcardReplacer.Setup(r => r.Replace(It.IsAny<string>())).Returns<string>(s => s);
 
         this.messageResponseOld = new MessageResponseOld();
 
-        this.loader = new MessageResponseLoader(this.repository.Object, this.wildcardReplacer.Object);
+        this.loader = new MessageResponseLoader(this.repository, this.wildcardReplacer);
     }
 
     [TestCase(10)]
@@ -40,7 +39,7 @@ public class MessageResponseLoaderTests
         this.messageResponseOld.LastUsed = DateTime.Now.AddSeconds(-timeout + 1);
         this.messageResponseOld.TimeoutInSeconds = timeout;
 
-        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         Assert.IsNull(response);
         Assert.IsFalse(result);
@@ -53,7 +52,7 @@ public class MessageResponseLoaderTests
         this.chatMessage.Setup(m => m.UserName).Returns(user);
         this.messageResponseOld.Users.Add("another user");
 
-        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         Assert.IsNull(response);
         Assert.IsFalse(result);
@@ -68,7 +67,7 @@ public class MessageResponseLoaderTests
         this.messageResponseOld.LooseKeywords.AddRange(new[] { keyword1, keyword2 });
         this.messageResponseOld.Replies.Add("responseOld");
 
-        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         Assert.AreEqual(expected, result);
         Assert.AreEqual(expected ? "responseOld" : null, response);
@@ -83,7 +82,7 @@ public class MessageResponseLoaderTests
         this.messageResponseOld.AllKeywords.AddRange(new[] { keyword1, keyword2 });
         this.messageResponseOld.Replies.Add("responseOld");
 
-        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         Assert.AreEqual(expected, result);
         Assert.AreEqual(expected ? "responseOld" : null, response);
@@ -95,7 +94,7 @@ public class MessageResponseLoaderTests
         this.messageResponseOld.ReplyAlways = true;
         this.messageResponseOld.Replies.Add("responseOld");
 
-        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         Assert.True(result);
         Assert.NotNull(response);
@@ -110,7 +109,7 @@ public class MessageResponseLoaderTests
         this.messageResponseOld.ExactKeywords.AddRange(new[] { keyword1, keyword2 });
         this.messageResponseOld.Replies.Add("responseOld");
 
-        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         Assert.AreEqual(expected, result);
         Assert.AreEqual(expected ? "responseOld" : null, response);
@@ -130,7 +129,7 @@ public class MessageResponseLoaderTests
 
         for (int i = 0; i < 100; i++)
         {
-            this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+            this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
             if (response == "response1")
             {
@@ -153,7 +152,7 @@ public class MessageResponseLoaderTests
         this.messageResponseOld.ExactKeywords.Add("keyword");
         this.messageResponseOld.Replies.Add("responseOld");
 
-        this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         Assert.That(this.messageResponseOld.LastUsed, Is.EqualTo(DateTime.Now).Within(2).Seconds);
         this.repository.Verify(r => r.Write(this.messageResponseOld));
@@ -166,7 +165,7 @@ public class MessageResponseLoaderTests
         this.messageResponseOld.ExactKeywords.Add("keyword");
         this.messageResponseOld.Replies.Add("responseOld");
 
-        this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         Assert.AreEqual(1, this.messageResponseOld.UseCount);
     }
@@ -180,7 +179,7 @@ public class MessageResponseLoaderTests
         this.messageResponseOld.ExactKeywords.Add("keyword");
         this.messageResponseOld.Replies.Add(responseText);
 
-        this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         Assert.AreEqual(expected, response);
     }
@@ -193,7 +192,7 @@ public class MessageResponseLoaderTests
         this.messageResponseOld.ExactKeywords.Add("keyword");
         this.messageResponseOld.Replies.Add(responseText);
 
-        this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage.Object, out string response);
+        this.loader.TryGetResponse(this.messageResponseOld, this.chatMessage, out string response);
 
         this.wildcardReplacer.Verify(r => r.Replace(responseText));
     }

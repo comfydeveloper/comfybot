@@ -4,7 +4,6 @@ using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Moq;
 using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Commands;
@@ -23,15 +22,15 @@ public class TextCommandReplyLoaderTests
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<TextCommandOld>>();
-        this.wildcardReplacer = new Mock<IWildcardReplacer>();
-        this.chatCommand = new Mock<IChatCommand>();
-        this.chatCommand.Setup(c => c.ChatMessage).Returns(new Mock<IChatMessage>().Object);
+        this.repository = Substitute.For<IRepository<TextCommandOld>>();
+        this.wildcardReplacer = Substitute.For<IWildcardReplacer>();
+        this.chatCommand = Substitute.For<IChatCommand>();
+        this.chatCommand.Setup(c => c.ChatMessage).Returns(new Mock<IChatMessage>());
         this.StubWildcardReplacer();
 
         this.textCommandOld = new TextCommandOld();
 
-        this.replyLoader = new TextCommandReplyLoader(this.repository.Object, this.wildcardReplacer.Object);
+        this.replyLoader = new TextCommandReplyLoader(this.repository, this.wildcardReplacer);
     }
 
     [TestCase("command1", "command1", "reply1")]
@@ -43,7 +42,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Commands.Add(textCommandText);
         this.textCommandOld.Replies.Add(replyText);
 
-        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string resultText);
 
         Assert.IsTrue(result);
         Assert.AreEqual(replyText, resultText);
@@ -59,7 +58,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Commands.Add("commandOld");
         this.textCommandOld.Replies.Add(replyText);
 
-        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string resultText);
 
         Assert.IsTrue(result);
         Assert.AreEqual(expectedReply, resultText);
@@ -75,7 +74,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Replies.Add(commandText);
         this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string resultText);
 
         Assert.AreEqual(expected, resultText);
     }
@@ -90,7 +89,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Replies.Add("reply with {{parameters}}");
         this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string resultText);
 
         Assert.AreEqual("reply with parameters", resultText);
     }
@@ -105,7 +104,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Replies.Add("reply");
         this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string resultText);
 
         Assert.AreEqual("reply", resultText);
     }
@@ -119,7 +118,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Replies.Add("reply");
         this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string resultText);
 
         Assert.AreEqual("reply", resultText);
     }
@@ -134,7 +133,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Replies.Add(replyText);
         this.textCommandOld.Commands.Add("commandOld");
 
-        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string resultText);
 
         Assert.AreEqual(expected, resultText);
     }
@@ -146,7 +145,7 @@ public class TextCommandReplyLoaderTests
         this.chatCommand.Setup(c => c.CommandText).Returns(command);
         this.textCommandOld.Commands.Add(textCommandText);
 
-        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string resultText);
 
         Assert.IsFalse(result);
         Assert.IsNull(resultText);
@@ -160,7 +159,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Commands.Add("commandOld");
         this.textCommandOld.Replies.Add("response");
 
-        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string response);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string response);
 
         Assert.That(this.textCommandOld.LastUsed, Is.EqualTo(DateTime.Now).Within(2).Seconds);
         this.repository.Verify(r => r.Write(this.textCommandOld));
@@ -174,7 +173,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Commands.Add("commandOld");
         this.textCommandOld.Replies.Add("response");
 
-        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string response);
+        this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string response);
 
         Assert.AreEqual(1, this.textCommandOld.UseCount);
     }
@@ -186,7 +185,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.LastUsed = DateTime.Now.AddSeconds(-timeout + 1);
         this.textCommandOld.TimeoutInSeconds = timeout;
 
-        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string response);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string response);
 
         Assert.IsNull(response);
         Assert.IsFalse(result);
@@ -200,7 +199,7 @@ public class TextCommandReplyLoaderTests
         this.textCommandOld.Commands.Add("commandOld");
         this.textCommandOld.Replies.Add("reply");
 
-        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand.Object, out string resultText);
+        bool result = this.replyLoader.TryGetReply(this.textCommandOld, this.chatCommand, out string resultText);
 
         this.wildcardReplacer.Verify(r => r.Replace("reply"));
     }

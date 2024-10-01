@@ -2,7 +2,6 @@
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Moq;
 using NUnit.Framework;
 using TwitchLib.Client.Interfaces;
 
@@ -21,30 +20,30 @@ public class MessageResponseHandlerTests
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<MessageResponseOld>>();
-        this.twitchClient = new Mock<ITwitchClient>();
-        this.responseLoader = new Mock<IMessageResponseLoader>();
-        this.chatMessage = new Mock<IChatMessage>();
+        this.repository = Substitute.For<IRepository<MessageResponseOld>>();
+        this.twitchClient = Substitute.For<ITwitchClient>();
+        this.responseLoader = Substitute.For<IMessageResponseLoader>();
+        this.chatMessage = Substitute.For<IChatMessage>();
 
-        this.handler = new MessageResponseHandler(this.repository.Object, this.responseLoader.Object);
+        this.handler = new MessageResponseHandler(this.repository, this.responseLoader);
     }
 
     [TestCase("channel1", "response1")]
     [TestCase("channel2", "response2")]
     public void HandleShouldSendMessageIfSuitableMessageFound(string channel, string response)
     {
-        ApplicationSettings.Default.Channel = channel;
+        this.settings.Channel = channel;
         MessageResponseOld messageResponse1 = new();
         MessageResponseOld messageResponse2 = new();
         this.chatMessage.Setup(m => m.Text).Returns("message");
         this.repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2, messageResponse2 });
-        this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response)).Returns(false);
-        this.responseLoader.Setup(r => r.TryGetResponse(messageResponse2, this.chatMessage.Object, out response)).Returns(true);
+        this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage, out response)).Returns(false);
+        this.responseLoader.Setup(r => r.TryGetResponse(messageResponse2, this.chatMessage, out response)).Returns(true);
 
-        this.handler.Handle(this.twitchClient.Object, this.chatMessage.Object);
+        this.handler.Handle(this.twitchClient, this.chatMessage);
 
-        this.responseLoader.Verify(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response));
-        this.responseLoader.Verify(r => r.TryGetResponse(messageResponse2, this.chatMessage.Object, out response));
+        this.responseLoader.Verify(r => r.TryGetResponse(messageResponse1, this.chatMessage, out response));
+        this.responseLoader.Verify(r => r.TryGetResponse(messageResponse2, this.chatMessage, out response));
         this.twitchClient.Verify(c => c.SendMessage(channel, response, false), Times.Once);
     }
 
@@ -53,15 +52,15 @@ public class MessageResponseHandlerTests
     {
         string response1 = "response1";
         string response2 = "response2";
-        ApplicationSettings.Default.Channel = "channel";
+        this.settings.Channel = "channel";
         MessageResponseOld messageResponse1 = new() { Priority = 2 };
         MessageResponseOld messageResponse2 = new() { Priority = 1 };
         this.chatMessage.Setup(m => m.Text).Returns("message");
         this.repository.Setup(r => r.GetAll()).Returns(new[] { messageResponse1, messageResponse2 });
-        this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage.Object, out response1)).Returns(true);
-        this.responseLoader.Setup(r => r.TryGetResponse(messageResponse2, this.chatMessage.Object, out response2)).Returns(true);
+        this.responseLoader.Setup(r => r.TryGetResponse(messageResponse1, this.chatMessage, out response1)).Returns(true);
+        this.responseLoader.Setup(r => r.TryGetResponse(messageResponse2, this.chatMessage, out response2)).Returns(true);
 
-        this.handler.Handle(this.twitchClient.Object, this.chatMessage.Object);
+        this.handler.Handle(this.twitchClient, this.chatMessage);
 
         this.twitchClient.Verify(c => c.SendMessage("channel", response2, false), Times.Once);
     }
@@ -73,7 +72,7 @@ public class MessageResponseHandlerTests
     {
         this.chatMessage.Setup(m => m.Text).Returns(commandMessage);
 
-        this.handler.Handle(this.twitchClient.Object, this.chatMessage.Object);
+        this.handler.Handle(this.twitchClient, this.chatMessage);
 
         this.repository.Verify(r => r.GetAll(), Times.Never);
     }

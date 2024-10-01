@@ -3,7 +3,6 @@ using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared.Contracts;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Moq;
 using NSubstitute;
 using NUnit.Framework;
 

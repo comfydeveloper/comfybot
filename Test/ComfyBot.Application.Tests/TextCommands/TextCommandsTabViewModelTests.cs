@@ -5,7 +5,6 @@ using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Moq;
 using NUnit.Framework;
 
 namespace ComfyBot.Application.Tests.TextCommands;
