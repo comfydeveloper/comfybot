@@ -24,4 +24,10 @@ public class MessageResponse : Entity
     public required int Priority { get; set; }
 
     public required bool AlwaysReply { get; set; }
+
+    public void UpdateLastUsage()
+    {
+        this.UseCount++;
+        this.LastUsedAt = DateTime.Now;
+    }
 }

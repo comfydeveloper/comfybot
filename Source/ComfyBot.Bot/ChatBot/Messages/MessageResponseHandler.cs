@@ -1,25 +1,30 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using ComfyBot.Settings;
+using Microsoft.Extensions.Options;
 using TwitchLib.Client.Interfaces;
 
 namespace ComfyBot.Bot.ChatBot.Messages;
 
 public class MessageResponseHandler : IMessageHandler
 {
-    private readonly IRepository<MessageResponseOld> repository;
+    private readonly IQueryableRepository repository;
     private readonly IMessageResponseLoader responseLoader;
+    private readonly BotSettings settings;
 
-    public MessageResponseHandler(IRepository<MessageResponseOld> repository,
-        IMessageResponseLoader responseLoader)
+    public MessageResponseHandler(IQueryableRepository repository,
+        IMessageResponseLoader responseLoader,
+        IOptions<BotSettings> settings)
     {
         this.repository = repository;
         this.responseLoader = responseLoader;
+        this.settings = settings.Value;
     }
 
+    // TODO [Shae] Move client creation out of these calls and use DI instead -> Singleton
     public void Handle(ITwitchClient client, IChatMessage message)
     {
         if (IsCommand(message))
@@ -27,13 +32,15 @@ public class MessageResponseHandler : IMessageHandler
             return;
         }
 
-        IEnumerable<MessageResponseOld> messageResponses = this.repository.GetAll().OrderBy(r => r.Priority);
+        MessageResponse[] messageResponses = this.repository.Query<MessageResponse>().OrderBy(r => r.Priority).ToArray();
 
-        foreach (MessageResponseOld messageResponse in messageResponses)
+        foreach (MessageResponse messageResponse in messageResponses)
         {
             if (this.responseLoader.TryGetResponse(messageResponse, message, out string response))
             {
-                client.SendMessage(ApplicationSettings.Default.Channel, response);
+                messageResponse.UpdateLastUsage();
+                this.repository.SaveChanges();
+                client.SendMessage(this.settings.Channel, response);
                 return;
             }
         }

@@ -5,6 +5,7 @@ using ComfyBot.Settings;
 
 namespace ComfyBot.Application.Configuration;
 
+// TODO [Shae] Remove this + configuration project
 //TODO [comfy] Uncovered because application.tests project would simply not want to use the System.Configuration.ConfigurationManager.
 [ExcludeFromCodeCoverage]
 public class ConfigurationTabViewModel
