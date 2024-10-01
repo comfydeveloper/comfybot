@@ -9,11 +9,11 @@ namespace ComfyBot.Bot.ChatBot.Messages;
 
 public class MessageResponseLoader : IMessageResponseLoader
 {
-    private readonly IWildcardReplacer wildcardReplacerObject;
+    private readonly IWildcardReplacer wildcardReplacer;
 
-    public MessageResponseLoader(IWildcardReplacer wildcardReplacerObject)
+    public MessageResponseLoader(IWildcardReplacer wildcardReplacer)
     {
-        this.wildcardReplacerObject = wildcardReplacerObject;
+        this.wildcardReplacer = wildcardReplacer;
     }
 
     public bool TryGetResponse(MessageResponse response, IChatMessage message, out string responseText)
@@ -34,7 +34,7 @@ public class MessageResponseLoader : IMessageResponseLoader
         {
             responseText = response.Replies.GetRandom();
             responseText = responseText.Replace("{{user}}", message.UserName);
-            responseText = this.wildcardReplacerObject.Replace(responseText);
+            responseText = this.wildcardReplacer.Replace(responseText);
             return true;
         }
         return false;

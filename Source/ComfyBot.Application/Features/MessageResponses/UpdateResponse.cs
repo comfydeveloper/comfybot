@@ -18,7 +18,8 @@ public sealed class UpdateResponse
         {
             this.CreateMap<Command, MessageResponse>(MemberList.Source)
                 .ForMember(x => x.Id, o => o.Ignore())
-                .ForMember(x => x.LastUsedAt, o => o.Ignore());
+                .ForMember(x => x.LastUsedAt, o => o.Ignore())
+                .ForMember(x => x.UseCount, o => o.Ignore());
         }
     }
 
