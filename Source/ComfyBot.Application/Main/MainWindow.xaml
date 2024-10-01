@@ -52,6 +52,13 @@
             <RowDefinition MinHeight="100" Height="100"/>
         </Grid.RowDefinitions>
         <TabControl >
+            <TabItem>
+                <TabItem.Header>
+                    <DockPanel>
+                        <materialDesign:PackIcon Kind="HouseOutline" />
+                    </DockPanel>
+                </TabItem.Header>
+            </TabItem>
             <!-- TextCommands Tab --> 
             <TabItem DataContext="{Binding Tabs.TextCommands}" IsSelected="{Binding IsSelected}">
                 <TabItem.Header>
