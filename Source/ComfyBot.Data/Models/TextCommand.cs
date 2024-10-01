@@ -14,4 +14,10 @@ public class TextCommand : Entity
     public required int UseCount { get; set; }
 
     public required int TimeoutInSeconds { get; set; }
+
+    public void UpdateLastUsage()
+    {
+        this.UseCount++;
+        this.LastUsedAt = DateTime.Now;
+    }
 }

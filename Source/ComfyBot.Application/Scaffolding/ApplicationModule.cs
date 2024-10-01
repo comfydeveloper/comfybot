@@ -6,7 +6,6 @@ using ComfyBot.Application.Shared.Contracts;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
 using ComfyBot.Common.Scaffolding;
-using ComfyBot.Data.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -16,7 +15,6 @@ public class ApplicationModule : IModule
 {
     public void RegisterServices(IServiceCollection services)
     {
-        services.AddTransient<IMapper<TextCommandOld, TextCommandModel>, TextCommandMapper>();
         services.AddTransient<IMessageBox, MessageBoxWrapper>();
 
         services.AddAutoMapper(this.GetType().Assembly);

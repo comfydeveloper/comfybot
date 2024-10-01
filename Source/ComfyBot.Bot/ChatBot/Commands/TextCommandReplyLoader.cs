@@ -4,30 +4,25 @@ using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Bot.Extensions;
 using ComfyBot.Data.Models;
-using ComfyBot.Data.Repositories;
 
 namespace ComfyBot.Bot.ChatBot.Commands;
 
 public class TextCommandReplyLoader : ITextCommandReplyLoader
 {
-    private readonly IRepository<TextCommandOld> repository;
     private readonly IWildcardReplacer wildcardReplacer;
 
-    public TextCommandReplyLoader(IRepository<TextCommandOld> repository, IWildcardReplacer wildcardReplacer)
+    public TextCommandReplyLoader(IWildcardReplacer wildcardReplacer)
     {
-        this.repository = repository;
         this.wildcardReplacer = wildcardReplacer;
     }
 
-    public bool TryGetReply(TextCommandOld textCommandOld, IChatCommand command, out string reply)
+    public bool TryGetReply(TextCommand textCommand, IChatCommand command, out string reply)
     {
-        if (!this.HasOngoingTimeout(textCommandOld) && CommandMatches(textCommandOld, command))
+        if (!this.HasOngoingTimeout(textCommand) && CommandMatches(textCommand, command))
         {
-            this.UpdateCommandUsageInfo(textCommandOld);
-
             if (command.ArgumentsAsList.Any())
             {
-                string[] repliesWithParameters = textCommandOld.Replies.Where(r => r.Contains("{{parameters}}")
+                string[] repliesWithParameters = textCommand.Replies.Where(r => r.Contains("{{parameters}}")
                     || r.Contains("{{parameter") && r.CanHandleParameters(command.ArgumentsAsList.Count)).ToArray();
 
                 //[TODO] try to match commands with *exactly* n parameters first
@@ -47,7 +42,7 @@ public class TextCommandReplyLoader : ITextCommandReplyLoader
                     return true;
                 }
             }
-            reply = textCommandOld.Replies.Where(r => !r.Contains("{{parameter")).GetRandom();
+            reply = textCommand.Replies.Where(r => !r.Contains("{{parameter")).GetRandom();
             reply = reply.Replace("{{user}}", command.ChatMessage.UserName);
             reply = this.wildcardReplacer.Replace(reply);
             return true;
@@ -56,20 +51,13 @@ public class TextCommandReplyLoader : ITextCommandReplyLoader
         return false;
     }
 
-    private bool HasOngoingTimeout(TextCommandOld textCommandOld)
+    private bool HasOngoingTimeout(TextCommand textCommand)
     {
-        return textCommandOld.LastUsed.HasValue && textCommandOld.LastUsed > DateTime.Now.AddSeconds(-textCommandOld.TimeoutInSeconds);
+        return textCommand.LastUsedAt.HasValue && textCommand.LastUsedAt > DateTime.Now.AddSeconds(-textCommand.TimeoutInSeconds);
     }
 
-    private void UpdateCommandUsageInfo(TextCommandOld textCommandOld)
+    private static bool CommandMatches(TextCommand textCommand, IChatCommand command)
     {
-        textCommandOld.UseCount++;
-        textCommandOld.LastUsed = DateTime.Now;
-        this.repository.Write(textCommandOld);
-    }
-
-    private static bool CommandMatches(TextCommandOld textCommandOld, IChatCommand command)
-    {
-        return textCommandOld.Commands.Any(c => c.Equals(command.CommandText, StringComparison.CurrentCultureIgnoreCase));
+        return textCommand.Commands.Any(c => c.Equals(command.CommandText, StringComparison.CurrentCultureIgnoreCase));
     }
 }
