@@ -2,7 +2,6 @@
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using ComfyBot.Settings;
 using Moq;
 using NUnit.Framework;
 using TwitchLib.Client.Interfaces;

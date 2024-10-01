@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using ComfyBot.Bot.PubSub.Extensions;
 using ComfyBot.Bot.PubSub.RewardRedeems;
 using ComfyBot.Bot.PubSub.Wrappers;
-using ComfyBot.Settings;
+using ComfyBot.Bot.Scaffolding;
+using Microsoft.Extensions.Options;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 
@@ -12,17 +13,19 @@ namespace ComfyBot.Bot.PubSub;
 public class ComfyPubSub : IComfyPubSub
 {
     private readonly IEnumerable<IRewardRedeemHandler> rewardRedeemHandlers;
+    private readonly BotSettings settings;
 
     private TwitchPubSub client;
 
-    public ComfyPubSub(IEnumerable<IRewardRedeemHandler> rewardRedeemHandlers)
+    public ComfyPubSub(IEnumerable<IRewardRedeemHandler> rewardRedeemHandlers, IOptions<BotSettings> settings)
     {
         this.rewardRedeemHandlers = rewardRedeemHandlers;
+        this.settings = settings.Value;
     }
 
     public void Run()
     {
-        if (string.IsNullOrEmpty(ApplicationSettings.Default.ChannelId))
+        if (string.IsNullOrEmpty(this.settings.Channel))
         {
             return;
         }
@@ -32,7 +35,7 @@ public class ComfyPubSub : IComfyPubSub
         this.client.OnPubSubServiceConnected += this.ClientOnOnPubSubServiceConnected;
         this.client.OnChannelPointsRewardRedeemed += this.OnChannelPointsRewardRedeemed;
 
-        this.client.ListenToChannelPoints(ApplicationSettings.Default.ChannelId);
+        this.client.ListenToChannelPoints(this.settings.Channel);
         this.client.Connect();
     }
 

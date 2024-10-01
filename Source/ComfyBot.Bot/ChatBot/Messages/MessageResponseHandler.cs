@@ -3,7 +3,6 @@ using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using ComfyBot.Settings;
 using Microsoft.Extensions.Options;
 using TwitchLib.Client.Interfaces;
 

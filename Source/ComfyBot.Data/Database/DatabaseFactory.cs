@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ComfyBot.Data.Wrappers;
-using ComfyBot.Settings.Extensions;
 using LiteDB;
 using System;
 
@@ -12,8 +11,9 @@ public class DatabaseFactory : IDatabaseFactory
 {
     public IDatabase Create()
     {
-        string databasePath = EnvironmentExtensions.GetDatabasePath();
-        
+        string databasePath = @"D:\Data\comfydeveloper - Copy.comfy";
+
+
         return new DatabaseWrapper(new LiteDatabase($"Filename={databasePath}; Connection=Shared;"));
     }
 }

@@ -2,7 +2,6 @@
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Timezones;
 using ComfyBot.Bot.ChatBot.Wrappers;
-using ComfyBot.Settings;
 using Moq;
 using NUnit.Framework;
 using TwitchLib.Client.Interfaces;

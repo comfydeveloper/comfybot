@@ -1,8 +1,6 @@
-﻿using ComfyBot.Application.Configuration;
-using ComfyBot.Application.Features.Shared.Contracts;
+﻿using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Main;
 using ComfyBot.Application.Responses;
-using ComfyBot.Application.Shared.Contracts;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
 using ComfyBot.Common.Scaffolding;
@@ -22,7 +20,6 @@ public class ApplicationModule : IModule
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<TabsViewModel>();
         services.AddTransient<ResponseTabViewModel>();
-        services.AddTransient<ConfigurationTabViewModel>();
         services.AddTransient<TextCommandsTabViewModel>();
 
         services.AddAllImplementing(typeof(ICommandHandler<>), ServiceLifetime.Transient);
@@ -33,7 +30,7 @@ public class ApplicationModule : IModule
         services.AddTransient<MainWindow>();
     }
 
-    public void Configure(IHost applicationBuilder)
+    public void Configure(IHost _)
     {
     }
 }

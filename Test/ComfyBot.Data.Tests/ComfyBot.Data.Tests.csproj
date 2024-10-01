@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Source\ComfyBot.Data\ComfyBot.Data.csproj" />
-    <ProjectReference Include="..\..\Source\ComfyBot.Settings\ComfyBot.Settings.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,6 @@ using System.Windows.Data;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.Shared.Extensions;
 using ComfyBot.Application.Shared.Wrappers;
-using ComfyBot.Application.TextCommands;
 using System.Windows;
 
 namespace ComfyBot.Application.Responses;

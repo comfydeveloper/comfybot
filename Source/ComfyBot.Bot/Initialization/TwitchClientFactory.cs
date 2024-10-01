@@ -1,7 +1,6 @@
 ﻿using ComfyBot.Bot.Scaffolding;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using ComfyBot.Settings;
 using Microsoft.Extensions.Options;
 using TwitchLib.Client;
 using TwitchLib.Client.Interfaces;

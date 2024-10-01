@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ComfyBot.Bot.ChatBot.Wrappers;
+﻿using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System.Linq;

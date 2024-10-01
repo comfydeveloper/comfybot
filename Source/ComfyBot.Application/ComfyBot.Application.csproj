@@ -35,7 +35,6 @@
     <ProjectReference Include="..\ComfyBot.Bot\ComfyBot.Bot.csproj" />
     <ProjectReference Include="..\ComfyBot.Common\ComfyBot.Common.csproj" />
     <ProjectReference Include="..\ComfyBot.Data\ComfyBot.Data.csproj" />
-    <ProjectReference Include="..\ComfyBot.Settings\ComfyBot.Settings.csproj" />
   </ItemGroup>
 
   <ItemGroup>

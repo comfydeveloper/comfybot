@@ -6,7 +6,6 @@ using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.Extensions;
 using ComfyBot.Bot.Initialization;
 using ComfyBot.Bot.Scaffolding;
-using ComfyBot.Settings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TwitchLib.Client.Events;

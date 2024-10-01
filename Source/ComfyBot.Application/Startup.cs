@@ -4,12 +4,8 @@ using System.Linq;
 using System.Reflection;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Common.Http;
-using ComfyBot.Common.Scaffolding;
 using ComfyBot.Data.Database;
-using ComfyBot.Data.Scaffolding;
-using ComfyBot.Settings.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 namespace ComfyBot.Application;
 
@@ -71,7 +67,8 @@ public class Startup
 
     private static void AssertDatabaseDirectoryExists()
     {
-        var databasePath = EnvironmentExtensions.GetDatabasePath();
-        Directory.CreateDirectory(Path.GetDirectoryName(databasePath)!);
+        // TODO [Shae] Remove/Assure this in another place
+        //var databasePath = EnvironmentExtensions.GetDatabasePath();
+        //Directory.CreateDirectory(Path.GetDirectoryName(databasePath)!);
     }
 }
