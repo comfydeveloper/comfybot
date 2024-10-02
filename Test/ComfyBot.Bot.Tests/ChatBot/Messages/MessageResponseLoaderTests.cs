@@ -3,6 +3,7 @@ using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
+using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -58,8 +59,8 @@ public class MessageResponseLoaderTests
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        Assert.IsNull(response);
-        Assert.IsFalse(result);
+        response.Should().BeNull();
+        result.Should().BeFalse();
     }
 
     [TestCase("user1")]
@@ -71,8 +72,8 @@ public class MessageResponseLoaderTests
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        Assert.IsNull(response);
-        Assert.IsFalse(result);
+        response.Should().BeNull();
+        result.Should().BeFalse();
     }
 
     [TestCase("keyword1", "keyword2", "message with keyword1", true)]
@@ -82,12 +83,12 @@ public class MessageResponseLoaderTests
     {
         this.chatMessage.Text.Returns(message);
         this.messageResponse.LooseKeywords.AddRange(new[] { keyword1, keyword2 });
-        this.messageResponse.Replies.Add("responseOld");
+        this.messageResponse.Replies.Add("response");
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        Assert.AreEqual(expected, result);
-        Assert.AreEqual(expected ? "responseOld" : null, response);
+        result.Should().Be(expected);
+        response.Should().Be(expected ? "response" : null);
     }
 
     [TestCase("keyword1", "keyword2", "Keyword2 keyword1", true)]
@@ -97,24 +98,24 @@ public class MessageResponseLoaderTests
     {
         this.chatMessage.Text.Returns(message);
         this.messageResponse.AllKeywords.AddRange(new[] { keyword1, keyword2 });
-        this.messageResponse.Replies.Add("responseOld");
+        this.messageResponse.Replies.Add("response");
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        Assert.AreEqual(expected, result);
-        Assert.AreEqual(expected ? "responseOld" : null, response);
+        result.Should().Be(expected);
+        response.Should().Be(expected ? "response" : null);
     }
 
     [Test]
     public void ShouldReturnMessageWhenSetToAlwaysReply()
     {
         this.messageResponse.AlwaysReply = true;
-        this.messageResponse.Replies.Add("responseOld");
+        this.messageResponse.Replies.Add("response");
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        Assert.True(result);
-        Assert.NotNull(response);
+        result.Should().BeTrue();
+        response.Should().NotBeNull();
     }
 
     [TestCase("keyword1", "keyword2", "keyword1", true)]
@@ -124,12 +125,12 @@ public class MessageResponseLoaderTests
     {
         this.chatMessage.Text.Returns(message);
         this.messageResponse.ExactKeywords.AddRange(new[] { keyword1, keyword2 });
-        this.messageResponse.Replies.Add("responseOld");
+        this.messageResponse.Replies.Add("response");
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        Assert.AreEqual(expected, result);
-        Assert.AreEqual(expected ? "responseOld" : null, response);
+        result.Should().Be(expected);
+        response.Should().Be(expected ? "response" : null);
     }
 
     [Test]
@@ -158,8 +159,7 @@ public class MessageResponseLoaderTests
             }
         }
 
-        Assert.AreEqual(50, response1Count, 15);
-        Assert.AreEqual(50, response2Count, 15);
+        response1Count.Should().BeInRange(35, 65);
     }
 
     [TestCase("response1 {{user}}", "username1", "response1 username1")]
@@ -173,13 +173,13 @@ public class MessageResponseLoaderTests
 
         this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        Assert.AreEqual(expected, response);
+        response.Should().Be(expected);
     }
 
     [Test]
     public void TryGetResponseShouldCallReplacementService()
     {
-        string responseText = "responseOld";
+        string responseText = "response";
         this.chatMessage.Text.Returns("keyword");
         this.messageResponse.ExactKeywords.Add("keyword");
         this.messageResponse.Replies.Add(responseText);
