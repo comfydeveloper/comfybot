@@ -1,32 +1,40 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
-using ComfyBot.Application.Shared.Contracts;
+using ComfyBot.Application.Features.MessageResponses;
+using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Features.TextCommands;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
 using ComfyBot.Data.Models;
-using ComfyBot.Data.Repositories;
+using NSubstitute;
 using NUnit.Framework;
+using static ComfyBot.Application.Features.TextCommands.GetCommands;
 
 namespace ComfyBot.Application.Tests.TextCommands;
 
 [TestFixture]
 public class TextCommandsTabViewModelTests
 {
-    private Mock<IRepository<TextCommandOld>> repository;
-    private Mock<IMapper<TextCommandOld, TextCommandModel>> mapper;
-    private Mock<IMessageBox> messageBox;
+    private IQueryHandler<GetCommands.Query, GetCommands.Result> getHandler;
+    private ICommandHandler<AddCommand.Command> addHandler;
+    private ICommandHandler<UpdateCommand.Command> updateHandler;
+    private ICommandHandler<RemoveCommand.Command> removeHandler;
+    private IMessageBox messageBox;
         
     private TextCommandsTabViewModel viewModel;
 
     [SetUp]
     public void Setup()
     {
-        this.repository = new Mock<IRepository<TextCommandOld>>();
-        this.mapper = new Mock<IMapper<TextCommandOld, TextCommandModel>>();
-        this.messageBox = new Mock<IMessageBox>();
+        this.getHandler = Substitute.For<IQueryHandler<GetCommands.Query, GetCommands.Result>>();
+        this.addHandler = Substitute.For<ICommandHandler<AddCommand.Command>>();
+        this.updateHandler = Substitute.For<ICommandHandler<UpdateCommand.Command>>();
+        this.removeHandler = Substitute.For<ICommandHandler<RemoveCommand.Command>>();
+        this.messageBox = Substitute.For<IMessageBox>();
 
 
-        this.viewModel = new TextCommandsTabViewModel(this.repository.Object, this.mapper.Object, this.messageBox.Object);
+        this.viewModel = new TextCommandsTabViewModel(this.getHandler, this.addHandler, this.updateHandler, this.removeHandler, this.messageBox);
     }
 
     [Test]
@@ -34,7 +42,7 @@ public class TextCommandsTabViewModelTests
     {
         this.viewModel.AddTextCommandCommand.Execute();
 
-        Assert.AreEqual(1, this.viewModel.Commands.Count);
+        this.addHandler.Received(1).Handle(Arg.Any<AddCommand.Command>());
     }
 
     [TestCase("00000000-0000-0000-0000-000000000000")]
@@ -43,26 +51,25 @@ public class TextCommandsTabViewModelTests
     {
         TextCommandModel model = new() { Id = id };
         this.viewModel.Commands.Add(model);
-        this.messageBox.Setup(b => b.Show(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MessageBoxButton>())).Returns(MessageBoxResult.Yes);
+        this.messageBox.Show(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<MessageBoxButton>()).Returns(MessageBoxResult.Yes);
 
         this.viewModel.RemoveTextCommandCommand.Execute(model);
 
         Assert.AreEqual(0, this.viewModel.Commands.Count);
-        this.repository.Verify(r => r.Remove(id));
+        this.removeHandler.Received(1).Handle(Arg.Is<RemoveCommand.Command>(x => x.Id == Guid.Parse(id)));
     }
 
     [TestCase(5)]
     [TestCase(10)]
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
-        TextCommandOld[] entities = Enumerable.Repeat(new TextCommandOld(), count).ToArray();
-        this.repository.Setup(r => r.GetAll()).Returns(entities);
+        TextCommandEntry[] entries = Enumerable.Repeat(CreateTextCommandEntry(), count).ToArray();
+        this.getHandler.Handle(default).ReturnsForAnyArgs(new Result { Entries = entries.ToList() });
 
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
 
         Assert.AreEqual(count, this.viewModel.Commands.Count);
-        this.mapper.Verify(m => m.MapToModel(It.IsAny<TextCommandOld>(), It.IsAny<TextCommandModel>()), () => Times.Exactly(count));
     }
 
     [Test]
@@ -74,7 +81,11 @@ public class TextCommandsTabViewModelTests
 
         model.Timeout = 1;
 
-        this.repository.Verify(r => r.Write(It.IsAny<TextCommandOld>()));
-        this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<TextCommandOld>()));
+        this.updateHandler.Received(1).Handle(Arg.Any<UpdateCommand.Command>());
+    }
+
+    private static TextCommandEntry CreateTextCommandEntry()
+    {
+        return new TextCommandEntry(default, default, default, default);
     }
 }

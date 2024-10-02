@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -7,6 +6,7 @@ using ComfyBot.Application.Annotations;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.Shared.Extensions;
 using NUnit.Framework;
+using System.Collections.ObjectModel;
 
 namespace ComfyBot.Application.Tests.Shared.Extensions;
 

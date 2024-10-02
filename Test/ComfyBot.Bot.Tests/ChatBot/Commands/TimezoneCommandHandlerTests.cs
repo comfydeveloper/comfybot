@@ -78,6 +78,6 @@ public class TimezoneCommandHandlerTests
 
         this.commandHandler.Handle(this.twitchClient, this.chatCommand);
 
-        this.twitchClient.Received(1).SendMessage("channel", @"Sorry user, can't find timezone info for 'zone'.", false));
+        this.twitchClient.Received(1).SendMessage("channel", "Sorry user, can't find timezone info for 'zone'.", false);
     }
 }

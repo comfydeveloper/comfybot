@@ -4,6 +4,7 @@ using ComfyBot.Bot.Initialization;
 using ComfyBot.Bot.Scaffolding;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NSubstitute;
 using NUnit.Framework;
 using TwitchLib.Client.Interfaces;
 
@@ -12,13 +13,13 @@ namespace ComfyBot.Bot.Tests.ChatBot;
 [TestFixture]
 public class ChatBotTests
 {
-    private Mock<ITwitchClientFactory> clientFactory;
-    private Mock<ITwitchClient> client;
+    private ITwitchClientFactory clientFactory;
+    private ITwitchClient client;
 
-    private Mock<ICommandHandler> commandHandler1;
-    private Mock<ICommandHandler> commandHandler2;
-    private Mock<IMessageHandler> messageHandler1;
-    private Mock<IMessageHandler> messageHandler2;
+    private ICommandHandler commandHandler1;
+    private ICommandHandler commandHandler2;
+    private IMessageHandler messageHandler1;
+    private IMessageHandler messageHandler2;
 
     private BotSettings settings;
     private Bot.ChatBot.ChatBot chatBot;
@@ -28,7 +29,7 @@ public class ChatBotTests
     {
         this.clientFactory = Substitute.For<ITwitchClientFactory>();
         this.client = Substitute.For<ITwitchClient>();
-        this.clientFactory.Setup(f => f.Create()).Returns(this.client);
+        this.clientFactory.Create().Returns(this.client);
 
         this.commandHandler1 = Substitute.For<ICommandHandler>();
         this.commandHandler2 = Substitute.For<ICommandHandler>();
@@ -40,8 +41,8 @@ public class ChatBotTests
         var logger = Substitute.For<ILogger<Bot.ChatBot.ChatBot>>();
 
         this.settings = new BotSettings();
-        Mock<IOptions<BotSettings>> options = new();
-        options.Setup(x => x.Value).Returns(this.settings);
+        IOptions<BotSettings> options = Substitute.For<IOptions<BotSettings>>();
+        options.Value.Returns(this.settings);
 
         this.chatBot = new Bot.ChatBot.ChatBot(this.clientFactory, commandHandlers, messageHandlers, options, logger);
     }
@@ -56,8 +57,8 @@ public class ChatBotTests
 
         this.chatBot.Run();
 
-        this.clientFactory.Verify(f => f.Create());
-        this.client.Verify(c => c.Connect());
+        this.clientFactory.Received().Create();
+        this.client.Received().Connect();
     }
 
     [Test]
@@ -69,6 +70,6 @@ public class ChatBotTests
 
         this.chatBot.Run();
 
-        this.clientFactory.Verify(f => f.Create(), Times.Never);
+        this.clientFactory.DidNotReceive().Create();
     }
 }

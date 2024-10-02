@@ -1,28 +1,35 @@
-﻿using System.Linq;
+﻿using ComfyBot.Application.Features.MessageResponses;
+using ComfyBot.Application.Features.Shared.Contracts;
+using System.Linq;
 using ComfyBot.Application.Responses;
-using ComfyBot.Application.Shared.Contracts;
-using ComfyBot.Data.Models;
-using ComfyBot.Data.Repositories;
+using ComfyBot.Application.Shared.Wrappers;
 using NSubstitute;
 using NUnit.Framework;
+using System;
 
 namespace ComfyBot.Application.Tests.Responses;
 
 [TestFixture]
 public class ResponseTabViewModelTests
 {
-    private IQueryableRepository repository;
-    private Mock<IMapper<MessageResponse, MessageResponseModel>> mapper;
+    private IQueryHandler<GetResponses.Query, GetResponses.Result> getHandler;
+    private ICommandHandler<AddResponse.Command> addHandler;
+    private ICommandHandler<UpdateResponse.Command> updateHandler;
+    private ICommandHandler<RemoveResponse.Command> removeHandler;
+    private IMessageBox messageBox;
 
     private ResponseTabViewModel viewModel;
 
     [SetUp]
     public void Setup()
     {
-        this.repository = Substitute.For<IQueryableRepository>();
-        this.mapper = new Mock<IMapper<MessageResponse, MessageResponseModel>>();
+        this.getHandler = Substitute.For<IQueryHandler<GetResponses.Query, GetResponses.Result>>();
+        this.addHandler = Substitute.For<ICommandHandler<AddResponse.Command>>();
+        this.updateHandler = Substitute.For<ICommandHandler<UpdateResponse.Command>>();
+        this.removeHandler = Substitute.For<ICommandHandler<RemoveResponse.Command>>();
+        this.messageBox = Substitute.For<IMessageBox>();
 
-        this.viewModel = new ResponseTabViewModel(this.repository, this.mapper.Object);
+        this.viewModel = new ResponseTabViewModel(this.getHandler, this.addHandler, this.updateHandler, this.removeHandler, this.messageBox);
     }
 
     [Test]
@@ -43,21 +50,25 @@ public class ResponseTabViewModelTests
         this.viewModel.RemoveResponseCommand.Execute(model);
 
         Assert.AreEqual(0, this.viewModel.Responses.Count);
-        this.repository.Verify(r => r.Remove(id));
+        this.removeHandler.Received(1).Handle(Arg.Is<RemoveResponse.Command>(x => x.Id == Guid.Parse(id)));
     }
 
     [TestCase(5)]
     [TestCase(10)]
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
-        MessageResponseOld[] entities = Enumerable.Repeat(new MessageResponseOld(), count).ToArray();
-        this.repository.Setup(r => r.GetAll()).Returns(entities);
+        GetResponses.MessageResponseEntry[] entries = Enumerable.Repeat(CreateResponseEntry(), count).ToArray();
+        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetResponses.Result { Entries = entries.ToList()});
 
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
 
         Assert.AreEqual(count, this.viewModel.Responses.Count);
-        this.mapper.Verify(m => m.MapToModel(It.IsAny<MessageResponseOld>(), It.IsAny<MessageResponseModel>()), () => Times.Exactly(count));
+    }
+
+    private static GetResponses.MessageResponseEntry CreateResponseEntry()
+    {
+        return new GetResponses.MessageResponseEntry(default, default, default, default, default, default, default, default, default);
     }
 
     [Test]
@@ -69,7 +80,6 @@ public class ResponseTabViewModelTests
 
         model.TimeoutInSeconds = 1;
 
-        this.repository.Verify(r => r.Write(It.IsAny<MessageResponseOld>()));
-        this.mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponseOld>()));
+        this.updateHandler.Received(1).Handle(Arg.Any<UpdateResponse.Command>());
     }
 }
