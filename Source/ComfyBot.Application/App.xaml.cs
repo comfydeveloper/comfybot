@@ -48,7 +48,6 @@ public partial class App
 
         RegisterModules(builder, modules);
 
-        Application.Startup.RegisterDependencies(builder.Services);
         Application.Startup.Initialize();
 
         builder.Logging.AddSerilog();

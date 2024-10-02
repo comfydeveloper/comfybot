@@ -3,7 +3,7 @@ using TwitchLib.Client.Interfaces;
 
 namespace ComfyBot.Bot.ChatBot.Messages;
 
-public interface IMessageHandler
+public interface IChatMessageHandler
 {
     void Handle(ITwitchClient client, IChatMessage message);
 }

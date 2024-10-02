@@ -17,7 +17,7 @@ public class ChatBot : IComfyBot
 {
     private readonly ITwitchClientFactory twitchClientFactory;
     private readonly IEnumerable<ICommandHandler> commandHandlers;
-    private readonly IEnumerable<IMessageHandler> messageHandlers;
+    private readonly IEnumerable<IChatMessageHandler> messageHandlers;
     private readonly ILogger<ChatBot> logger;
     private readonly BotSettings settings;
 
@@ -25,7 +25,7 @@ public class ChatBot : IComfyBot
 
     public ChatBot(ITwitchClientFactory twitchClientFactory,
         IEnumerable<ICommandHandler> commandHandlers,
-        IEnumerable<IMessageHandler> messageHandlers,
+        IEnumerable<IChatMessageHandler> messageHandlers,
         IOptions<BotSettings> botSettings,
         ILogger<ChatBot> logger)
     {
@@ -111,7 +111,7 @@ public class ChatBot : IComfyBot
     [ExcludeFromCodeCoverage]
     private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
     {
-        foreach (IMessageHandler handler in this.messageHandlers)
+        foreach (IChatMessageHandler handler in this.messageHandlers)
         {
             try
             {

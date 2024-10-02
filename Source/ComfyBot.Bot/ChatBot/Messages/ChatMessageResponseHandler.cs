@@ -8,13 +8,13 @@ using TwitchLib.Client.Interfaces;
 
 namespace ComfyBot.Bot.ChatBot.Messages;
 
-public class MessageResponseHandler : IMessageHandler
+public class ChatMessageResponseHandler : IChatMessageHandler
 {
     private readonly IQueryableRepository repository;
     private readonly IMessageResponseLoader responseLoader;
     private readonly BotSettings settings;
 
-    public MessageResponseHandler(IQueryableRepository repository,
+    public ChatMessageResponseHandler(IQueryableRepository repository,
         IMessageResponseLoader responseLoader,
         IOptions<BotSettings> settings)
     {

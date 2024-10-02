@@ -18,8 +18,8 @@ public class ChatBotTests
 
     private ICommandHandler commandHandler1;
     private ICommandHandler commandHandler2;
-    private IMessageHandler messageHandler1;
-    private IMessageHandler messageHandler2;
+    private IChatMessageHandler chatMessageHandler1;
+    private IChatMessageHandler chatMessageHandler2;
 
     private BotSettings settings;
     private Bot.ChatBot.ChatBot chatBot;
@@ -35,9 +35,9 @@ public class ChatBotTests
         this.commandHandler2 = Substitute.For<ICommandHandler>();
         ICommandHandler[] commandHandlers = [this.commandHandler1, this.commandHandler2];
 
-        this.messageHandler1 = Substitute.For<IMessageHandler>();
-        this.messageHandler2 = Substitute.For<IMessageHandler>();
-        IMessageHandler[] messageHandlers = [this.messageHandler1, this.messageHandler2];
+        this.chatMessageHandler1 = Substitute.For<IChatMessageHandler>();
+        this.chatMessageHandler2 = Substitute.For<IChatMessageHandler>();
+        IChatMessageHandler[] messageHandlers = [this.chatMessageHandler1, this.chatMessageHandler2];
         var logger = Substitute.For<ILogger<Bot.ChatBot.ChatBot>>();
 
         this.settings = new BotSettings();

@@ -13,7 +13,7 @@ using TwitchLib.Client.Interfaces;
 namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 
 [TestFixture]
-public class MessageResponseHandlerTests
+public class ChatMessageResponseHandlerTests
 {
     private IMessageResponseLoader responseLoader;
     private ITwitchClient twitchClient;
@@ -21,7 +21,7 @@ public class MessageResponseHandlerTests
     private IChatMessage chatMessage;
     private BotSettings settings;
 
-    private MessageResponseHandler handler;
+    private ChatMessageResponseHandler handler;
 
     [SetUp]
     public void Setup()
@@ -35,7 +35,7 @@ public class MessageResponseHandlerTests
         IOptions<BotSettings> options = Substitute.For<IOptions<BotSettings>>();
         options.Value.Returns(this.settings);
 
-        this.handler = new MessageResponseHandler(this.repository, this.responseLoader, options);
+        this.handler = new ChatMessageResponseHandler(this.repository, this.responseLoader, options);
     }
 
     [TestCase("channel1", "response1")]

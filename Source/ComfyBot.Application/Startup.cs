@@ -11,52 +11,6 @@ namespace ComfyBot.Application;
 [Obsolete]
 public class Startup
 {
-    public static void RegisterDependencies(IServiceCollection services)
-    {
-        Assembly[] assemblies =
-        [
-            typeof(ICommandHandler).Assembly,
-            typeof(IHttpService).Assembly
-        ];
-
-        foreach (Assembly assembly in assemblies)
-        {
-            RegisterImplementations(services, assembly);
-            RegisterImplementationsWithoutInterfaces(services, assembly);
-        }
-    }
-
-    private static void RegisterImplementationsWithoutInterfaces(IServiceCollection collection, Assembly assembly)
-    {
-        Type[] registrations = assembly.GetExportedTypes()
-            .Where(type => type.Namespace!.StartsWith("ComfyBot")
-                           && !type.IsAbstract
-                           && !type.GetInterfaces().Any())
-            .ToArray();
-
-        foreach (var registration in registrations)
-        {
-            collection.AddTransient(registration);
-        }
-
-        collection.AddTransient(typeof(MainWindow));
-    }
-
-    private static void RegisterImplementations(IServiceCollection collection, Assembly assembly)
-    {
-        var registrations = from type in assembly.GetExportedTypes()
-            where type.Namespace.StartsWith("ComfyBot")
-                  && !type.IsAbstract
-                  && (!type.Name.Contains("Wrapper") || type.GetConstructor(Type.EmptyTypes) != null)
-            from service in type.GetInterfaces()
-            select new { service, implementation = type };
-
-        foreach (var registration in registrations)
-        {
-            collection.AddTransient(registration.service, registration.implementation);
-        }
-    }
-
     public static void Initialize()
     {
         AssertDatabaseDirectoryExists();
