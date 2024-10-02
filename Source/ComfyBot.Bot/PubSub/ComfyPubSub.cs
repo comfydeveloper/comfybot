@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using ComfyBot.Bot.PubSub.Extensions;
 using ComfyBot.Bot.PubSub.RewardRedeems;
 using ComfyBot.Bot.PubSub.Wrappers;
-using ComfyBot.Settings;
+using ComfyBot.Bot.Scaffolding;
+using Microsoft.Extensions.Options;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 
@@ -12,33 +13,35 @@ namespace ComfyBot.Bot.PubSub;
 public class ComfyPubSub : IComfyPubSub
 {
     private readonly IEnumerable<IRewardRedeemHandler> rewardRedeemHandlers;
+    private readonly BotSettings settings;
 
     private TwitchPubSub client;
 
-    public ComfyPubSub(IEnumerable<IRewardRedeemHandler> rewardRedeemHandlers)
+    public ComfyPubSub(IEnumerable<IRewardRedeemHandler> rewardRedeemHandlers, IOptions<BotSettings> settings)
     {
         this.rewardRedeemHandlers = rewardRedeemHandlers;
+        this.settings = settings.Value;
     }
 
     public void Run()
     {
-        if (string.IsNullOrEmpty(ApplicationSettings.Default.ChannelId))
+        if (string.IsNullOrEmpty(this.settings.Channel))
         {
             return;
         }
 
-        client = new TwitchPubSub();
+        this.client = new TwitchPubSub();
 
-        client.OnPubSubServiceConnected += ClientOnOnPubSubServiceConnected;
-        client.OnChannelPointsRewardRedeemed += OnChannelPointsRewardRedeemed;
+        this.client.OnPubSubServiceConnected += this.ClientOnOnPubSubServiceConnected;
+        this.client.OnChannelPointsRewardRedeemed += this.OnChannelPointsRewardRedeemed;
 
-        client.ListenToChannelPoints(ApplicationSettings.Default.ChannelId);
-        client.Connect();
+        this.client.ListenToChannelPoints(this.settings.Channel);
+        this.client.Connect();
     }
 
     private void ClientOnOnPubSubServiceConnected(object sender, EventArgs e)
     {
-        client.SendTopics();
+        this.client.SendTopics();
     }
 
     private void OnChannelPointsRewardRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
@@ -46,7 +49,7 @@ public class ComfyPubSub : IComfyPubSub
         try
         {
             IRewardRedemption rewardRedemption = e.ToRewardRedemption();
-            foreach (IRewardRedeemHandler rewardRedeemHandler in rewardRedeemHandlers)
+            foreach (IRewardRedeemHandler rewardRedeemHandler in this.rewardRedeemHandlers)
             {
                 rewardRedeemHandler.Handle(rewardRedemption);
             }

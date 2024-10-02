@@ -1,6 +1,6 @@
 ﻿using ComfyBot.Bot.ChatBot.Timezones;
 using ComfyBot.Common.Http;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
@@ -8,32 +8,32 @@ namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
 [TestFixture]
 public class TimeLoaderTests
 {
-    private Mock<IHttpService> httpService;
+    private IHttpService httpService;
 
     private TimeLoader timeLoader;
 
     [SetUp]
     public void Setup()
     {
-        httpService = new Mock<IHttpService>();
-        timeLoader = new TimeLoader();
+        this.httpService = Substitute.For<IHttpService>();
+        this.timeLoader = new TimeLoader();
 
-        HttpService.OverrideInstance(httpService.Object);
+        HttpService.OverrideInstance(this.httpService);
     }
 
     [Test]
     public void GetTimeShouldMapTimezone()
     {
-        Timezone timezone = new Timezone
+        Timezone timezone = new()
         {
             Area = "area",
             Location = "location",
             Region = "region"
         };
 
-        TimezoneInfo timezoneInfo = timeLoader.GetTime(timezone);
+        this.timeLoader.GetTime(timezone);
 
-        httpService.Verify(s => s.GetAsync<TimezoneInfo>($"http://worldtimeapi.org/api/timezone/{timezone}"));
+        this.httpService.Received(1).GetAsync<TimezoneInfo>($"http://worldtimeapi.org/api/timezone/{timezone}");
     }
 
     [TearDown]

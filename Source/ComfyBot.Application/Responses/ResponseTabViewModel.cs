@@ -1,90 +1,134 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ComfyBot.Application.Features.MessageResponses;
+using ComfyBot.Application.Features.Shared.Contracts;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Data;
 using ComfyBot.Application.Shared;
-using ComfyBot.Application.Shared.Contracts;
 using ComfyBot.Application.Shared.Extensions;
-using ComfyBot.Data.Models;
-using ComfyBot.Data.Repositories;
+using ComfyBot.Application.Shared.Wrappers;
+using System.Windows;
 
 namespace ComfyBot.Application.Responses;
 
 public class ResponseTabViewModel : InitializableTab
 {
-    private readonly IRepository<MessageResponse> repository;
-    private readonly IMapper<MessageResponse, MessageResponseModel> mapper;
+    private readonly IQueryHandler<GetResponses.Query, GetResponses.Result> getHandler;
+    private readonly ICommandHandler<AddResponse.Command> addHandler;
+    private readonly ICommandHandler<UpdateResponse.Command> updateHandler;
+    private readonly ICommandHandler<RemoveResponse.Command> removeHandler;
+    private readonly IMessageBox messageBox;
+
     private string searchText;
 
-    public ResponseTabViewModel(IRepository<MessageResponse> repository,
-        IMapper<MessageResponse, MessageResponseModel> mapper)
+    public ResponseTabViewModel(
+        IQueryHandler<GetResponses.Query, GetResponses.Result> getHandler,
+        ICommandHandler<AddResponse.Command> addHandler,
+        ICommandHandler<UpdateResponse.Command> updateHandler,
+        ICommandHandler<RemoveResponse.Command> removeHandler,
+        IMessageBox messageBox)
     {
-        this.repository = repository;
-        this.mapper = mapper;
+        this.getHandler = getHandler;
+        this.addHandler = addHandler;
+        this.updateHandler = updateHandler;
+        this.removeHandler = removeHandler;
+        this.messageBox = messageBox;
 
-        AddResponseCommand = new DelegateCommand(AddResponse);
-        RemoveResponseCommand = new ParameterCommand(RemoveResponse);
+        this.AddResponseCommand = new DelegateCommand(this.AddResponse);
+        this.RemoveResponseCommand = new ParameterCommand(this.RemoveResponse);
     }
 
     public DelegateCommand AddResponseCommand { get; }
 
     public ParameterCommand RemoveResponseCommand { get; }
 
-    public ObservableCollection<MessageResponseModel> Responses { get; set; } = new();
+    public ObservableCollection<MessageResponseModel> Responses { get; set; } = [];
 
     protected override void Initialize()
     {
-        IEnumerable<MessageResponse> messageResponses = repository.GetAll().OrderBy(r => r.Priority);
+        GetResponses.Result result = this.getHandler.Handle(new GetResponses.Query()).Result;
 
-        foreach (MessageResponse entity in messageResponses)
+        foreach (GetResponses.MessageResponseEntry entry in result.Entries)
         {
-            MessageResponseModel model = new MessageResponseModel();
-            mapper.MapToModel(entity, model);
-            Responses.Add(model);
+            MessageResponseModel model = new()
+            {
+                Id = entry.Id.ToString(),
+                TimeoutInSeconds = entry.TimeoutInSeconds,
+                Priority = entry.Priority,
+                ReplyAlways = entry.AlwaysReply,
+            };
+
+            model.Users.AddRange(entry.Users.ToTextModels().OrderBy(m => m.Text));
+            model.LooseKeywords.AddRange(entry.LooseKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.AllKeywords.AddRange(entry.AllKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.ExactKeywords.AddRange(entry.ExactKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.Replies.AddRange(entry.Replies.ToTextModels().OrderBy(m => m.Text));
+
+            this.Responses.Add(model);
         }
 
-        Responses.RegisterCollectionItemChanged(OnResponseUpdate);
+        this.Responses.RegisterCollectionItemChanged(this.OnResponseUpdate);
     }
 
     private void AddResponse()
     {
-        MessageResponseModel messageResponse = new MessageResponseModel { Id = Guid.NewGuid().ToString() };
-        Responses.Add(messageResponse);
+        Guid id = Guid.NewGuid();
+        MessageResponseModel messageResponse = new() { Id = id.ToString() };
+        this.Responses.Add(messageResponse);
+
+        this.addHandler.Handle(new AddResponse.Command(id));
+    }
+
+    private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
+    {
+        MessageResponseModel model = (MessageResponseModel)sender;
+
+        UpdateResponse.Command command = new(Guid.Parse(model.Id),
+                                             model.TimeoutInSeconds,
+                                             model.ReplyAlways,
+                                             model.Priority,
+                                             model.Users.ToStrings(),
+                                             model.ExactKeywords.ToStrings(),
+                                             model.LooseKeywords.ToStrings(),
+                                             model.AllKeywords.ToStrings(),
+                                             model.Replies.ToStrings());
+
+        this.updateHandler.Handle(command);
     }
 
     private void RemoveResponse(object parameter)
     {
         MessageResponseModel response = (MessageResponseModel) parameter;
 
-        Responses.Remove(response);
-        repository.Remove(response.Id);
+        if (this.messageBox.Show(GetDeletionMessage(response), "Delete response", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+        {
+            this.Responses.Remove(response);
+            this.removeHandler.Handle(new RemoveResponse.Command(Guid.Parse(response.Id)));
+        }
     }
 
-    private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
+    private static string GetDeletionMessage(MessageResponseModel model)
     {
-        MessageResponseModel model = (MessageResponseModel)sender;
-        MessageResponse entity = new MessageResponse();
-
-        mapper.MapToEntity(model, entity);
-        repository.Write(entity);
+        return $"Do you want to delete the response [{string.Join(",", model.Replies.Select(x => x.Text[..10]))}]?";
     }
 
     [ExcludeFromCodeCoverage]
     public string SearchText
     {
-        get => searchText;
-        set { searchText = value; UpdateSearch(); }
+        get => this.searchText;
+        set {
+            this.searchText = value;
+            this.UpdateSearch(); }
     }
-
+    
     [ExcludeFromCodeCoverage]
     private void UpdateSearch()
     {
-        ICollectionView collectionView = CollectionViewSource.GetDefaultView(Responses);
+        ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Responses);
 
-        if (string.IsNullOrEmpty(SearchText))
+        if (string.IsNullOrEmpty(this.SearchText))
         {
             collectionView.Filter = o => true;
         }
@@ -94,10 +138,10 @@ public class ResponseTabViewModel : InitializableTab
             {
                 MessageResponseModel response = (MessageResponseModel) o;
 
-                return response.Replies.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                       || response.AllKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                       || response.ExactKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                       || response.LooseKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+                return response.Replies.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.AllKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.ExactKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase))
+                       || response.LooseKeywords.Any(k => k.Text.Contains(this.searchText, StringComparison.OrdinalIgnoreCase));
             };
         }
 

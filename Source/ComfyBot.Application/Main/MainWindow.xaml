@@ -52,6 +52,13 @@
             <RowDefinition MinHeight="100" Height="100"/>
         </Grid.RowDefinitions>
         <TabControl >
+            <TabItem>
+                <TabItem.Header>
+                    <DockPanel>
+                        <materialDesign:PackIcon Kind="HouseOutline" />
+                    </DockPanel>
+                </TabItem.Header>
+            </TabItem>
             <!-- TextCommands Tab --> 
             <TabItem DataContext="{Binding Tabs.TextCommands}" IsSelected="{Binding IsSelected}">
                 <TabItem.Header>
@@ -367,7 +374,7 @@
                                             <StackPanel Grid.Column="4" Margin="5">
                                                 <DockPanel LastChildFill="False">
                                                     <Label Content="And I reply every" FontWeight="Bold" />
-                                                    <TextBox MinWidth="30" Text="{Binding Timeout}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <TextBox MinWidth="30" Text="{Binding TimeoutInSeconds}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                                     <Label Content="seconds and a priority of" FontWeight="Bold" />
                                                     <TextBox MinWidth="30" Text="{Binding Priority}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                                     <Label Content="with" FontWeight="Bold" />
@@ -427,39 +434,6 @@
                         </DockPanel>
                     </Grid>
                 </ScrollViewer>
-            </TabItem>
-            <!-- Configuration -->
-            <TabItem DataContext="{Binding Tabs.Configuration}">
-                <TabItem.Header>
-                    <DockPanel LastChildFill="False">
-                        <materialDesign:PackIcon Kind="Cog"/>
-                        <TextBlock Text="Configuration" Margin="5 0 0 0"/>
-                    </DockPanel>
-                </TabItem.Header>
-                <StackPanel>
-                    <DockPanel LastChildFill="False" Margin="0 2">
-                        <Label Content="User Name" Width="90" />
-                        <TextBox VerticalContentAlignment="Center" Text="{Binding UserName}" Width="500" />
-                    </DockPanel>
-                    <DockPanel LastChildFill="False" Margin="0 2" >
-                        <Label Content="OAuthKey" Width="90"  />
-                        <PasswordBox x:Name="StreamKey" VerticalContentAlignment="Center" Width="500" />
-                    </DockPanel>
-                    <DockPanel LastChildFill="False" Margin="0 2" >
-                        <Label Content="Channel" Width="90"  />
-                        <TextBox VerticalContentAlignment="Center" Text="{Binding Channel}" Width="500" />
-                    </DockPanel>
-                    <DockPanel LastChildFill="False" Margin="0 2" >
-                        <Label Content="ChannelId" Width="90"  />
-                        <TextBox VerticalContentAlignment="Center" Text="{Binding ChannelId}" Width="500" />
-                    </DockPanel>
-                    <DockPanel LastChildFill="False" Margin="0 2" >
-                        <Label Content="Data Storage" Width="90"  />
-                        <TextBox VerticalContentAlignment="Center" Text="{Binding DatabasePath}" Width="500" />
-                    </DockPanel>
-                    <Button Content="Update" Command="{Binding UpdateConfigurationCommand}" CommandParameter="{Binding ElementName=StreamKey}" Margin="5 0" Width="100" HorizontalAlignment="Left" />
-                </StackPanel>
-                
             </TabItem>
         </TabControl>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />

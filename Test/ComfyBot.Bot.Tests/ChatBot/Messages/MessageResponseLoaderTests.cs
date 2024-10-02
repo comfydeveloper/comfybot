@@ -4,7 +4,7 @@ using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Messages;
@@ -12,9 +12,8 @@ namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 [TestFixture]
 public class MessageResponseLoaderTests
 {
-    private Mock<IRepository<MessageResponse>> repository;
-    private Mock<IWildcardReplacer> wildcardReplacer;
-    private Mock<IChatMessage> chatMessage;
+    private IWildcardReplacer wildcardReplacer;
+    private IChatMessage chatMessage;
 
     private MessageResponse messageResponse;
 
@@ -23,24 +22,42 @@ public class MessageResponseLoaderTests
     [SetUp]
     public void Setup()
     {
-        repository = new Mock<IRepository<MessageResponse>>();
-        wildcardReplacer = new Mock<IWildcardReplacer>();
-        chatMessage = new Mock<IChatMessage>();
-        wildcardReplacer.Setup(r => r.Replace(It.IsAny<string>())).Returns<string>(s => s);
+        this.wildcardReplacer = Substitute.For<IWildcardReplacer>();
+        this.chatMessage = Substitute.For<IChatMessage>();
+        this.wildcardReplacer.Replace(Arg.Any<string>()).Returns(s => (string)s[0]);
 
-        messageResponse = new MessageResponse();
+        this.messageResponse = CreateMessageResponse();
 
-        loader = new MessageResponseLoader(repository.Object, wildcardReplacer.Object);
+        this.loader = new MessageResponseLoader(this.wildcardReplacer);
+    }
+
+    private static MessageResponse CreateMessageResponse()
+    {
+        return new MessageResponse
+        {
+            Users = [],
+            LooseKeywords = [],
+            AllKeywords = [],
+            ExactKeywords = [],
+            Replies = [],
+            LastUsedAt = DateTime.Now,
+            TimeoutInSeconds = 0,
+            UseCount = 0,
+            Priority = 0,
+            AlwaysReply = false,
+            Id = Guid.NewGuid(),
+            CreatedAt = DateTime.Now
+        };
     }
 
     [TestCase(10)]
     [TestCase(20)]
     public void TryGetResponseShouldReturnFalseWhenTheResponseTimeoutHasNotRunOutYet(int timeout)
     {
-        messageResponse.LastUsed = DateTime.Now.AddSeconds(-timeout + 1);
-        messageResponse.TimeoutInSeconds = timeout;
+        this.messageResponse.LastUsedAt = DateTime.Now.AddSeconds(-timeout + 1);
+        this.messageResponse.TimeoutInSeconds = timeout;
 
-        bool result = loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
         Assert.IsNull(response);
         Assert.IsFalse(result);
@@ -50,10 +67,10 @@ public class MessageResponseLoaderTests
     [TestCase("user2")]
     public void TryGetResponseShouldReturnFalseIfResponseIsNotForUser(string user)
     {
-        chatMessage.Setup(m => m.UserName).Returns(user);
-        messageResponse.Users.Add("another user");
+        this.chatMessage.UserName.Returns(user);
+        this.messageResponse.Users.Add("another user");
 
-        bool result = loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
         Assert.IsNull(response);
         Assert.IsFalse(result);
@@ -64,14 +81,14 @@ public class MessageResponseLoaderTests
     [TestCase("keyword1", "keyword2", "message", false)]
     public void TryGetResponseShouldReturnResponseIfMessageContainsAnyLooseKeyword(string keyword1, string keyword2, string message, bool expected)
     {
-        chatMessage.Setup(m => m.Text).Returns(message);
-        messageResponse.LooseKeywords.AddRange(new[] { keyword1, keyword2 });
-        messageResponse.Replies.Add("response");
+        this.chatMessage.Text.Returns(message);
+        this.messageResponse.LooseKeywords.AddRange(new[] { keyword1, keyword2 });
+        this.messageResponse.Replies.Add("responseOld");
 
-        bool result = loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
         Assert.AreEqual(expected, result);
-        Assert.AreEqual(expected ? "response" : null, response);
+        Assert.AreEqual(expected ? "responseOld" : null, response);
     }
 
     [TestCase("keyword1", "keyword2", "Keyword2 keyword1", true)]
@@ -79,23 +96,23 @@ public class MessageResponseLoaderTests
     [TestCase("keyword1", "keyword2", "keyword1 message", false)]
     public void TryGetResponseShouldReturnResponseIfMessageContainsEveryAllKeyword(string keyword1, string keyword2, string message, bool expected)
     {
-        chatMessage.Setup(m => m.Text).Returns(message);
-        messageResponse.AllKeywords.AddRange(new[] { keyword1, keyword2 });
-        messageResponse.Replies.Add("response");
+        this.chatMessage.Text.Returns(message);
+        this.messageResponse.AllKeywords.AddRange(new[] { keyword1, keyword2 });
+        this.messageResponse.Replies.Add("responseOld");
 
-        bool result = loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
         Assert.AreEqual(expected, result);
-        Assert.AreEqual(expected ? "response" : null, response);
+        Assert.AreEqual(expected ? "responseOld" : null, response);
     }
 
     [Test]
     public void ShouldReturnMessageWhenSetToAlwaysReply()
     {
-        messageResponse.ReplyAlways = true;
-        messageResponse.Replies.Add("response");
+        this.messageResponse.AlwaysReply = true;
+        this.messageResponse.Replies.Add("responseOld");
 
-        bool result = loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
         Assert.True(result);
         Assert.NotNull(response);
@@ -106,31 +123,31 @@ public class MessageResponseLoaderTests
     [TestCase("keyword1", "keyword2", "keyword1 message", false)]
     public void TryGetResponseShouldReturnResponseIfMessageMatchesAnyExactKeyword(string keyword1, string keyword2, string message, bool expected)
     {
-        chatMessage.Setup(m => m.Text).Returns(message);
-        messageResponse.ExactKeywords.AddRange(new[] { keyword1, keyword2 });
-        messageResponse.Replies.Add("response");
+        this.chatMessage.Text.Returns(message);
+        this.messageResponse.ExactKeywords.AddRange(new[] { keyword1, keyword2 });
+        this.messageResponse.Replies.Add("responseOld");
 
-        bool result = loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
+        bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
         Assert.AreEqual(expected, result);
-        Assert.AreEqual(expected ? "response" : null, response);
+        Assert.AreEqual(expected ? "responseOld" : null, response);
     }
 
     [Test]
     public void TryGetResponseShouldReturnRandomResponseWhenMultipleResponseTextsAreAvailable()
     {
-        chatMessage.Setup(m => m.Text).Returns("keyword");
-        messageResponse.ExactKeywords.Add("keyword");
-        messageResponse.Replies.Add("response1");
-        messageResponse.Replies.Add("response2");
-        messageResponse.TimeoutInSeconds = 0;
+        this.chatMessage.Text.Returns("keyword");
+        this.messageResponse.ExactKeywords.Add("keyword");
+        this.messageResponse.Replies.Add("response1");
+        this.messageResponse.Replies.Add("response2");
+        this.messageResponse.TimeoutInSeconds = 0;
 
         int response1Count = 0;
         int response2Count = 0;
 
         for (int i = 0; i < 100; i++)
         {
-            loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
+            this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
             if (response == "response1")
             {
@@ -146,41 +163,16 @@ public class MessageResponseLoaderTests
         Assert.AreEqual(50, response2Count, 15);
     }
 
-    [Test]
-    public void TryGetResponseShouldSetLastUsageDateIfMatchWasFound()
-    {
-        chatMessage.Setup(m => m.Text).Returns("keyword");
-        messageResponse.ExactKeywords.Add("keyword");
-        messageResponse.Replies.Add("response");
-
-        loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
-
-        Assert.That(messageResponse.LastUsed, Is.EqualTo(DateTime.Now).Within(2).Seconds);
-        repository.Verify(r => r.Write(messageResponse));
-    }
-
-    [Test]
-    public void TryGetResponseShouldSetUseCountIfMatchWasFound()
-    {
-        chatMessage.Setup(m => m.Text).Returns("keyword");
-        messageResponse.ExactKeywords.Add("keyword");
-        messageResponse.Replies.Add("response");
-
-        loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
-
-        Assert.AreEqual(1, messageResponse.UseCount);
-    }
-
     [TestCase("response1 {{user}}", "username1", "response1 username1")]
     [TestCase("response2 {{user}}", "username2", "response2 username2")]
     public void TryGetResponseShouldSetReplaceUser(string responseText, string userName, string expected)
     {
-        chatMessage.Setup(m => m.Text).Returns("keyword");
-        chatMessage.Setup(m => m.UserName).Returns(userName);
-        messageResponse.ExactKeywords.Add("keyword");
-        messageResponse.Replies.Add(responseText);
+        this.chatMessage.Text.Returns("keyword");
+        this.chatMessage.UserName.Returns(userName);
+        this.messageResponse.ExactKeywords.Add("keyword");
+        this.messageResponse.Replies.Add(responseText);
 
-        loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
+        this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
         Assert.AreEqual(expected, response);
     }
@@ -188,13 +180,13 @@ public class MessageResponseLoaderTests
     [Test]
     public void TryGetResponseShouldCallReplacementService()
     {
-        string responseText = "response";
-        chatMessage.Setup(m => m.Text).Returns("keyword");
-        messageResponse.ExactKeywords.Add("keyword");
-        messageResponse.Replies.Add(responseText);
+        string responseText = "responseOld";
+        this.chatMessage.Text.Returns("keyword");
+        this.messageResponse.ExactKeywords.Add("keyword");
+        this.messageResponse.Replies.Add(responseText);
 
-        loader.TryGetResponse(messageResponse, chatMessage.Object, out string response);
+        this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        wildcardReplacer.Verify(r => r.Replace(responseText));
+        this.wildcardReplacer.Received(1).Replace(responseText);
     }
 }

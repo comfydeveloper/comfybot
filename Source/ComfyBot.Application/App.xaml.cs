@@ -1,23 +1,28 @@
-﻿using System;
+﻿using ComfyBot.Application.Scaffolding;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using ComfyBot.Bot.ChatBot;
 using ComfyBot.Bot.PubSub;
+using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Common.Initialization;
+using ComfyBot.Data.Scaffolding;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
+using ComfyBot.Common.Scaffolding;
 
 namespace ComfyBot.Application;
 
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : System.Windows.Application
+public partial class App
 {
-    public static IHost? AppHost { get; private set; }
+    public static IHost AppHost { get; private set; }
 
     public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
@@ -30,12 +35,54 @@ public partial class App : System.Windows.Application
             .Enrich.WithExceptionDetails()
             .CreateLogger();
 
-        AppHost = Host.CreateDefaultBuilder()
-            .ConfigureServices(Application.Startup.RegisterDependencies)
-            .UseSerilog()
-            .Build();
+        DotNetEnv.Env.Load();
+
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder();
+
+        List<IModule> modules =
+        [
+            new ApplicationModule(),
+            new DataModule(),
+            new BotModule()
+        ];
+
+        RegisterModules(builder, modules);
+
+        builder.Logging.AddSerilog();
+
+        SetupConfiguration(builder);
+
+        AppHost = builder.Build();
+
+        ConfigureModules(AppHost, modules);
 
         ServiceProvider = AppHost.Services;
+    }
+
+    private static void ConfigureModules(IHost host, List<IModule> modules)
+    {
+        foreach (IModule projectModule in modules)
+        {
+            projectModule.Configure(host);
+        }
+    }
+
+    private static void RegisterModules(IHostApplicationBuilder builder, List<IModule> modules)
+    {
+        foreach (IModule projectModule in modules)
+        {
+            projectModule.RegisterServices(builder.Services);
+        }
+    }
+
+    private static void SetupConfiguration(IHostApplicationBuilder builder)
+    {
+        builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+        builder.Configuration.AddEnvironmentVariables();
+
+        builder.Services.Configure<DataSettings>(builder.Configuration.GetSection(DataSettings.SectionName));
+        builder.Services.Configure<BotSettings>(builder.Configuration.GetSection(BotSettings.SectionName));
     }
 
     [STAThread]
@@ -45,7 +92,6 @@ public partial class App : System.Windows.Application
         {
             Log.Debug("OnStartup started.");
 
-            Application.Startup.Initialize();
             await AppHost!.StartAsync();
 
             var startupForm = AppHost.Services.GetRequiredService<MainWindow>();
@@ -72,14 +118,13 @@ public partial class App : System.Windows.Application
         {
             Log.Fatal(ex, "Failed on startup");
         }
-        
     }
 
     protected override async void OnExit(ExitEventArgs e)
     {
-        IEnumerable<ICompletableJob> completableTask = AppHost!.Services.GetServices<ICompletableJob>();
+        IEnumerable<IShutdownJob> completableTask = AppHost!.Services.GetServices<IShutdownJob>();
 
-        foreach (ICompletableJob job in completableTask)
+        foreach (IShutdownJob job in completableTask)
         {
             job.Complete();
         }

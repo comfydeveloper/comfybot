@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ComfyBot.Application.Configuration;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.TextCommands;
 
@@ -9,15 +8,11 @@ namespace ComfyBot.Application.Main;
 public class TabsViewModel
 {
     public TabsViewModel(ResponseTabViewModel responses,
-        ConfigurationTabViewModel configuration,
         TextCommandsTabViewModel textCommands)
     {
-        Responses = responses;
-        Configuration = configuration;
-        TextCommands = textCommands;
+        this.Responses = responses;
+        this.TextCommands = textCommands;
     }
-
-    public ConfigurationTabViewModel Configuration { get; }
 
     public TextCommandsTabViewModel TextCommands { get; }
 

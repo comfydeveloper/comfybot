@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System;
 
 namespace ComfyBot.Data.Models;
 
 public class TextCommand : Entity
 {
-    public List<string> Replies { get; set; } = new();
+    public required List<string> Replies { get; set; } = [];
 
-    public List<string> Commands { get; set; } = new();
+    public required List<string> Commands { get; set; } = [];
 
-    public DateTime? LastUsed { get; set; }
+    public required DateTime? LastUsedAt { get; set; }
 
-    public int UseCount { get; set; }
+    public required int UseCount { get; set; }
 
-    public int TimeoutInSeconds { get; set; }
+    public required int TimeoutInSeconds { get; set; }
+
+    public void UpdateLastUsage()
+    {
+        this.UseCount++;
+        this.LastUsedAt = DateTime.Now;
+    }
 }

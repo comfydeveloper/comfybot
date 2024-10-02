@@ -5,8 +5,9 @@ using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.Extensions;
 using ComfyBot.Bot.Initialization;
-using ComfyBot.Settings;
+using ComfyBot.Bot.Scaffolding;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
@@ -16,27 +17,30 @@ public class ChatBot : IComfyBot
 {
     private readonly ITwitchClientFactory twitchClientFactory;
     private readonly IEnumerable<ICommandHandler> commandHandlers;
-    private readonly IEnumerable<IMessageHandler> messageHandlers;
+    private readonly IEnumerable<IChatMessageHandler> messageHandlers;
     private readonly ILogger<ChatBot> logger;
+    private readonly BotSettings settings;
 
     private ITwitchClient twitchClient;
 
     public ChatBot(ITwitchClientFactory twitchClientFactory,
         IEnumerable<ICommandHandler> commandHandlers,
-        IEnumerable<IMessageHandler> messageHandlers,
+        IEnumerable<IChatMessageHandler> messageHandlers,
+        IOptions<BotSettings> botSettings,
         ILogger<ChatBot> logger)
     {
         this.twitchClientFactory = twitchClientFactory;
         this.commandHandlers = commandHandlers;
         this.messageHandlers = messageHandlers;
         this.logger = logger;
+        this.settings = botSettings.Value;
     }
 
     public void Run()
     {
         if (IsBotReady())
         {
-            InitializeClient();
+            this.InitializeClient();
         }
         else
         {
@@ -44,61 +48,60 @@ public class ChatBot : IComfyBot
         }
     }
 
-    private static bool IsBotReady()
+    private bool IsBotReady()
     {
-        ApplicationSettings applicationSettings = ApplicationSettings.Default;
-        return !string.IsNullOrEmpty(applicationSettings.Channel)
-               && !string.IsNullOrEmpty(applicationSettings.AuthKey)
-               && !string.IsNullOrEmpty(applicationSettings.User);
+        return !string.IsNullOrEmpty(this.settings.Channel)
+               && !string.IsNullOrEmpty(this.settings.AuthKey)
+               && !string.IsNullOrEmpty(this.settings.User);
     }
 
     private void InitializeClient()
     {
         try
         {
-            Logon();
-            RegisterHandlers();
-            Connect();
+            this.Logon();
+            this.RegisterHandlers();
+            this.Connect();
             Log("Bot initialized.");
         }
         catch (Exception ex)
         {
-            logger.LogCritical(ex, "Failed to initialize bot");
+            this.logger.LogCritical(ex, "Failed to initialize bot");
             throw;
         }
     }
 
     private void Connect()
     {
-        twitchClient.Connect();
+        this.twitchClient.Connect();
     }
 
     private void RegisterHandlers()
     {
-        twitchClient.OnChatCommandReceived += OnCommandReceived;
-        twitchClient.OnMessageReceived += OnMessageReceived;
-        twitchClient.OnLog += OnLog;
-        twitchClient.OnConnected += OnConnected;
-        twitchClient.OnJoinedChannel += OnJoinedChannel;
+        this.twitchClient.OnChatCommandReceived += this.OnCommandReceived;
+        this.twitchClient.OnMessageReceived += this.OnMessageReceived;
+        this.twitchClient.OnLog += OnLog;
+        this.twitchClient.OnConnected += this.OnConnected;
+        this.twitchClient.OnJoinedChannel += this.OnJoinedChannel;
     }
 
     private void Logon()
     {
-        twitchClient = twitchClientFactory.Create();
+        this.twitchClient = this.twitchClientFactory.Create();
     }
 
     [ExcludeFromCodeCoverage]
     private void OnCommandReceived(object sender, OnChatCommandReceivedArgs e)
     {
-        foreach (ICommandHandler handler in commandHandlers)
+        foreach (ICommandHandler handler in this.commandHandlers)
         {
             try
             {
-                handler.Handle(twitchClient, e.Command.Wrap());
+                handler.Handle(this.twitchClient, e.Command.Wrap());
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to handle command {@CommandText}", e.Command.CommandText);
+                this.logger.LogError(ex, "Failed to handle command {@CommandText}", e.Command.CommandText);
                 Log($"Failed to handle command {e.Command.CommandText} - {ex.Message}");
             }
 
@@ -108,15 +111,15 @@ public class ChatBot : IComfyBot
     [ExcludeFromCodeCoverage]
     private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
     {
-        foreach (IMessageHandler handler in messageHandlers)
+        foreach (IChatMessageHandler handler in this.messageHandlers)
         {
             try
             {
-                handler.Handle(twitchClient, e.ChatMessage.Wrap());
+                handler.Handle(this.twitchClient, e.ChatMessage.Wrap());
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to handle message {@Message}", e.ChatMessage.Message);
+                this.logger.LogError(ex, "Failed to handle message {@Message}", e.ChatMessage.Message);
             }
         }
     }
@@ -130,7 +133,7 @@ public class ChatBot : IComfyBot
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to log successful connection");
+            this.logger.LogError(ex, "Failed to log successful connection");
         }
     }
 
@@ -143,7 +146,7 @@ public class ChatBot : IComfyBot
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to log successful channel join");
+            this.logger.LogError(ex, "Failed to log successful channel join");
         }
     }
 

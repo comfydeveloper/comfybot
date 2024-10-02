@@ -10,14 +10,14 @@ public class Timezone
 
     public override string ToString()
     {
-        if (!string.IsNullOrEmpty(Region))
+        if (!string.IsNullOrEmpty(this.Region))
         {
-            return $"{Area}/{Location}/{Region}";
+            return $"{this.Area}/{this.Location}/{this.Region}";
         }
-        if (!string.IsNullOrEmpty(Location))
+        if (!string.IsNullOrEmpty(this.Location))
         {
-            return $"{Area}/{Location}";
+            return $"{this.Area}/{this.Location}";
         }
-        return Area;
+        return this.Area;
     }
 }

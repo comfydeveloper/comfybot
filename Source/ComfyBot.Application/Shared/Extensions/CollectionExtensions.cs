@@ -57,4 +57,9 @@ public static class CollectionExtensions
     {
         return collection.Select(s => new TextModel { Text = s });
     }
+
+    public static string[] ToStrings(this IEnumerable<TextModel> collection)
+    {
+        return collection.Where(x => !string.IsNullOrEmpty(x.Text)).Select(x => x.Text).ToArray();
+    }
 }

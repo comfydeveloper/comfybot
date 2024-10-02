@@ -1,75 +1,88 @@
-﻿using System.Linq;
+﻿using ComfyBot.Application.Features.MessageResponses;
+using ComfyBot.Application.Features.Shared.Contracts;
+using System.Linq;
 using ComfyBot.Application.Responses;
-using ComfyBot.Application.Shared.Contracts;
-using ComfyBot.Data.Models;
-using ComfyBot.Data.Repositories;
-using Moq;
+using ComfyBot.Application.Shared.Wrappers;
+using NSubstitute;
 using NUnit.Framework;
+using System;
+using System.Windows;
 
 namespace ComfyBot.Application.Tests.Responses;
 
 [TestFixture]
 public class ResponseTabViewModelTests
 {
-    private Mock<IRepository<MessageResponse>> repository;
-    private Mock<IMapper<MessageResponse, MessageResponseModel>> mapper;
+    private IQueryHandler<GetResponses.Query, GetResponses.Result> getHandler;
+    private ICommandHandler<AddResponse.Command> addHandler;
+    private ICommandHandler<UpdateResponse.Command> updateHandler;
+    private ICommandHandler<RemoveResponse.Command> removeHandler;
+    private IMessageBox messageBox;
 
     private ResponseTabViewModel viewModel;
 
     [SetUp]
     public void Setup()
     {
-        repository = new Mock<IRepository<MessageResponse>>();
-        mapper = new Mock<IMapper<MessageResponse, MessageResponseModel>>();
+        this.getHandler = Substitute.For<IQueryHandler<GetResponses.Query, GetResponses.Result>>();
+        this.addHandler = Substitute.For<ICommandHandler<AddResponse.Command>>();
+        this.updateHandler = Substitute.For<ICommandHandler<UpdateResponse.Command>>();
+        this.removeHandler = Substitute.For<ICommandHandler<RemoveResponse.Command>>();
+        this.messageBox = Substitute.For<IMessageBox>();
 
-        viewModel = new ResponseTabViewModel(repository.Object, mapper.Object);
+        this.viewModel = new ResponseTabViewModel(this.getHandler, this.addHandler, this.updateHandler, this.removeHandler, this.messageBox);
     }
 
     [Test]
     public void AddResponseCommandShouldAddResponse()
     {
-        viewModel.AddResponseCommand.Execute();
+        this.viewModel.AddResponseCommand.Execute();
 
-        Assert.AreEqual(1, viewModel.Responses.Count);
+        Assert.AreEqual(1, this.viewModel.Responses.Count);
     }
 
     [TestCase("00000000-0000-0000-0000-000000000000")]
     [TestCase("00000000-0000-0000-0000-000000000001")]
     public void RemoveResponseCommandShouldRemoveResponse(string id)
     {
-        MessageResponseModel model = new MessageResponseModel { Id = id };
-        viewModel.Responses.Add(model);
+        MessageResponseModel model = new() { Id = id };
+        this.viewModel.Responses.Add(model);
+        this.messageBox.Show(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<MessageBoxButton>()).Returns(MessageBoxResult.Yes);
 
-        viewModel.RemoveResponseCommand.Execute(model);
+        this.viewModel.RemoveResponseCommand.Execute(model);
 
-        Assert.AreEqual(0, viewModel.Responses.Count);
-        repository.Verify(r => r.Remove(id));
+        Assert.AreEqual(0, this.viewModel.Responses.Count);
+        this.removeHandler.Received(1).Handle(Arg.Is<RemoveResponse.Command>(x => x.Id == Guid.Parse(id)));
     }
 
     [TestCase(5)]
     [TestCase(10)]
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
-        MessageResponse[] entities = Enumerable.Repeat(new MessageResponse(), count).ToArray();
-        repository.Setup(r => r.GetAll()).Returns(entities);
+        GetResponses.MessageResponseEntry[] entries = Enumerable.Repeat(CreateResponseEntry(), count).ToArray();
+        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetResponses.Result { Entries = entries.ToList()});
 
-        viewModel.IsSelected = true;
-        viewModel.IsSelected = true;
+        this.viewModel.IsSelected = true;
+        this.viewModel.IsSelected = true;
 
-        Assert.AreEqual(count, viewModel.Responses.Count);
-        mapper.Verify(m => m.MapToModel(It.IsAny<MessageResponse>(), It.IsAny<MessageResponseModel>()), () => Times.Exactly(count));
+        Assert.AreEqual(count, this.viewModel.Responses.Count);
+    }
+
+    private static GetResponses.MessageResponseEntry CreateResponseEntry()
+    {
+        return new GetResponses.MessageResponseEntry(default, default, default, default, [], [], [], [], []);
     }
 
     [Test]
     public void UpdatingATextModelShouldUpdateEntity()
     {
-        MessageResponseModel model = new MessageResponseModel();
-        viewModel.Responses.Add(model);
-        viewModel.IsSelected = true;
+        MessageResponseModel model = new () { Id = Guid.NewGuid().ToString() };
+        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetResponses.Result());
+        this.viewModel.Responses.Add(model);
+        this.viewModel.IsSelected = true;
 
-        model.Timeout = 1;
+        model.TimeoutInSeconds = 1;
 
-        repository.Verify(r => r.Write(It.IsAny<MessageResponse>()));
-        mapper.Verify(r => r.MapToEntity(model, It.IsAny<MessageResponse>()));
+        this.updateHandler.Received(1).Handle(Arg.Any<UpdateResponse.Command>());
     }
 }

@@ -1,7 +1,6 @@
-﻿using System;
-using ComfyBot.Bot.ChatBot.Timezones;
+﻿using ComfyBot.Bot.ChatBot.Timezones;
 using ComfyBot.Common.Http;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
@@ -9,26 +8,26 @@ namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
 [TestFixture]
 public class TimezoneLoaderTests
 {
-    private Mock<IHttpService> httpService;
+    private IHttpService httpService;
 
     private TimezoneLoader timezoneLoader;
 
     [SetUp]
     public void Setup()
     {
-        httpService = new Mock<IHttpService>();
-        timezoneLoader = new TimezoneLoader();
+        this.httpService = Substitute.For<IHttpService>();
+        this.timezoneLoader = new TimezoneLoader();
 
-        HttpService.OverrideInstance(httpService.Object);
+        HttpService.OverrideInstance(this.httpService);
     }
 
     [Test]
     public void TryLoadShouldReturnFalseWhenNoMatchingTimezoneFound()
     {
-        string[] foundZones = Array.Empty<string>();
-        httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
+        string[] foundZones = [];
+        this.httpService.GetAsync<string[]>("http://worldtimeapi.org/api/timezone").Returns(foundZones);
 
-        bool result = timezoneLoader.TryLoad("test", out Timezone zone);
+        bool result = this.timezoneLoader.TryLoad("test", out Timezone zone);
 
         Assert.False(result);
         Assert.IsNull(zone);
@@ -39,10 +38,10 @@ public class TimezoneLoaderTests
     [TestCase("test", "test")]
     public void TryLoadShouldReturnTrueWhenMatchingTimezoneFound(string foundZone, string searchText)
     {
-        string[] foundZones = { foundZone };
-        httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
+        string[] foundZones = [foundZone];
+        this.httpService.GetAsync<string[]>("http://worldtimeapi.org/api/timezone").Returns(foundZones);
 
-        bool result = timezoneLoader.TryLoad(searchText, out Timezone zone);
+        bool result = this.timezoneLoader.TryLoad(searchText, out Timezone zone);
 
         Assert.True(result);
         Assert.IsNotNull(zone);
@@ -51,13 +50,13 @@ public class TimezoneLoaderTests
     [Test]
     public void TryLoadShouldCacheTimezones()
     {
-        string[] foundZones = { "test" };
-        httpService.Setup(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone")).ReturnsAsync(foundZones);
+        string[] foundZones = ["test"];
+        this.httpService.GetAsync<string[]>("http://worldtimeapi.org/api/timezone").Returns(foundZones);
 
-        timezoneLoader.TryLoad("test", out Timezone zone1);
-        timezoneLoader.TryLoad("test", out Timezone zone2);
+        this.timezoneLoader.TryLoad("test", out Timezone zone1);
+        this.timezoneLoader.TryLoad("test", out Timezone zone2);
 
-        httpService.Verify(s => s.GetAsync<string[]>("http://worldtimeapi.org/api/timezone"), Times.Once());
+        this.httpService.Received(1).GetAsync<string[]>("http://worldtimeapi.org/api/timezone");
     }
 
     [TearDown]

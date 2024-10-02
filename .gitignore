@@ -286,3 +286,10 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+*.ncrunchsolution
+Source/ComfyBot.Application/appsettings.user.json
+Source/ComfyBot.Application/appsettings.user.json
+Source/ComfyBot.Application/appsettings.user.json
+Source/ComfyBot.Application/comfybot.sqlite
+/Source/ComfyBot.Application/logs
+Source/ComfyBot.Application/.env

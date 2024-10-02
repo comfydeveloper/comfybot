@@ -28,11 +28,11 @@ public class DelegateCommand : ICommand
 
     public bool CanExecute(object parameter)
     {
-        return canExecute == null || canExecute(parameter);
+        return this.canExecute == null || this.canExecute(parameter);
     }
 
     public void Execute(object parameter = null)
     {
-        action();
+        this.action();
     }
 }

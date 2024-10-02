@@ -4,19 +4,16 @@ using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Bot.Extensions;
 using ComfyBot.Data.Models;
-using ComfyBot.Data.Repositories;
 
 namespace ComfyBot.Bot.ChatBot.Messages;
 
 public class MessageResponseLoader : IMessageResponseLoader
 {
-    private readonly IRepository<MessageResponse> repository;
-    private readonly IWildcardReplacer wildcardReplacerObject;
+    private readonly IWildcardReplacer wildcardReplacer;
 
-    public MessageResponseLoader(IRepository<MessageResponse> repository, IWildcardReplacer wildcardReplacerObject)
+    public MessageResponseLoader(IWildcardReplacer wildcardReplacer)
     {
-        this.repository = repository;
-        this.wildcardReplacerObject = wildcardReplacerObject;
+        this.wildcardReplacer = wildcardReplacer;
     }
 
     public bool TryGetResponse(MessageResponse response, IChatMessage message, out string responseText)
@@ -33,34 +30,26 @@ public class MessageResponseLoader : IMessageResponseLoader
             return false;
         }
 
-        if (response.ReplyAlways || MatchesLooseKeyword(response, message) || MatchesAllKeywords(response, message) || MatchesExactKeyword(response, message))
+        if (response.AlwaysReply || MatchesLooseKeyword(response, message) || MatchesAllKeywords(response, message) || MatchesExactKeyword(response, message))
         {
-            UpdateUsageInfo(response);
             responseText = response.Replies.GetRandom();
             responseText = responseText.Replace("{{user}}", message.UserName);
-            responseText = wildcardReplacerObject.Replace(responseText);
+            responseText = this.wildcardReplacer.Replace(responseText);
             return true;
         }
         return false;
     }
 
-    private void UpdateUsageInfo(MessageResponse response)
-    {
-        response.UseCount++;
-        response.LastUsed = DateTime.Now;
-        repository.Write(response);
-    }
-
     private static bool HasOngoingTimeout(MessageResponse response)
     {
-        return response.LastUsed.HasValue && response.LastUsed > DateTime.Now.AddSeconds(-response.TimeoutInSeconds);
+        return response.LastUsedAt.HasValue && response.LastUsedAt > DateTime.Now.AddSeconds(-response.TimeoutInSeconds);
     }
 
-    private static bool MatchesLooseKeyword(MessageResponse messageResponse, IChatMessage message)
+    private static bool MatchesLooseKeyword(MessageResponse response, IChatMessage message)
     {
-        foreach (string keyword in messageResponse.LooseKeywords)
+        foreach (string keyword in response.LooseKeywords)
         {
-            if (message.Text.ToLower().Contains(keyword.ToLower()))
+            if (message.Text.ToLower().Contains(keyword.ToLower(), StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -68,16 +57,16 @@ public class MessageResponseLoader : IMessageResponseLoader
         return false;
     }
 
-    private static bool MatchesAllKeywords(MessageResponse messageResponse, IChatMessage message)
+    private static bool MatchesAllKeywords(MessageResponse response, IChatMessage message)
     {
-        if (!messageResponse.AllKeywords.Any())
+        if (!response.AllKeywords.Any())
         {
             return false;
         }
 
-        foreach (string keyword in messageResponse.AllKeywords)
+        foreach (string keyword in response.AllKeywords)
         {
-            if (!message.Text.ToLower().Contains(keyword.ToLower()))
+            if (!message.Text.ToLower().Contains(keyword.ToLower(), StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -85,9 +74,9 @@ public class MessageResponseLoader : IMessageResponseLoader
         return true;
     }
 
-    private static bool MatchesExactKeyword(MessageResponse messageResponse, IChatMessage message)
+    private static bool MatchesExactKeyword(MessageResponse response, IChatMessage message)
     {
-        foreach (string keyword in messageResponse.ExactKeywords)
+        foreach (string keyword in response.ExactKeywords)
         {
             if (string.Equals(message.Text, keyword, StringComparison.CurrentCultureIgnoreCase))
             {

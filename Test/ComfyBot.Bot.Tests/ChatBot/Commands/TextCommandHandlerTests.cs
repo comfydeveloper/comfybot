@@ -1,10 +1,13 @@
 ﻿using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using ComfyBot.Settings;
-using Moq;
+using Microsoft.Extensions.Options;
+using NSubstitute;
 using NUnit.Framework;
+using System;
+using System.Linq;
 using TwitchLib.Client.Interfaces;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Commands;
@@ -12,52 +15,74 @@ namespace ComfyBot.Bot.Tests.ChatBot.Commands;
 [TestFixture]
 public class TextCommandHandlerTests
 {
-    private Mock<IRepository<TextCommand>> repository;
-    private Mock<ITextCommandReplyLoader> replyLoader;
+    private IQueryableRepository repository;
+    private ITextCommandReplyLoader replyLoader;
 
-    private Mock<ITwitchClient> twitchClient;
-    private Mock<IChatCommand> chatCommand;
+    private ITwitchClient twitchClient;
+    private IChatCommand chatCommand;
+    private BotSettings settings;
 
     private TextCommandHandler handler;
 
     [SetUp]
     public void Setup()
     {
-        repository = new Mock<IRepository<TextCommand>>();
-        replyLoader = new Mock<ITextCommandReplyLoader>();
+        this.repository = Substitute.For<IQueryableRepository>();
+        this.replyLoader = Substitute.For<ITextCommandReplyLoader>();
 
-        twitchClient = new Mock<ITwitchClient>();
-        chatCommand = new Mock<IChatCommand>();
+        this.twitchClient = Substitute.For<ITwitchClient>();
+        this.chatCommand = Substitute.For<IChatCommand>();
 
-        handler = new TextCommandHandler(repository.Object, replyLoader.Object);
+        this.settings = new BotSettings();
+        IOptions<BotSettings> options = Substitute.For<IOptions<BotSettings>>();
+        options.Value.Returns(this.settings);
+
+        this.handler = new TextCommandHandler(this.repository, this.replyLoader, options);
     }
 
     [TestCase("channel1", "reply1")]
     [TestCase("channel2", "reply2")]
     public void HandleShouldSendLoadedReply(string channel, string reply)
     {
-        ApplicationSettings.Default.Channel = channel;
-        TextCommand command1 = new TextCommand();
-        TextCommand command2 = new TextCommand();
-        repository.Setup(r => r.GetAll()).Returns(new[] { command1, command2 });
-        replyLoader.Setup(l => l.TryGetReply(command1, chatCommand.Object, out reply)).Returns(false);
-        replyLoader.Setup(l => l.TryGetReply(command1, chatCommand.Object, out reply)).Returns(true);
+        this.settings.Channel = channel;
+        TextCommand command1 = CreateCommand();
+        TextCommand command2 = CreateCommand();
+        this.repository.Query<TextCommand>().Returns(new[] { command1, command2 }.AsQueryable());
+        this.replyLoader.TryGetReply(command1, this.chatCommand, out Arg.Any<string>()).Returns(false);
+        this.replyLoader.TryGetReply(command2, this.chatCommand, out Arg.Any<string>()).Returns(x =>
+        {
+            x[2] = reply;
+            return true;
+        });
 
-        handler.Handle(twitchClient.Object, chatCommand.Object);
+        this.handler.Handle(this.twitchClient, this.chatCommand);
 
-        twitchClient.Verify(c => c.SendMessage(channel, reply, false), Times.Once);
+        this.twitchClient.Received(1).SendMessage(channel, reply, false);
     }
 
     [Test]
     public void HandleShouldSendNothingIfNoReplyFound()
     {
-        TextCommand command = new TextCommand();
-        repository.Setup(r => r.GetAll()).Returns(new[] { command });
-        string reply;
-        replyLoader.Setup(l => l.TryGetReply(command, chatCommand.Object, out reply)).Returns(false);
+        TextCommand command = CreateCommand();
+        this.repository.Query<TextCommand>().Returns(new[] { command }.AsQueryable());
+        this.replyLoader.TryGetReply(command, this.chatCommand, out Arg.Any<string>()).Returns(false);
 
-        handler.Handle(twitchClient.Object, chatCommand.Object);
+        this.handler.Handle(this.twitchClient, this.chatCommand);
 
-        twitchClient.Verify(c => c.SendMessage(It.IsAny<string>(), It.IsAny<string>(), false), Times.Never);
+        this.twitchClient.DidNotReceive().SendMessage(Arg.Any<string>(), Arg.Any<string>(), false);
+    }
+
+    private static TextCommand CreateCommand()
+    {
+        return new TextCommand
+        {
+            Replies = [],
+            Commands = [],
+            LastUsedAt = DateTime.Now,
+            UseCount = 0,
+            TimeoutInSeconds = 0,
+            Id = Guid.NewGuid(),
+            CreatedAt = DateTime.Now
+        };
     }
 }

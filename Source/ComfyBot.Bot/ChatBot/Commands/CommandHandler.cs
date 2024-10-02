@@ -1,25 +1,33 @@
 ﻿using ComfyBot.Bot.ChatBot.Wrappers;
-using ComfyBot.Settings;
+using ComfyBot.Bot.Scaffolding;
+using Microsoft.Extensions.Options;
 using TwitchLib.Client.Interfaces;
 
 namespace ComfyBot.Bot.ChatBot.Commands;
 
 public abstract class CommandHandler : ICommandHandler
 {
+    private readonly BotSettings settings;
+
+    protected CommandHandler(IOptions<BotSettings> settings)
+    {
+        this.settings = settings.Value;
+    }
+
     public void Handle(ITwitchClient client, IChatCommand command)
     {
-        if (CanHandle(command))
+        if (this.CanHandle(command))
         {
-            HandleInternal(client, command);
+            this.HandleInternal(client, command);
         }
     }
 
     protected abstract bool CanHandle(IChatCommand command);
 
-    protected abstract void HandleInternal(ITwitchClient client, IChatCommand command);
+    protected abstract void HandleInternal(ITwitchClient client, IChatCommand chatCommand);
 
     protected void SendMessage(ITwitchClient client, string message)
     {
-        client.SendMessage(ApplicationSettings.Default.Channel, message);
+        client.SendMessage(this.settings.Channel, message);
     }
 }

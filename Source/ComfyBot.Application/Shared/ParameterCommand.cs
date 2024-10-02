@@ -16,16 +16,16 @@ public class ParameterCommand : ICommand
 
     public bool CanExecute(object parameter)
     {
-        if (canExecute == null)
+        if (this.canExecute == null)
         {
             return true;
         }
-        return canExecute(parameter);
+        return this.canExecute(parameter);
     }
 
     public void Execute(object parameter)
     {
-        action(parameter);
+        this.action(parameter);
     }
 
     public event EventHandler CanExecuteChanged;

@@ -4,7 +4,7 @@ namespace ComfyBot.Data.Models;
 
 public abstract class Entity
 {
-    public string Id { get; set; }
+    public required Guid Id { get; init; }
 
-    public DateTime DateOfCreation { get; set; }
+    public required DateTime CreatedAt { get; init; } = DateTime.Now;
 }

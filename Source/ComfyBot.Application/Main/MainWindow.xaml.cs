@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using ComfyBot.Application.Main;
 using ComfyBot.Application.Output;
-using ComfyBot.Settings;
 
 namespace ComfyBot.Application;
 
@@ -15,12 +14,10 @@ public partial class MainWindow : Window
 {
     public MainWindow(MainWindowViewModel viewModel)
     {
-        DataContext = viewModel;
+        this.DataContext = viewModel;
 
-        InitializeComponent();
-        ConsoleOutputWriter writer = new ConsoleOutputWriter(ConsoleTextBox);
+        this.InitializeComponent();
+        ConsoleOutputWriter writer = new(this.ConsoleTextBox);
         Console.SetOut(writer);
-
-        StreamKey.Password = ApplicationSettings.Default.AuthKey;
     }
 }

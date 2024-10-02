@@ -5,5 +5,5 @@ namespace ComfyBot.Bot.ChatBot.Messages;
 
 public interface IMessageResponseLoader
 {
-    bool TryGetResponse(MessageResponse messageResponse, IChatMessage message, out string response);
+    bool TryGetResponse(MessageResponse response, IChatMessage message, out string responseText);
 }

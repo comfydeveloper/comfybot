@@ -6,7 +6,9 @@ public class TextModel : NotifyingModel
 
     public string Text
     {
-        get => text;
-        set { text = value; OnPropertyChanged(); }
+        get => this.text;
+        set {
+            this.text = value;
+            this.OnPropertyChanged(); }
     }
 }

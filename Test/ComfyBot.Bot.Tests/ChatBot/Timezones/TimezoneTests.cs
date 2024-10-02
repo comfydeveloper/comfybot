@@ -11,7 +11,7 @@ public class TimezoneTests
     [TestCase("area", "", "", "area")]
     public void ToStringShouldReturnCombinedProperties(string area, string location, string region, string expected)
     {
-        Timezone zone = new Timezone
+        Timezone zone = new()
         {
             Area = area,
             Location = location,

@@ -14,15 +14,15 @@ public class ChatCommandWrapper : IChatCommand
         this.command = command;
     }
 
-    public List<string> ArgumentsAsList => command.ArgumentsAsList;
+    public List<string> ArgumentsAsList => this.command.ArgumentsAsList;
 
-    public string ArgumentsAsString => command.ArgumentsAsString;
+    public string ArgumentsAsString => this.command.ArgumentsAsString;
 
-    public IChatMessage ChatMessage => new ChatMessageWrapper(command.ChatMessage);
+    public IChatMessage ChatMessage => new ChatMessageWrapper(this.command.ChatMessage);
 
-    public string CommandText => command.CommandText;
+    public string CommandText => this.command.CommandText;
 
-    public bool IsBroadcaster => command.ChatMessage.IsBroadcaster;
+    public bool IsBroadcaster => this.command.ChatMessage.IsBroadcaster;
 
-    public bool IsModerator => command.ChatMessage.IsModerator;
+    public bool IsModerator => this.command.ChatMessage.IsModerator;
 }

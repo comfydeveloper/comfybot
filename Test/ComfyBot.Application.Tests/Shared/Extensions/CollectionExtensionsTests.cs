@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -7,6 +6,7 @@ using ComfyBot.Application.Annotations;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.Shared.Extensions;
 using NUnit.Framework;
+using System.Collections.ObjectModel;
 
 namespace ComfyBot.Application.Tests.Shared.Extensions;
 
@@ -18,7 +18,7 @@ public class CollectionExtensionsTests
     public void AddRangeShouldAddAllElementsToObservableCollection(int count)
     {
         string[] source = Enumerable.Repeat("", count).ToArray();
-        ObservableCollection<string> target = new ObservableCollection<string>();
+        ObservableCollection<string> target = [];
 
         target.AddRange(source);
 
@@ -29,7 +29,7 @@ public class CollectionExtensionsTests
     [TestCase("text2")]
     public void ToTextModelsShouldMapStringsToTextModels(string text)
     {
-        string[] source = { text, "" };
+        string[] source = [text, ""];
 
         IEnumerable<TextModel> result = source.ToTextModels().ToArray();
 
@@ -45,8 +45,8 @@ public class CollectionExtensionsTests
         {
             callCount++;
         }
-        NotifyingStub model = new NotifyingStub();
-        ObservableCollection<NotifyingStub> models = new ObservableCollection<NotifyingStub>();
+        NotifyingStub model = new();
+        ObservableCollection<NotifyingStub> models = [];
 
         models.RegisterCollectionItemChanged(TestMethod);
 
@@ -66,8 +66,8 @@ public class CollectionExtensionsTests
         {
             callCount++;
         }
-        NotifyingStub model = new NotifyingStub();
-        ObservableCollection<NotifyingStub> models = new ObservableCollection<NotifyingStub> { model };
+        NotifyingStub model = new();
+        ObservableCollection<NotifyingStub> models = [model];
 
         models.RegisterCollectionItemChanged(TestMethod);
 
@@ -82,12 +82,12 @@ public class CollectionExtensionsTests
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void Test()
         {
-            OnPropertyChanged();
+            this.OnPropertyChanged();
         }
     }
 }

@@ -7,28 +7,28 @@ namespace ComfyBot.Application.Responses;
 
 public class MessageResponseModel : NotifyingModel
 {
-    private int timeout = 60;
+    private int timeoutInSeconds = 60;
     private int priority;
     private bool replyAlways;
 
     public MessageResponseModel()
     {
-        AddUserCommand = new DelegateCommand(AddUser);
-        AddLooseKeywordCommand = new DelegateCommand(AddLooseKeyword);
-        AddAllKeywordCommand = new DelegateCommand(AddAllKeyword);
-        AddExactKeywordCommand = new DelegateCommand(AddExactKeyword);
-        AddReplyCommand = new DelegateCommand(AddReply);
-        RemoveUserCommand = new ParameterCommand(RemoveUser);
-        RemoveLooseKeywordCommand = new ParameterCommand(RemoveLooseKeyword);
-        RemoveAllKeywordCommand = new ParameterCommand(RemoveAllKeyword);
-        RemoveExactKeywordCommand = new ParameterCommand(RemoveExactKeyword);
-        RemoveReplyCommand = new ParameterCommand(RemoveReply);
+        this.AddUserCommand = new DelegateCommand(this.AddUser);
+        this.AddLooseKeywordCommand = new DelegateCommand(this.AddLooseKeyword);
+        this.AddAllKeywordCommand = new DelegateCommand(this.AddAllKeyword);
+        this.AddExactKeywordCommand = new DelegateCommand(this.AddExactKeyword);
+        this.AddReplyCommand = new DelegateCommand(this.AddReply);
+        this.RemoveUserCommand = new ParameterCommand(this.RemoveUser);
+        this.RemoveLooseKeywordCommand = new ParameterCommand(this.RemoveLooseKeyword);
+        this.RemoveAllKeywordCommand = new ParameterCommand(this.RemoveAllKeyword);
+        this.RemoveExactKeywordCommand = new ParameterCommand(this.RemoveExactKeyword);
+        this.RemoveReplyCommand = new ParameterCommand(this.RemoveReply);
 
-        Users.RegisterCollectionItemChanged(OnTextModelUpdate);
-        LooseKeywords.RegisterCollectionItemChanged(OnTextModelUpdate);
-        AllKeywords.RegisterCollectionItemChanged(OnTextModelUpdate);
-        ExactKeywords.RegisterCollectionItemChanged(OnTextModelUpdate);
-        Replies.RegisterCollectionItemChanged(OnTextModelUpdate);
+        this.Users.RegisterCollectionItemChanged(this.OnTextModelUpdate);
+        this.LooseKeywords.RegisterCollectionItemChanged(this.OnTextModelUpdate);
+        this.AllKeywords.RegisterCollectionItemChanged(this.OnTextModelUpdate);
+        this.ExactKeywords.RegisterCollectionItemChanged(this.OnTextModelUpdate);
+        this.Replies.RegisterCollectionItemChanged(this.OnTextModelUpdate);
     }
 
     public DelegateCommand AddUserCommand { get; }
@@ -53,87 +53,93 @@ public class MessageResponseModel : NotifyingModel
 
     public string Id { get; set; }
 
-    public ObservableCollection<TextModel> Users { get; set; } = new();
+    public ObservableCollection<TextModel> Users { get; set; } = [];
 
-    public ObservableCollection<TextModel> ExactKeywords { get; set; } = new();
+    public ObservableCollection<TextModel> ExactKeywords { get; set; } = [];
 
-    public ObservableCollection<TextModel> LooseKeywords { get; set; } = new();
+    public ObservableCollection<TextModel> LooseKeywords { get; set; } = [];
 
-    public ObservableCollection<TextModel> AllKeywords { get; set; } = new();
+    public ObservableCollection<TextModel> AllKeywords { get; set; } = [];
 
-    public ObservableCollection<TextModel> Replies { get; set; } = new();
+    public ObservableCollection<TextModel> Replies { get; set; } = [];
 
-    public int Timeout
+    public int TimeoutInSeconds
     {
-        get => timeout;
-        set { timeout = value; OnPropertyChanged(); }
+        get => this.timeoutInSeconds;
+        set {
+            this.timeoutInSeconds = value;
+            this.OnPropertyChanged(); }
     }
 
     public bool ReplyAlways 
     { 
-        get => replyAlways; 
-        set { replyAlways = value; OnPropertyChanged(); } 
+        get => this.replyAlways; 
+        set {
+            this.replyAlways = value;
+            this.OnPropertyChanged(); } 
     }
 
     public int Priority
     {
-        get => priority;
-        set { priority = value; OnPropertyChanged(); }
+        get => this.priority;
+        set {
+            this.priority = value;
+            this.OnPropertyChanged(); }
     }
 
     private void AddUser()
     {
-        Users.Add(new TextModel());
+        this.Users.Add(new TextModel());
     }
 
     private void AddLooseKeyword()
     {
-        LooseKeywords.Add(new TextModel());
+        this.LooseKeywords.Add(new TextModel());
     }
 
     private void AddAllKeyword()
     {
-        AllKeywords.Add(new TextModel());
+        this.AllKeywords.Add(new TextModel());
     }
 
     private void AddExactKeyword()
     {
-        ExactKeywords.Add(new TextModel());
+        this.ExactKeywords.Add(new TextModel());
     }
 
     private void AddReply()
     {
-        Replies.Add(new TextModel());
+        this.Replies.Add(new TextModel());
     }
 
     private void RemoveUser(object parameter)
     {
-        Users.Remove((TextModel)parameter);
-        OnPropertyChanged();
+        this.Users.Remove((TextModel)parameter);
+        this.OnPropertyChanged();
     }
 
     private void RemoveLooseKeyword(object parameter)
     {
-        LooseKeywords.Remove((TextModel)parameter);
-        OnPropertyChanged();
+        this.LooseKeywords.Remove((TextModel)parameter);
+        this.OnPropertyChanged();
     }
 
     private void RemoveAllKeyword(object parameter)
     {
-        AllKeywords.Remove((TextModel)parameter);
-        OnPropertyChanged();
+        this.AllKeywords.Remove((TextModel)parameter);
+        this.OnPropertyChanged();
     }
 
     private void RemoveExactKeyword(object parameter)
     {
-        ExactKeywords.Remove((TextModel)parameter);
-        OnPropertyChanged();
+        this.ExactKeywords.Remove((TextModel)parameter);
+        this.OnPropertyChanged();
     }
 
     private void RemoveReply(object parameter)
     {
-        Replies.Remove((TextModel)parameter);
-        OnPropertyChanged();
+        this.Replies.Remove((TextModel)parameter);
+        this.OnPropertyChanged();
     }
 
     private void OnTextModelUpdate(object sender, PropertyChangedEventArgs e)
@@ -144,6 +150,7 @@ public class MessageResponseModel : NotifyingModel
         {
             return;
         }
-        OnPropertyChanged();
+
+        this.OnPropertyChanged();
     }
 }

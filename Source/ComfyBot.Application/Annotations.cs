@@ -128,7 +128,7 @@ public sealed class StringFormatMethodAttribute : Attribute
     /// </param>
     public StringFormatMethodAttribute([NotNull] string formatParameterName)
     {
-        FormatParameterName = formatParameterName;
+        this.FormatParameterName = formatParameterName;
     }
 
     [NotNull] public string FormatParameterName { get; }
@@ -168,7 +168,7 @@ public sealed class ValueProviderAttribute : Attribute
 {
     public ValueProviderAttribute([NotNull] string name)
     {
-        Name = name;
+        this.Name = name;
     }
 
     [NotNull] public string Name { get; }
@@ -232,7 +232,7 @@ public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     public NotifyPropertyChangedInvocatorAttribute() { }
     public NotifyPropertyChangedInvocatorAttribute([NotNull] string parameterName)
     {
-        ParameterName = parameterName;
+        this.ParameterName = parameterName;
     }
 
     [CanBeNull] public string ParameterName { get; }
@@ -290,8 +290,8 @@ public sealed class ContractAnnotationAttribute : Attribute
 
     public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
     {
-        Contract = contract;
-        ForceFullStates = forceFullStates;
+        this.Contract = contract;
+        this.ForceFullStates = forceFullStates;
     }
 
     [NotNull] public string Contract { get; }
@@ -315,7 +315,7 @@ public sealed class LocalizationRequiredAttribute : Attribute
 
     public LocalizationRequiredAttribute(bool required)
     {
-        Required = required;
+        this.Required = required;
     }
 
     public bool Required { get; }
@@ -361,7 +361,7 @@ public sealed class BaseTypeRequiredAttribute : Attribute
 {
     public BaseTypeRequiredAttribute([NotNull] Type baseType)
     {
-        BaseType = baseType;
+        this.BaseType = baseType;
     }
 
     [NotNull] public Type BaseType { get; }
@@ -385,8 +385,8 @@ public sealed class UsedImplicitlyAttribute : Attribute
 
     public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
     {
-        UseKindFlags = useKindFlags;
-        TargetFlags = targetFlags;
+        this.UseKindFlags = useKindFlags;
+        this.TargetFlags = targetFlags;
     }
 
     public ImplicitUseKindFlags UseKindFlags { get; }
@@ -414,8 +414,8 @@ public sealed class MeansImplicitUseAttribute : Attribute
 
     public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
     {
-        UseKindFlags = useKindFlags;
-        TargetFlags = targetFlags;
+        this.UseKindFlags = useKindFlags;
+        this.TargetFlags = targetFlags;
     }
 
     [UsedImplicitly] public ImplicitUseKindFlags UseKindFlags { get; }
@@ -455,7 +455,7 @@ public enum ImplicitUseTargetFlags
     Itself = 1,
     /// <summary>Members of entity marked with attribute are considered used.</summary>
     Members = 2,
-    /// <summary>Entity marked with attribute and all its members considered used.</summary>
+    /// <summary>EntityOld marked with attribute and all its members considered used.</summary>
     WithMembers = Itself | Members
 }
 
@@ -471,7 +471,7 @@ public sealed class PublicAPIAttribute : Attribute
 
     public PublicAPIAttribute([NotNull] string comment)
     {
-        Comment = comment;
+        this.Comment = comment;
     }
 
     [CanBeNull] public string Comment { get; }
@@ -517,7 +517,7 @@ public sealed class MustUseReturnValueAttribute : Attribute
 
     public MustUseReturnValueAttribute([NotNull] string justification)
     {
-        Justification = justification;
+        this.Justification = justification;
     }
 
     [CanBeNull] public string Justification { get; }
@@ -554,7 +554,7 @@ public sealed class PathReferenceAttribute : Attribute
 
     public PathReferenceAttribute([NotNull, PathReference] string basePath)
     {
-        BasePath = basePath;
+        this.BasePath = basePath;
     }
 
     [CanBeNull] public string BasePath { get; }
@@ -608,7 +608,7 @@ public sealed class SourceTemplateAttribute : Attribute { }
 /// Applying the attribute on a template method parameter:
 /// <code>
 /// [SourceTemplate]
-/// public static void something(this Entity x, [Macro(Expression = "guid()", Editable = -1)] string newguid) {
+/// public static void something(this EntityOld x, [Macro(Expression = "guid()", Editable = -1)] string newguid) {
 ///   /*$ var $x$Id = "$newguid$" + x.ToString();
 ///   x.DoSomething($x$Id); */
 /// }
@@ -645,7 +645,7 @@ public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
 {
     public AspMvcAreaMasterLocationFormatAttribute([NotNull] string format)
     {
-        Format = format;
+        this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -656,7 +656,7 @@ public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
 {
     public AspMvcAreaPartialViewLocationFormatAttribute([NotNull] string format)
     {
-        Format = format;
+        this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -667,7 +667,7 @@ public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
 {
     public AspMvcAreaViewLocationFormatAttribute([NotNull] string format)
     {
-        Format = format;
+        this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -678,7 +678,7 @@ public sealed class AspMvcMasterLocationFormatAttribute : Attribute
 {
     public AspMvcMasterLocationFormatAttribute([NotNull] string format)
     {
-        Format = format;
+        this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -689,7 +689,7 @@ public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
 {
     public AspMvcPartialViewLocationFormatAttribute([NotNull] string format)
     {
-        Format = format;
+        this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -700,7 +700,7 @@ public sealed class AspMvcViewLocationFormatAttribute : Attribute
 {
     public AspMvcViewLocationFormatAttribute([NotNull] string format)
     {
-        Format = format;
+        this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -719,7 +719,7 @@ public sealed class AspMvcActionAttribute : Attribute
 
     public AspMvcActionAttribute([NotNull] string anonymousProperty)
     {
-        AnonymousProperty = anonymousProperty;
+        this.AnonymousProperty = anonymousProperty;
     }
 
     [CanBeNull] public string AnonymousProperty { get; }
@@ -737,7 +737,7 @@ public sealed class AspMvcAreaAttribute : Attribute
 
     public AspMvcAreaAttribute([NotNull] string anonymousProperty)
     {
-        AnonymousProperty = anonymousProperty;
+        this.AnonymousProperty = anonymousProperty;
     }
 
     [CanBeNull] public string AnonymousProperty { get; }
@@ -756,7 +756,7 @@ public sealed class AspMvcControllerAttribute : Attribute
 
     public AspMvcControllerAttribute([NotNull] string anonymousProperty)
     {
-        AnonymousProperty = anonymousProperty;
+        this.AnonymousProperty = anonymousProperty;
     }
 
     [CanBeNull] public string AnonymousProperty { get; }
@@ -859,7 +859,7 @@ public sealed class HtmlElementAttributesAttribute : Attribute
 
     public HtmlElementAttributesAttribute([NotNull] string name)
     {
-        Name = name;
+        this.Name = name;
     }
 
     [CanBeNull] public string Name { get; }
@@ -870,7 +870,7 @@ public sealed class HtmlAttributeValueAttribute : Attribute
 {
     public HtmlAttributeValueAttribute([NotNull] string name)
     {
-        Name = name;
+        this.Name = name;
     }
 
     [NotNull] public string Name { get; }
@@ -916,7 +916,7 @@ public sealed class CollectionAccessAttribute : Attribute
 {
     public CollectionAccessAttribute(CollectionAccessType collectionAccessType)
     {
-        CollectionAccessType = collectionAccessType;
+        this.CollectionAccessType = collectionAccessType;
     }
 
     public CollectionAccessType CollectionAccessType { get; }
@@ -957,7 +957,7 @@ public sealed class AssertionConditionAttribute : Attribute
 {
     public AssertionConditionAttribute(AssertionConditionType conditionType)
     {
-        ConditionType = conditionType;
+        this.ConditionType = conditionType;
     }
 
     public AssertionConditionType ConditionType { get; }
@@ -1054,8 +1054,8 @@ public sealed class AspChildControlTypeAttribute : Attribute
 {
     public AspChildControlTypeAttribute([NotNull] string tagName, [NotNull] Type controlType)
     {
-        TagName = tagName;
-        ControlType = controlType;
+        this.TagName = tagName;
+        this.ControlType = controlType;
     }
 
     [NotNull] public string TagName { get; }
@@ -1077,7 +1077,7 @@ public sealed class AspRequiredAttributeAttribute : Attribute
 {
     public AspRequiredAttributeAttribute([NotNull] string attribute)
     {
-        Attribute = attribute;
+        this.Attribute = attribute;
     }
 
     [NotNull] public string Attribute { get; }
@@ -1090,7 +1090,7 @@ public sealed class AspTypePropertyAttribute : Attribute
 
     public AspTypePropertyAttribute(bool createConstructorReferences)
     {
-        CreateConstructorReferences = createConstructorReferences;
+        this.CreateConstructorReferences = createConstructorReferences;
     }
 }
 
@@ -1099,7 +1099,7 @@ public sealed class RazorImportNamespaceAttribute : Attribute
 {
     public RazorImportNamespaceAttribute([NotNull] string name)
     {
-        Name = name;
+        this.Name = name;
     }
 
     [NotNull] public string Name { get; }
@@ -1110,8 +1110,8 @@ public sealed class RazorInjectionAttribute : Attribute
 {
     public RazorInjectionAttribute([NotNull] string type, [NotNull] string fieldName)
     {
-        Type = type;
-        FieldName = fieldName;
+        this.Type = type;
+        this.FieldName = fieldName;
     }
 
     [NotNull] public string Type { get; }
@@ -1124,7 +1124,7 @@ public sealed class RazorDirectiveAttribute : Attribute
 {
     public RazorDirectiveAttribute([NotNull] string directive)
     {
-        Directive = directive;
+        this.Directive = directive;
     }
 
     [NotNull] public string Directive { get; }
@@ -1135,12 +1135,12 @@ public sealed class RazorPageBaseTypeAttribute : Attribute
 {
     public RazorPageBaseTypeAttribute([NotNull] string baseType)
     {
-        BaseType = baseType;
+        this.BaseType = baseType;
     }
     public RazorPageBaseTypeAttribute([NotNull] string baseType, string pageName)
     {
-        BaseType = baseType;
-        PageName = pageName;
+        this.BaseType = baseType;
+        this.PageName = pageName;
     }
 
     [NotNull] public string BaseType { get; }
