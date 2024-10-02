@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Common.Http;
-using ComfyBot.Data.Database;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ComfyBot.Application;
@@ -17,7 +16,6 @@ public class Startup
         Assembly[] assemblies =
         [
             typeof(ICommandHandler).Assembly,
-            typeof(IDatabaseFactory).Assembly,
             typeof(IHttpService).Assembly
         ];
 
