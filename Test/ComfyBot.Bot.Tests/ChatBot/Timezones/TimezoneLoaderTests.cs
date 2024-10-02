@@ -32,8 +32,6 @@ public class TimezoneLoaderTests
 
         result.Should().BeFalse();
         zone.Should().BeNull();
-        Assert.False(result);
-        Assert.IsNull(zone);
     }
 
     [TestCase("a/b/test", "test")]
