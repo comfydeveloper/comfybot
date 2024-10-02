@@ -23,9 +23,11 @@ The message "border" will be made configurable later.
 ![Shoutout Chat Result Image](/Misc/Shoutouts_Chat.png)
 
 ## Technologies 
-- .NET Core 3.1
+- NET 8.0
 - WPF
 - TwitchLib
-- LiteDB
+- EF Core with SQLite
 - NUnit
-- Moq
+- NSubstitute
+- AutoMapper
+- FluentAssertions
