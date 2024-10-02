@@ -53,8 +53,8 @@ public class TimezoneLoaderTests
         string[] foundZones = ["test"];
         this.httpService.GetAsync<string[]>("http://worldtimeapi.org/api/timezone").Returns(foundZones);
 
-        this.timezoneLoader.TryLoad("test", out Arg.Any<Timezone>());
-        this.timezoneLoader.TryLoad("test", out Arg.Any<Timezone>());
+        this.timezoneLoader.TryLoad("test", out Timezone zone1);
+        this.timezoneLoader.TryLoad("test", out Timezone zone2);
 
         this.httpService.Received(1).GetAsync<string[]>("http://worldtimeapi.org/api/timezone");
     }

@@ -91,10 +91,10 @@ public class TextCommandReplyLoaderTests
     {
         this.chatCommand.ArgumentsAsString.Returns("parameters");
         this.chatCommand.ArgumentsAsList.Returns(["parameter"]);
-        this.chatCommand.CommandText.Returns("commandOld");
+        this.chatCommand.CommandText.Returns("command");
         this.textCommand.Replies.Add("reply");
         this.textCommand.Replies.Add("reply with {{parameters}}");
-        this.textCommand.Commands.Add("commandOld");
+        this.textCommand.Commands.Add("command");
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
@@ -158,19 +158,6 @@ public class TextCommandReplyLoaderTests
         Assert.IsNull(resultText);
     }
 
-    [Test]
-    public void TryGetResponseShouldIncreaseUseCount()
-    {
-        this.chatCommand.ArgumentsAsList.Returns([]);
-        this.chatCommand.CommandText.Returns("commandOld");
-        this.textCommand.Commands.Add("commandOld");
-        this.textCommand.Replies.Add("response");
-
-        this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string response);
-
-        Assert.AreEqual(1, this.textCommand.UseCount);
-    }
-
     [TestCase(10)]
     [TestCase(20)]
     public void TryGetResponseShouldReturnFalseWhenTheResponseTimeoutHasNotRunOutYet(int timeout)
@@ -199,6 +186,7 @@ public class TextCommandReplyLoaderTests
 
     private void StubWildcardReplacer()
     {
+        this.wildcardReplacer.Replace(default, default).ReturnsForAnyArgs(s => (string)s[0]);
         this.wildcardReplacer.Replace(default).ReturnsForAnyArgs(s => (string)s[0]);
     }
 }

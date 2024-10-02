@@ -6,6 +6,7 @@ using ComfyBot.Application.Shared.Wrappers;
 using NSubstitute;
 using NUnit.Framework;
 using System;
+using System.Windows;
 
 namespace ComfyBot.Application.Tests.Responses;
 
@@ -46,6 +47,7 @@ public class ResponseTabViewModelTests
     {
         MessageResponseModel model = new() { Id = id };
         this.viewModel.Responses.Add(model);
+        this.messageBox.Show(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<MessageBoxButton>()).Returns(MessageBoxResult.Yes);
 
         this.viewModel.RemoveResponseCommand.Execute(model);
 
@@ -68,13 +70,14 @@ public class ResponseTabViewModelTests
 
     private static GetResponses.MessageResponseEntry CreateResponseEntry()
     {
-        return new GetResponses.MessageResponseEntry(default, default, default, default, default, default, default, default, default);
+        return new GetResponses.MessageResponseEntry(default, default, default, default, [], [], [], [], []);
     }
 
     [Test]
     public void UpdatingATextModelShouldUpdateEntity()
     {
-        MessageResponseModel model = new();
+        MessageResponseModel model = new () { Id = Guid.NewGuid().ToString() };
+        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetResponses.Result());
         this.viewModel.Responses.Add(model);
         this.viewModel.IsSelected = true;
 

@@ -48,8 +48,12 @@ public class TextCommandHandlerTests
         TextCommand command1 = CreateCommand();
         TextCommand command2 = CreateCommand();
         this.repository.Query<TextCommand>().Returns(new[] { command1, command2 }.AsQueryable());
-        this.replyLoader.TryGetReply(command1, this.chatCommand, out reply).Returns(false);
-        this.replyLoader.TryGetReply(command1, this.chatCommand, out reply).Returns(true);
+        this.replyLoader.TryGetReply(command1, this.chatCommand, out Arg.Any<string>()).Returns(false);
+        this.replyLoader.TryGetReply(command2, this.chatCommand, out Arg.Any<string>()).Returns(x =>
+        {
+            x[2] = reply;
+            return true;
+        });
 
         this.handler.Handle(this.twitchClient, this.chatCommand);
 

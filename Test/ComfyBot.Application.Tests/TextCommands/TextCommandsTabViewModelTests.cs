@@ -6,10 +6,8 @@ using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Features.TextCommands;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
-using ComfyBot.Data.Models;
 using NSubstitute;
 using NUnit.Framework;
-using static ComfyBot.Application.Features.TextCommands.GetCommands;
 
 namespace ComfyBot.Application.Tests.TextCommands;
 
@@ -53,6 +51,7 @@ public class TextCommandsTabViewModelTests
         this.viewModel.Commands.Add(model);
         this.messageBox.Show(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<MessageBoxButton>()).Returns(MessageBoxResult.Yes);
 
+
         this.viewModel.RemoveTextCommandCommand.Execute(model);
 
         Assert.AreEqual(0, this.viewModel.Commands.Count);
@@ -63,8 +62,8 @@ public class TextCommandsTabViewModelTests
     [TestCase(10)]
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
-        TextCommandEntry[] entries = Enumerable.Repeat(CreateTextCommandEntry(), count).ToArray();
-        this.getHandler.Handle(default).ReturnsForAnyArgs(new Result { Entries = entries.ToList() });
+        GetCommands.TextCommandEntry[] entries = Enumerable.Repeat(CreateTextCommandEntry(), count).ToArray();
+        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetCommands.Result { Entries = entries.ToList() });
 
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
@@ -75,7 +74,8 @@ public class TextCommandsTabViewModelTests
     [Test]
     public void UpdatingATextModelShouldUpdateEntity()
     {
-        TextCommandModel model = new();
+        TextCommandModel model = new() { Id = Guid.NewGuid().ToString() };
+        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetCommands.Result());
         this.viewModel.Commands.Add(model);
         this.viewModel.IsSelected = true;
 
@@ -84,8 +84,8 @@ public class TextCommandsTabViewModelTests
         this.updateHandler.Received(1).Handle(Arg.Any<UpdateCommand.Command>());
     }
 
-    private static TextCommandEntry CreateTextCommandEntry()
+    private static GetCommands.TextCommandEntry CreateTextCommandEntry()
     {
-        return new TextCommandEntry(default, default, default, default);
+        return new GetCommands.TextCommandEntry(default, default, [], []);
     }
 }
