@@ -48,8 +48,6 @@ public partial class App
 
         RegisterModules(builder, modules);
 
-        Application.Startup.Initialize();
-
         builder.Logging.AddSerilog();
 
         SetupConfiguration(builder);
@@ -94,7 +92,6 @@ public partial class App
         {
             Log.Debug("OnStartup started.");
 
-            Application.Startup.Initialize();
             await AppHost!.StartAsync();
 
             var startupForm = AppHost.Services.GetRequiredService<MainWindow>();
