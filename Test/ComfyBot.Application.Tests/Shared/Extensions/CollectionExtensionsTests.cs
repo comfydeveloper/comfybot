@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using ComfyBot.Application.Annotations;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.Shared.Extensions;
+using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.ObjectModel;
 
@@ -22,7 +23,7 @@ public class CollectionExtensionsTests
 
         target.AddRange(source);
 
-        Assert.AreEqual(count, target.Count);
+        target.Count.Should().Be(count);
     }
 
     [TestCase("text1")]
@@ -33,8 +34,8 @@ public class CollectionExtensionsTests
 
         IEnumerable<TextModel> result = source.ToTextModels().ToArray();
 
-        Assert.AreEqual(2, result.Count());
-        Assert.AreEqual(text, result.First().Text);
+        result.Count().Should().Be(2);
+        result.First().Text.Should().Be(text);
     }
 
     [Test]
@@ -52,10 +53,10 @@ public class CollectionExtensionsTests
 
         models.Add(model);
         model.Test();
-        Assert.AreEqual(1, callCount);
+        callCount.Should().Be(1);
         models.Remove(model);
         model.Test();
-        Assert.AreEqual(1, callCount);
+        callCount.Should().Be(1);
     }
 
     [Test]
@@ -72,7 +73,7 @@ public class CollectionExtensionsTests
         models.RegisterCollectionItemChanged(TestMethod);
 
         model.Test();
-        Assert.AreEqual(1, callCount);
+        callCount.Should().Be(1);
     }
 
     private class NotifyingStub : INotifyPropertyChanged

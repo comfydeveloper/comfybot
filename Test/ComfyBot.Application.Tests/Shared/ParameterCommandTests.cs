@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Application.Shared;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace ComfyBot.Application.Tests.Shared;
@@ -29,7 +30,7 @@ public class ParameterCommandTests
 
         bool result = this.command.CanExecute(parameter);
 
-        Assert.AreEqual(parameter, result);
+        result.Should().Be(parameter);
     }
 
     [Test]
@@ -39,7 +40,7 @@ public class ParameterCommandTests
 
         this.command.Execute(new object());
 
-        Assert.IsTrue(this.actionHasBeenExecuted);
+        this.actionHasBeenExecuted.Should().BeTrue();
     }
 
     private void TestAction(object parameter)

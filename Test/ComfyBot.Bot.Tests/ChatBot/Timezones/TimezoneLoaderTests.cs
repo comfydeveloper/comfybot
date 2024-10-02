@@ -1,5 +1,6 @@
 ﻿using ComfyBot.Bot.ChatBot.Timezones;
 using ComfyBot.Common.Http;
+using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -29,6 +30,8 @@ public class TimezoneLoaderTests
 
         bool result = this.timezoneLoader.TryLoad("test", out Timezone zone);
 
+        result.Should().BeFalse();
+        zone.Should().BeNull();
         Assert.False(result);
         Assert.IsNull(zone);
     }
@@ -43,8 +46,8 @@ public class TimezoneLoaderTests
 
         bool result = this.timezoneLoader.TryLoad(searchText, out Timezone zone);
 
-        Assert.True(result);
-        Assert.IsNotNull(zone);
+        result.Should().BeTrue();
+        zone.Should().NotBeNull();
     }
 
     [Test]
@@ -53,8 +56,8 @@ public class TimezoneLoaderTests
         string[] foundZones = ["test"];
         this.httpService.GetAsync<string[]>("http://worldtimeapi.org/api/timezone").Returns(foundZones);
 
-        this.timezoneLoader.TryLoad("test", out Timezone zone1);
-        this.timezoneLoader.TryLoad("test", out Timezone zone2);
+        this.timezoneLoader.TryLoad("test", out Timezone _);
+        this.timezoneLoader.TryLoad("test", out Timezone _);
 
         this.httpService.Received(1).GetAsync<string[]>("http://worldtimeapi.org/api/timezone");
     }

@@ -3,7 +3,6 @@ using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
-using ComfyBot.Data.Repositories;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace ComfyBot.Application.Tests.Responses;
@@ -21,7 +22,7 @@ public class MessageResponseModelTests
     {
         this.model.AddReplyCommand.Execute();
 
-        Assert.AreEqual(1, this.model.Replies.Count);
+        this.model.Replies.Count.Should().Be(1);
     }
 
     [Test]
@@ -29,7 +30,7 @@ public class MessageResponseModelTests
     {
         this.model.AddLooseKeywordCommand.Execute();
 
-        Assert.AreEqual(1, this.model.LooseKeywords.Count);
+        this.model.LooseKeywords.Count.Should().Be(1);
     }
 
     [Test]
@@ -37,7 +38,7 @@ public class MessageResponseModelTests
     {
         this.model.AddExactKeywordCommand.Execute();
 
-        Assert.AreEqual(1, this.model.ExactKeywords.Count);
+        this.model.ExactKeywords.Count.Should().Be(1);
     }
 
     [Test]
@@ -45,7 +46,7 @@ public class MessageResponseModelTests
     {
         this.model.AddAllKeywordCommand.Execute();
 
-        Assert.AreEqual(1, this.model.AllKeywords.Count);
+        this.model.AllKeywords.Count.Should().Be(1);
     }
 
     [Test]
@@ -53,7 +54,7 @@ public class MessageResponseModelTests
     {
         this.model.AddUserCommand.Execute();
 
-        Assert.AreEqual(1, this.model.Users.Count);
+        this.model.Users.Count.Should().Be(1);
     }
 
     [Test]
@@ -64,7 +65,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveUserCommand.Execute(textModel);
 
-        Assert.AreEqual(0, this.model.Users.Count);
+        this.model.Users.Should().BeEmpty();
     }
 
     [Test]
@@ -75,7 +76,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveAllKeywordCommand.Execute(textModel);
 
-        Assert.AreEqual(0, this.model.AllKeywords.Count);
+        this.model.AllKeywords.Should().BeEmpty();
     }
 
     [Test]
@@ -86,7 +87,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveLooseKeywordCommand.Execute(textModel);
 
-        Assert.AreEqual(0, this.model.LooseKeywords.Count);
+        this.model.LooseKeywords.Should().BeEmpty();
     }
 
     [Test]
@@ -97,7 +98,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveExactKeywordCommand.Execute(textModel);
 
-        Assert.AreEqual(0, this.model.ExactKeywords.Count);
+        this.model.ExactKeywords.Should().BeEmpty();
     }
 
     [Test]
@@ -108,7 +109,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveReplyCommand.Execute(textModel);
 
-        Assert.AreEqual(0, this.model.Replies.Count);
+        this.model.Replies.Should().BeEmpty();
     }
 
     [TestCase(null, false)]

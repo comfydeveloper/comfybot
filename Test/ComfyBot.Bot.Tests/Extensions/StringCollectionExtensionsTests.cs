@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ComfyBot.Bot.Extensions;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.Extensions;
@@ -28,8 +29,8 @@ public class StringCollectionExtensionsTests
             }
         }
 
-        Assert.AreEqual(50, elementCount1, 15);
-        Assert.AreEqual(50, elementCount2, 15);
+        elementCount1.Should().BeInRange(35, 65);
+        elementCount2.Should().BeInRange(35, 65);
     }
 
     [TestCase("string1")]
@@ -40,6 +41,6 @@ public class StringCollectionExtensionsTests
 
         string result = collection.GetRandom();
 
-        Assert.AreEqual(text, result);
+        result.Should().Be(text);
     }
 }

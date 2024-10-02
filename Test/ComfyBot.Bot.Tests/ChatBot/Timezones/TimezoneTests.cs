@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Bot.ChatBot.Timezones;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Timezones;
@@ -18,6 +19,6 @@ public class TimezoneTests
             Region = region
         };
 
-        Assert.AreEqual(expected, zone.ToString());
+        zone.ToString().Should().Be(expected);
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using ComfyBot.Application.Features.MessageResponses;
 using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Features.TextCommands;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
+using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -54,7 +54,7 @@ public class TextCommandsTabViewModelTests
 
         this.viewModel.RemoveTextCommandCommand.Execute(model);
 
-        Assert.AreEqual(0, this.viewModel.Commands.Count);
+        this.viewModel.Commands.Should().BeEmpty();
         this.removeHandler.Received(1).Handle(Arg.Is<RemoveCommand.Command>(x => x.Id == Guid.Parse(id)));
     }
 
@@ -68,7 +68,7 @@ public class TextCommandsTabViewModelTests
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
 
-        Assert.AreEqual(count, this.viewModel.Commands.Count);
+        this.viewModel.Commands.Count.Should().Be(count);
     }
 
     [Test]

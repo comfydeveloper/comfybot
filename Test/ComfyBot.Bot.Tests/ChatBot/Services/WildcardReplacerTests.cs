@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Bot.ChatBot.Services;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Services;
@@ -20,7 +21,7 @@ public class WildcardReplacerTests
 
         string result = this.replacer.Replace(original);
 
-        Assert.That(result is "test2 and test3" or "test1 and test3");
+        result.Should().Match(s => s == "test2 and test3" || s == "test1 and test3");
     }
 
     [Test]
@@ -31,6 +32,6 @@ public class WildcardReplacerTests
         string result = this.replacer.Replace(original);
 
         int resultNumber = int.Parse(result);
-        Assert.That(resultNumber is > 0 and < 10);
+        resultNumber.Should().BeInRange(1, 9);
     }
 }

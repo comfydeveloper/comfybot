@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.TextCommands;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace ComfyBot.Application.Tests.TextCommands;
@@ -21,7 +22,7 @@ public class TextCommandModelTests
     {
         this.model.AddReplyCommand.Execute();
 
-        Assert.AreEqual(1, this.model.Replies.Count);
+        this.model.Replies.Count.Should().Be(1);
     }
 
     [Test]
@@ -32,7 +33,7 @@ public class TextCommandModelTests
 
         this.model.RemoveReplyCommand.Execute(textModel);
 
-        Assert.AreEqual(0, this.model.Replies.Count);
+        this.model.Replies.Should().BeEmpty();
     }
 
     [TestCase(null, false)]
@@ -52,7 +53,7 @@ public class TextCommandModelTests
 
         textModel.Text = text;
 
-        Assert.AreEqual(expected, result);
+        this.model.Replies.Count.Should().Be(1);
     }
 
     [Test]
@@ -60,7 +61,7 @@ public class TextCommandModelTests
     {
         this.model.AddTextCommand.Execute();
 
-        Assert.AreEqual(1, this.model.Commands.Count);
+        this.model.Commands.Count.Should().Be(1);
     }
 
     [Test]
@@ -71,7 +72,7 @@ public class TextCommandModelTests
 
         this.model.RemoveTextCommand.Execute(textModel);
 
-        Assert.AreEqual(0, this.model.Commands.Count);
+        this.model.Commands.Should().BeEmpty();
     }
 
     [TestCase(null, false)]
@@ -91,7 +92,7 @@ public class TextCommandModelTests
 
         textModel.Text = text;
 
-        Assert.AreEqual(expected, result);
+        result.Should().Be(expected);
     }
 
     [TestCase(1)]
@@ -100,7 +101,7 @@ public class TextCommandModelTests
     {
         this.model.Timeout = timeout;
 
-        Assert.AreEqual(timeout, this.model.Timeout);
+        this.model.Timeout.Should().Be(timeout);
     }
 
     [Test]

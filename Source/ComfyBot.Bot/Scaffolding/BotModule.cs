@@ -10,7 +10,6 @@ using ComfyBot.Bot.PubSub.RewardRedeems;
 using ComfyBot.Common.Scaffolding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TwitchLib.Client.Interfaces;
 
 namespace ComfyBot.Bot.Scaffolding;
 

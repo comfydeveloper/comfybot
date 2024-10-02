@@ -57,25 +57,6 @@ public class ChatMessageResponseHandlerTests
         this.twitchClient.SendMessage(channel, response, false);
     }
 
-    private static MessageResponse CreateMessageResponse(int priority = 0)
-    {
-        return new MessageResponse
-        {
-            Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now,
-            Users = [],
-            LooseKeywords = [],
-            AllKeywords = [],
-            ExactKeywords = [],
-            Replies = [],
-            LastUsedAt = DateTime.Now,
-            TimeoutInSeconds = 0,
-            UseCount = 0,
-            Priority = priority,
-            AlwaysReply = false
-        };
-    }
-
     [Test]
     public void HandleShouldSendSuitableMessageOrderedByPriority()
     {
@@ -112,5 +93,24 @@ public class ChatMessageResponseHandlerTests
         this.handler.Handle(this.twitchClient, this.chatMessage);
 
         this.repository.DidNotReceive().Query<MessageResponse>();
+    }
+
+    private static MessageResponse CreateMessageResponse(int priority = 0)
+    {
+        return new MessageResponse
+        {
+            Id = Guid.NewGuid(),
+            CreatedAt = DateTime.Now,
+            Users = [],
+            LooseKeywords = [],
+            AllKeywords = [],
+            ExactKeywords = [],
+            Replies = [],
+            LastUsedAt = DateTime.Now,
+            TimeoutInSeconds = 0,
+            UseCount = 0,
+            Priority = priority,
+            AlwaysReply = false
+        };
     }
 }

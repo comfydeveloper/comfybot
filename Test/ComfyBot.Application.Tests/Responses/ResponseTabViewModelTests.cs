@@ -3,6 +3,7 @@ using ComfyBot.Application.Features.Shared.Contracts;
 using System.Linq;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared.Wrappers;
+using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System;
@@ -38,7 +39,7 @@ public class ResponseTabViewModelTests
     {
         this.viewModel.AddResponseCommand.Execute();
 
-        Assert.AreEqual(1, this.viewModel.Responses.Count);
+        this.viewModel.Responses.Count.Should().Be(1);
     }
 
     [TestCase("00000000-0000-0000-0000-000000000000")]
@@ -51,7 +52,7 @@ public class ResponseTabViewModelTests
 
         this.viewModel.RemoveResponseCommand.Execute(model);
 
-        Assert.AreEqual(0, this.viewModel.Responses.Count);
+        this.viewModel.Responses.Should().BeEmpty();
         this.removeHandler.Received(1).Handle(Arg.Is<RemoveResponse.Command>(x => x.Id == Guid.Parse(id)));
     }
 
@@ -65,7 +66,7 @@ public class ResponseTabViewModelTests
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
 
-        Assert.AreEqual(count, this.viewModel.Responses.Count);
+        this.viewModel.Responses.Count.Should().Be(count);
     }
 
     private static GetResponses.MessageResponseEntry CreateResponseEntry()
