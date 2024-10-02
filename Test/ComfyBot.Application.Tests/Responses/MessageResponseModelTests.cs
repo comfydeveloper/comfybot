@@ -129,7 +129,7 @@ public class MessageResponseModelTests
 
         textModel.Text = text;
 
-        Assert.AreEqual(expected, result);
+        result.Should().Be(expected);
     }
 
     [TestCase(1)]
@@ -138,7 +138,7 @@ public class MessageResponseModelTests
     {
         this.model.TimeoutInSeconds = timeout;
 
-        Assert.AreEqual(timeout, this.model.TimeoutInSeconds);
+        this.model.TimeoutInSeconds.Should().Be(timeout);
     }
 
     [Test]
@@ -154,7 +154,7 @@ public class MessageResponseModelTests
 
         this.model.TimeoutInSeconds = 1;
 
-        Assert.IsTrue(result);
+        result.Should().BeTrue();
     }
 
     [TestCase(1)]
@@ -163,7 +163,7 @@ public class MessageResponseModelTests
     {
         this.model.Priority = priority;
 
-        Assert.AreEqual(priority, this.model.Priority);
+        this.model.Priority.Should().Be(priority);
     }
 
     [Test]
@@ -179,6 +179,6 @@ public class MessageResponseModelTests
 
         this.model.TimeoutInSeconds = 1;
 
-        Assert.IsTrue(result);
+        result.Should().BeTrue();
     }
 }

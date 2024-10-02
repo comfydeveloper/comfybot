@@ -117,6 +117,6 @@ public class TextCommandModelTests
 
         this.model.Timeout = 1;
 
-        Assert.IsTrue(result);
+        result.Should().BeTrue();
     }
 }

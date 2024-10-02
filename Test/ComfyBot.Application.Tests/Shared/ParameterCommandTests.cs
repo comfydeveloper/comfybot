@@ -18,7 +18,7 @@ public class ParameterCommandTests
 
         bool result = this.command.CanExecute(new object());
 
-        Assert.IsTrue(result);
+        result.Should().BeTrue();
     }
 
     [TestCase(true)]
