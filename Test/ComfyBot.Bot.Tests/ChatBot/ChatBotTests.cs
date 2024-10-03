@@ -1,6 +1,5 @@
 ﻿using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Messages;
-using ComfyBot.Bot.Initialization;
 using ComfyBot.Bot.Scaffolding;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,7 +12,6 @@ namespace ComfyBot.Bot.Tests.ChatBot;
 [TestFixture]
 public class ChatBotTests
 {
-    private ITwitchClientFactory clientFactory;
     private ITwitchClient client;
 
     private ICommandHandler commandHandler1;
@@ -27,9 +25,7 @@ public class ChatBotTests
     [SetUp]
     public void Setup()
     {
-        this.clientFactory = Substitute.For<ITwitchClientFactory>();
         this.client = Substitute.For<ITwitchClient>();
-        this.clientFactory.Create().Returns(this.client);
 
         this.commandHandler1 = Substitute.For<ICommandHandler>();
         this.commandHandler2 = Substitute.For<ICommandHandler>();
@@ -44,7 +40,7 @@ public class ChatBotTests
         IOptions<BotSettings> options = Substitute.For<IOptions<BotSettings>>();
         options.Value.Returns(this.settings);
 
-        this.chatBot = new Bot.ChatBot.ChatBot(this.clientFactory, commandHandlers, messageHandlers, options, logger);
+        this.chatBot = new Bot.ChatBot.ChatBot(this.client, commandHandlers, messageHandlers, logger);
     }
 
     [TestCase("user1", "password1", "channel1")]
@@ -57,19 +53,6 @@ public class ChatBotTests
 
         this.chatBot.Run();
 
-        this.clientFactory.Received().Create();
         this.client.Received().Connect();
-    }
-
-    [Test]
-    public void RunShouldExitWhenSettingsAreNotReady()
-    {
-        this.settings.User = string.Empty;
-        this.settings.AuthKey = string.Empty;
-        this.settings.Channel = string.Empty;
-
-        this.chatBot.Run();
-
-        this.clientFactory.DidNotReceive().Create();
     }
 }

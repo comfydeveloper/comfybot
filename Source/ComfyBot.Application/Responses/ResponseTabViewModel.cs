@@ -111,7 +111,12 @@ public class ResponseTabViewModel : InitializableTab
 
     private static string GetDeletionMessage(MessageResponseModel model)
     {
-        return $"Do you want to delete the response [{string.Join(",", model.Replies.Select(x => x.Text[..10]))}]?";
+        return $"Do you want to delete the response [{string.Join(",", model.Replies.Select(GetFirstTenCharactersOfResponse))}]?";
+    }
+
+    private static string GetFirstTenCharactersOfResponse(TextModel response)
+    {
+        return response.Text.Length < 10 ? response.Text : response.Text[..10];
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Bot.Scaffolding;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
@@ -13,16 +14,20 @@ namespace ComfyBot.Bot.Initialization;
 [ExcludeFromCodeCoverage]
 public class TwitchClientFactory : ITwitchClientFactory
 {
+    private readonly ILogger<TwitchClientFactory> logger;
     private static TwitchClient twitchClient;
     private readonly BotSettings settings;
 
-    public TwitchClientFactory(IOptions<BotSettings> settings)
+    public TwitchClientFactory(IOptions<BotSettings> settings, ILogger<TwitchClientFactory> logger)
     {
+        this.logger = logger;
         this.settings = settings.Value;
     }
 
     public ITwitchClient Create()
     {
+        this.AssertSettingsAreProvided();
+
         if (twitchClient == null)
         {
             string userName = this.settings.User;
@@ -37,5 +42,26 @@ public class TwitchClientFactory : ITwitchClientFactory
         }
 
         return twitchClient;
+    }
+
+    private void AssertSettingsAreProvided()
+    {
+        if (string.IsNullOrWhiteSpace(this.settings.Channel))
+        {
+            this.logger.LogError("Channel is not set in the configuration.");
+            throw new InvalidOperationException("Channel is not set in the configuration.");
+        }
+
+        if (string.IsNullOrWhiteSpace(this.settings.AuthKey))
+        {
+            this.logger.LogError("AuthKey is not set in the configuration.");
+            throw new InvalidOperationException("AuthKey is not set in the configuration.");
+        }
+
+        if (string.IsNullOrWhiteSpace(this.settings.User))
+        {
+            this.logger.LogError("Bot user is not set in the configuration.");
+            throw new InvalidOperationException("Bot user is not set in the configuration.");
+        }
     }
 }

@@ -4,10 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.Extensions;
-using ComfyBot.Bot.Initialization;
-using ComfyBot.Bot.Scaffolding;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
@@ -15,51 +12,32 @@ namespace ComfyBot.Bot.ChatBot;
 
 public class ChatBot : IComfyBot
 {
-    private readonly ITwitchClientFactory twitchClientFactory;
     private readonly IEnumerable<ICommandHandler> commandHandlers;
     private readonly IEnumerable<IChatMessageHandler> messageHandlers;
     private readonly ILogger<ChatBot> logger;
-    private readonly BotSettings settings;
 
-    private ITwitchClient twitchClient;
+    private readonly ITwitchClient twitchClient;
 
-    public ChatBot(ITwitchClientFactory twitchClientFactory,
-        IEnumerable<ICommandHandler> commandHandlers,
-        IEnumerable<IChatMessageHandler> messageHandlers,
-        IOptions<BotSettings> botSettings,
-        ILogger<ChatBot> logger)
+    public ChatBot(ITwitchClient twitchClient,
+                   IEnumerable<ICommandHandler> commandHandlers,
+                   IEnumerable<IChatMessageHandler> messageHandlers,
+                   ILogger<ChatBot> logger)
     {
-        this.twitchClientFactory = twitchClientFactory;
+        this.twitchClient = twitchClient;
         this.commandHandlers = commandHandlers;
         this.messageHandlers = messageHandlers;
         this.logger = logger;
-        this.settings = botSettings.Value;
     }
 
     public void Run()
     {
-        if (IsBotReady())
-        {
-            this.InitializeClient();
-        }
-        else
-        {
-            Log("Could not initialize bot. Please make sure to set your configuration in the configuration tab and restart the bot.");
-        }
-    }
-
-    private bool IsBotReady()
-    {
-        return !string.IsNullOrEmpty(this.settings.Channel)
-               && !string.IsNullOrEmpty(this.settings.AuthKey)
-               && !string.IsNullOrEmpty(this.settings.User);
+        this.InitializeClient();
     }
 
     private void InitializeClient()
     {
         try
         {
-            this.Logon();
             this.RegisterHandlers();
             this.Connect();
             Log("Bot initialized.");
@@ -85,11 +63,6 @@ public class ChatBot : IComfyBot
         this.twitchClient.OnJoinedChannel += this.OnJoinedChannel;
     }
 
-    private void Logon()
-    {
-        this.twitchClient = this.twitchClientFactory.Create();
-    }
-
     [ExcludeFromCodeCoverage]
     private void OnCommandReceived(object sender, OnChatCommandReceivedArgs e)
     {
@@ -97,7 +70,7 @@ public class ChatBot : IComfyBot
         {
             try
             {
-                handler.Handle(this.twitchClient, e.Command.Wrap());
+                handler.Handle(e.Command.Wrap());
             }
             catch (Exception ex)
             {
@@ -115,7 +88,7 @@ public class ChatBot : IComfyBot
         {
             try
             {
-                handler.Handle(this.twitchClient, e.ChatMessage.Wrap());
+                handler.Handle(e.ChatMessage.Wrap());
             }
             catch (Exception ex)
             {

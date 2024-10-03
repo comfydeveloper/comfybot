@@ -29,12 +29,19 @@ public class BotModule : IModule
         services.AddTransient<IMessageResponseLoader, MessageResponseLoader>();
 
         services.AddTransient<IWildcardReplacer, WildcardReplacer>();
+        services.AddSingleton<IMessageSender, MessageSender>();
 
         services.AddTransient<IComfyBot, ChatBot.ChatBot>();
         services.AddTransient<IComfyPubSub, ComfyPubSub>();
 
         services.AddTransient<ITwitchClientFactory, TwitchClientFactory>();
 
+        services.AddSingleton(serviceProvider =>
+        {
+            ITwitchClientFactory factory = serviceProvider.GetRequiredService<ITwitchClientFactory>();
+
+            return factory.Create();
+        });
     }
 
     public void Configure(IHost applicationBuilder)

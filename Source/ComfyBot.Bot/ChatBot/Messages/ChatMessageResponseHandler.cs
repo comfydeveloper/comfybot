@@ -1,10 +1,8 @@
-﻿using System.Linq;
+﻿using ComfyBot.Bot.ChatBot.Services;
+using System.Linq;
 using ComfyBot.Bot.ChatBot.Wrappers;
-using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Microsoft.Extensions.Options;
-using TwitchLib.Client.Interfaces;
 
 namespace ComfyBot.Bot.ChatBot.Messages;
 
@@ -12,19 +10,18 @@ public class ChatMessageResponseHandler : IChatMessageHandler
 {
     private readonly IQueryableRepository repository;
     private readonly IMessageResponseLoader responseLoader;
-    private readonly BotSettings settings;
+    private readonly IMessageSender messageSender;
 
     public ChatMessageResponseHandler(IQueryableRepository repository,
         IMessageResponseLoader responseLoader,
-        IOptions<BotSettings> settings)
+        IMessageSender messageSender)
     {
         this.repository = repository;
         this.responseLoader = responseLoader;
-        this.settings = settings.Value;
+        this.messageSender = messageSender;
     }
 
-    // TODO [Shae] Move client creation out of these calls and use DI instead -> Singleton
-    public void Handle(ITwitchClient client, IChatMessage message)
+    public void Handle(IChatMessage message)
     {
         if (IsCommand(message))
         {
@@ -39,7 +36,7 @@ public class ChatMessageResponseHandler : IChatMessageHandler
             {
                 messageResponse.UpdateLastUsage();
                 this.repository.SaveChanges();
-                client.SendMessage(this.settings.Channel, response);
+                this.messageSender.Send(response);
                 return;
             }
         }

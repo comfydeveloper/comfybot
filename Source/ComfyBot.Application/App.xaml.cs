@@ -39,6 +39,8 @@ public partial class App
 
         HostApplicationBuilder builder = Host.CreateApplicationBuilder();
 
+        SetupConfiguration(builder);
+
         List<IModule> modules =
         [
             new ApplicationModule(),
@@ -49,8 +51,6 @@ public partial class App
         RegisterModules(builder, modules);
 
         builder.Logging.AddSerilog();
-
-        SetupConfiguration(builder);
 
         AppHost = builder.Build();
 

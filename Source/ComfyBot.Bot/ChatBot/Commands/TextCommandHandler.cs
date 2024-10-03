@@ -1,10 +1,8 @@
-﻿using ComfyBot.Bot.ChatBot.Wrappers;
+﻿using ComfyBot.Bot.ChatBot.Services;
+using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System.Linq;
-using TwitchLib.Client.Interfaces;
-using ComfyBot.Bot.Scaffolding;
-using Microsoft.Extensions.Options;
 
 namespace ComfyBot.Bot.ChatBot.Commands;
 
@@ -12,11 +10,15 @@ public class TextCommandHandler : CommandHandler
 {
     private readonly IQueryableRepository repository;
     private readonly ITextCommandReplyLoader replyLoader;
+    private readonly IMessageSender messageSender;
 
-    public TextCommandHandler(IQueryableRepository repository, ITextCommandReplyLoader replyLoader, IOptions<BotSettings> settings) : base(settings)
+    public TextCommandHandler(IQueryableRepository repository,
+                              ITextCommandReplyLoader replyLoader,
+                              IMessageSender messageSender)
     {
         this.repository = repository;
         this.replyLoader = replyLoader;
+        this.messageSender = messageSender;
     }
 
     protected override bool CanHandle(IChatCommand command)
@@ -24,7 +26,7 @@ public class TextCommandHandler : CommandHandler
         return true;
     }
 
-    protected override void HandleInternal(ITwitchClient client, IChatCommand chatCommand)
+    protected override void HandleInternal(IChatCommand chatCommand)
     {
         IQueryable<TextCommand> textCommands = this.repository.Query<TextCommand>();
 
@@ -35,7 +37,7 @@ public class TextCommandHandler : CommandHandler
                 textCommand.UpdateLastUsage();
                 this.repository.SaveChanges();
 
-                this.SendMessage(client, reply);
+                this.messageSender.Send(reply);
                 return;
             }
         }

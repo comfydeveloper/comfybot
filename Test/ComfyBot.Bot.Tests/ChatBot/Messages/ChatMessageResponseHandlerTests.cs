@@ -1,14 +1,12 @@
 ﻿using ComfyBot.Bot.ChatBot.Messages;
+using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
-using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Microsoft.Extensions.Options;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
-using TwitchLib.Client.Interfaces;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 
@@ -16,10 +14,9 @@ namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 public class ChatMessageResponseHandlerTests
 {
     private IMessageResponseLoader responseLoader;
-    private ITwitchClient twitchClient;
     private IQueryableRepository repository;
     private IChatMessage chatMessage;
-    private BotSettings settings;
+    private IMessageSender messageSender;
 
     private ChatMessageResponseHandler handler;
 
@@ -27,22 +24,17 @@ public class ChatMessageResponseHandlerTests
     public void Setup()
     {
         this.repository = Substitute.For<IQueryableRepository>();
-        this.twitchClient = Substitute.For<ITwitchClient>();
         this.responseLoader = Substitute.For<IMessageResponseLoader>();
         this.chatMessage = Substitute.For<IChatMessage>();
+        this.messageSender = Substitute.For<IMessageSender>();
 
-        this.settings = new BotSettings();
-        IOptions<BotSettings> options = Substitute.For<IOptions<BotSettings>>();
-        options.Value.Returns(this.settings);
-
-        this.handler = new ChatMessageResponseHandler(this.repository, this.responseLoader, options);
+        this.handler = new ChatMessageResponseHandler(this.repository, this.responseLoader, this.messageSender);
     }
 
     [TestCase("channel1", "response1")]
     [TestCase("channel2", "response2")]
-    public void HandleShouldSendMessageIfSuitableMessageFound(string channel, string response)
+    public void HandleShouldSendIfSuitableMessageFound(string channel, string response)
     {
-        this.settings.Channel = channel;
         MessageResponse messageResponse1 = CreateMessageResponse();
         MessageResponse messageResponse2 = CreateMessageResponse();
         this.chatMessage.Text.Returns("message");
@@ -50,11 +42,11 @@ public class ChatMessageResponseHandlerTests
         this.responseLoader.TryGetResponse(messageResponse1, this.chatMessage, out Arg.Any<string>()).Returns(false);
         this.responseLoader.TryGetResponse(messageResponse2, this.chatMessage, out Arg.Any<string>()).Returns(true);
 
-        this.handler.Handle(this.twitchClient, this.chatMessage);
+        this.handler.Handle(this.chatMessage);
 
         this.responseLoader.Received(1).TryGetResponse(messageResponse1, this.chatMessage, out Arg.Any<string>());
         this.responseLoader.TryGetResponse(messageResponse2, this.chatMessage, out Arg.Any<string>());
-        this.twitchClient.SendMessage(channel, response, false);
+        this.messageSender.Send(response);
     }
 
     [Test]
@@ -62,7 +54,6 @@ public class ChatMessageResponseHandlerTests
     {
         string response1 = "response1";
         string response2 = "response2";
-        this.settings.Channel = "channel";
         MessageResponse messageResponse1 = CreateMessageResponse(priority: 2);
         MessageResponse messageResponse2 = CreateMessageResponse(priority: 1);
         this.chatMessage.Text.Returns("message");
@@ -78,9 +69,9 @@ public class ChatMessageResponseHandlerTests
             return true;
         });
 
-        this.handler.Handle(this.twitchClient, this.chatMessage);
+        this.handler.Handle(this.chatMessage);
 
-        this.twitchClient.Received(1).SendMessage("channel", response2, false);
+        this.messageSender.Received(1).Send(response2);
     }
 
     [TestCase("!")]
@@ -90,7 +81,7 @@ public class ChatMessageResponseHandlerTests
     {
         this.chatMessage.Text.Returns(commandMessage);
 
-        this.handler.Handle(this.twitchClient, this.chatMessage);
+        this.handler.Handle(this.chatMessage);
 
         this.repository.DidNotReceive().Query<MessageResponse>();
     }
