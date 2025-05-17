@@ -5,6 +5,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>ComfyBot.Application.App</StartupObject>
+    <ApplicationIcon>Comfybot.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,10 @@
     <EmbeddedResource Remove="logs\**" />
     <None Remove="logs\**" />
     <Page Remove="logs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Comfybot.ico" />
   </ItemGroup>
 
   <ItemGroup>
