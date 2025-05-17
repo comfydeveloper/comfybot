@@ -7,6 +7,7 @@ using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 
@@ -33,7 +34,7 @@ public class ChatMessageResponseHandlerTests
 
     [TestCase("channel1", "response1")]
     [TestCase("channel2", "response2")]
-    public void HandleShouldSendIfSuitableMessageFound(string channel, string response)
+    public async Task HandleShouldSendIfSuitableMessageFound(string channel, string response)
     {
         MessageResponse messageResponse1 = CreateMessageResponse();
         MessageResponse messageResponse2 = CreateMessageResponse();
@@ -42,7 +43,7 @@ public class ChatMessageResponseHandlerTests
         this.responseLoader.TryGetResponse(messageResponse1, this.chatMessage, out Arg.Any<string>()).Returns(false);
         this.responseLoader.TryGetResponse(messageResponse2, this.chatMessage, out Arg.Any<string>()).Returns(true);
 
-        this.handler.Handle(this.chatMessage);
+        await this.handler.Handle(this.chatMessage);
 
         this.responseLoader.Received(1).TryGetResponse(messageResponse1, this.chatMessage, out Arg.Any<string>());
         this.responseLoader.TryGetResponse(messageResponse2, this.chatMessage, out Arg.Any<string>());
@@ -50,7 +51,7 @@ public class ChatMessageResponseHandlerTests
     }
 
     [Test]
-    public void HandleShouldSendSuitableMessageOrderedByPriority()
+    public async Task HandleShouldSendSuitableMessageOrderedByPriority()
     {
         string response1 = "response1";
         string response2 = "response2";
@@ -69,7 +70,7 @@ public class ChatMessageResponseHandlerTests
             return true;
         });
 
-        this.handler.Handle(this.chatMessage);
+        await this.handler.Handle(this.chatMessage);
 
         this.messageSender.Received(1).Send(response2);
     }
@@ -77,11 +78,11 @@ public class ChatMessageResponseHandlerTests
     [TestCase("!")]
     [TestCase("!test")]
     [TestCase("! test")]
-    public void HandleShouldNotSendResponseWhenMessageIsCommand(string commandMessage)
+    public async Task HandleShouldNotSendResponseWhenMessageIsCommand(string commandMessage)
     {
         this.chatMessage.Text.Returns(commandMessage);
 
-        this.handler.Handle(this.chatMessage);
+        await this.handler.Handle(this.chatMessage);
 
         this.repository.DidNotReceive().Query<MessageResponse>();
     }

@@ -1,8 +1,9 @@
 ﻿using ComfyBot.Bot.ChatBot.Wrappers;
+using System.Threading.Tasks;
 
 namespace ComfyBot.Bot.ChatBot.Messages;
 
 public interface IChatMessageHandler
 {
-    void Handle(IChatMessage message);
+    Task Handle(IChatMessage message);
 }

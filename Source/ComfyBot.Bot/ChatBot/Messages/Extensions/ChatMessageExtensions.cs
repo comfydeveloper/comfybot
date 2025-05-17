@@ -8,4 +8,9 @@ public static class ChatMessageExtensions
     {
         return message.Text.StartsWith(text);
     }
+
+    public static bool IsCommand(this IChatMessage message)
+    {
+        return message.Text.StartsWith('!');
+    }
 }

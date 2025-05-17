@@ -1,8 +1,11 @@
-﻿using ComfyBot.Bot.ChatBot.Services;
+﻿using ComfyBot.Bot.ChatBot.Messages.Extensions;
+using ComfyBot.Bot.ChatBot.Services;
 using System.Linq;
 using ComfyBot.Bot.ChatBot.Wrappers;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
+using System;
+using System.Threading.Tasks;
 
 namespace ComfyBot.Bot.ChatBot.Messages;
 
@@ -21,9 +24,9 @@ public class ChatMessageResponseHandler : IChatMessageHandler
         this.messageSender = messageSender;
     }
 
-    public void Handle(IChatMessage message)
+    public async Task Handle(IChatMessage message)
     {
-        if (IsCommand(message))
+        if (message.IsCommand())
         {
             return;
         }
@@ -35,15 +38,14 @@ public class ChatMessageResponseHandler : IChatMessageHandler
             if (this.responseLoader.TryGetResponse(messageResponse, message, out string response))
             {
                 messageResponse.UpdateLastUsage();
-                this.repository.SaveChanges();
+                await this.repository.SaveChanges();
+
+                int waitTime = Random.Shared.Next(2500, 11000);
+                await Task.Delay(waitTime);
+
                 this.messageSender.Send(response);
                 return;
             }
         }
-    }
-
-    private static bool IsCommand(IChatMessage message)
-    {
-        return message.Text.StartsWith('!');
     }
 }
