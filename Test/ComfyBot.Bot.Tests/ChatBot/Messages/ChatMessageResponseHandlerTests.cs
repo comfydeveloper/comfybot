@@ -1,8 +1,10 @@
 ﻿using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using NUnit.Framework;
 using System;
@@ -18,6 +20,7 @@ public class ChatMessageResponseHandlerTests
     private IQueryableRepository repository;
     private IChatMessage chatMessage;
     private IMessageSender messageSender;
+    private BotSettings settings;
 
     private ChatMessageResponseHandler handler;
 
@@ -28,8 +31,11 @@ public class ChatMessageResponseHandlerTests
         this.responseLoader = Substitute.For<IMessageResponseLoader>();
         this.chatMessage = Substitute.For<IChatMessage>();
         this.messageSender = Substitute.For<IMessageSender>();
+        this.settings = new BotSettings();
+        IOptions<BotSettings> options = Substitute.For<IOptions<BotSettings>>();
+        options.Value.Returns(this.settings);
 
-        this.handler = new ChatMessageResponseHandler(this.repository, this.responseLoader, this.messageSender);
+        this.handler = new ChatMessageResponseHandler(this.repository, this.responseLoader, this.messageSender, options);
     }
 
     [TestCase("channel1", "response1")]
@@ -81,6 +87,17 @@ public class ChatMessageResponseHandlerTests
     public async Task HandleShouldNotSendResponseWhenMessageIsCommand(string commandMessage)
     {
         this.chatMessage.Text.Returns(commandMessage);
+
+        await this.handler.Handle(this.chatMessage);
+
+        this.repository.DidNotReceive().Query<MessageResponse>();
+    }
+
+    [Test]
+    public async Task HandleShouldNotSendResponseWhenMessageIsSentByIgnoredUser()
+    {
+        this.chatMessage.UserName.Returns("ignored");
+        this.settings.IgnoredUsers = ["Ignored"];
 
         await this.handler.Handle(this.chatMessage);
 

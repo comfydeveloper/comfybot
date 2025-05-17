@@ -2,8 +2,10 @@
 using ComfyBot.Bot.ChatBot.Services;
 using System.Linq;
 using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -14,19 +16,22 @@ public class ChatMessageResponseHandler : IChatMessageHandler
     private readonly IQueryableRepository repository;
     private readonly IMessageResponseLoader responseLoader;
     private readonly IMessageSender messageSender;
+    private readonly BotSettings settings;
 
     public ChatMessageResponseHandler(IQueryableRepository repository,
         IMessageResponseLoader responseLoader,
-        IMessageSender messageSender)
+        IMessageSender messageSender,
+        IOptions<BotSettings> options)
     {
         this.repository = repository;
         this.responseLoader = responseLoader;
         this.messageSender = messageSender;
+        this.settings = options.Value;
     }
 
     public async Task Handle(IChatMessage message)
     {
-        if (message.IsCommand())
+        if (message.IsCommand() || message.SentBy(this.settings.IgnoredUsers))
         {
             return;
         }

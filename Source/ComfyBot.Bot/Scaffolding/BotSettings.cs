@@ -9,4 +9,9 @@ public class BotSettings
     public string AuthKey { get; set; }
 
     public string User { get; set; }
+
+    /// <summary>
+    /// Gets or sets a list of users that should be ignored by the bot when responding to chat messages.
+    /// </summary>
+    public string[] IgnoredUsers { get; set; } = [];
 }

@@ -1,4 +1,6 @@
 ﻿using ComfyBot.Bot.ChatBot.Wrappers;
+using System;
+using System.Linq;
 
 namespace ComfyBot.Bot.ChatBot.Messages.Extensions;
 
@@ -12,5 +14,10 @@ public static class ChatMessageExtensions
     public static bool IsCommand(this IChatMessage message)
     {
         return message.Text.StartsWith('!');
+    }
+
+    public static bool SentBy(this IChatMessage message, params string[] userNames)
+    {
+        return userNames.Any(n => n.Equals(message.UserName, StringComparison.OrdinalIgnoreCase));
     }
 }
