@@ -28,6 +28,6 @@ public static class StringExtensions
         {
             return text;
         }
-        return text.Substring(0, position) + replace + text.Substring(position + search.Length);
+        return string.Concat(text.AsSpan(0, position), replace, text.AsSpan(position + search.Length));
     }
 }
