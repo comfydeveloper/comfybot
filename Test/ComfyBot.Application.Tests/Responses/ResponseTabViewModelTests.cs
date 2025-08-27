@@ -1,7 +1,9 @@
-﻿using ComfyBot.Application.Features.MessageResponses;
+﻿using Accessibility;
+using ComfyBot.Application.Features.MessageResponses;
 using ComfyBot.Application.Features.Shared.Contracts;
 using System.Linq;
 using ComfyBot.Application.Responses;
+using ComfyBot.Application.Shared.Services;
 using ComfyBot.Application.Shared.Wrappers;
 using FluentAssertions;
 using NSubstitute;
@@ -18,6 +20,7 @@ public class ResponseTabViewModelTests
     private ICommandHandler<AddResponse.Command> addHandler;
     private ICommandHandler<UpdateResponse.Command> updateHandler;
     private ICommandHandler<RemoveResponse.Command> removeHandler;
+    private IScopedServiceProvider provider;
     private IMessageBox messageBox;
 
     private ResponseTabViewModel viewModel;
@@ -29,9 +32,15 @@ public class ResponseTabViewModelTests
         this.addHandler = Substitute.For<ICommandHandler<AddResponse.Command>>();
         this.updateHandler = Substitute.For<ICommandHandler<UpdateResponse.Command>>();
         this.removeHandler = Substitute.For<ICommandHandler<RemoveResponse.Command>>();
+        this.provider = Substitute.For<IScopedServiceProvider>();
         this.messageBox = Substitute.For<IMessageBox>();
 
-        this.viewModel = new ResponseTabViewModel(this.getHandler, this.addHandler, this.updateHandler, this.removeHandler, this.messageBox);
+        this.provider.Create<IQueryHandler<GetResponses.Query, GetResponses.Result>>().Returns(new ScopedService<IQueryHandler<GetResponses.Query, GetResponses.Result>>(null, this.getHandler));
+        this.provider.Create<ICommandHandler<AddResponse.Command>>().Returns(new ScopedService<ICommandHandler<AddResponse.Command>>(null, this.addHandler));
+        this.provider.Create<ICommandHandler<UpdateResponse.Command>>().Returns(new ScopedService<ICommandHandler<UpdateResponse.Command>>(null, this.updateHandler));
+        this.provider.Create<ICommandHandler<RemoveResponse.Command>>().Returns(new ScopedService<ICommandHandler<RemoveResponse.Command>>(null, this.removeHandler));
+
+        this.viewModel = new ResponseTabViewModel(this.provider, this.messageBox);
     }
 
     [Test]

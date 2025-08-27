@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Bot.ChatBot.Services;
+using ComfyBot.Bot.ChatBot.Services.Strategies;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -11,7 +12,7 @@ public class WildcardReplacerTests
     [SetUp]
     public void Setup()
     {
-        this.replacer = new WildcardReplacer();
+        this.replacer = new WildcardReplacer([new VariableWordsStrategy(), new NumberRangeStrategy()]);
     }
 
     [Test]

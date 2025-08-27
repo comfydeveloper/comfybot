@@ -3,9 +3,9 @@ using System.Linq;
 using System.Windows;
 using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Features.TextCommands;
+using ComfyBot.Application.Shared.Services;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
-using ComfyBot.Application.Variables;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
@@ -19,8 +19,9 @@ public class TextCommandsTabViewModelTests
     private ICommandHandler<AddCommand.Command> addHandler;
     private ICommandHandler<UpdateCommand.Command> updateHandler;
     private ICommandHandler<RemoveCommand.Command> removeHandler;
+    private IScopedServiceProvider provider;
     private IMessageBox messageBox;
-        
+
     private TextCommandsTabViewModel viewModel;
 
     [SetUp]
@@ -30,10 +31,15 @@ public class TextCommandsTabViewModelTests
         this.addHandler = Substitute.For<ICommandHandler<AddCommand.Command>>();
         this.updateHandler = Substitute.For<ICommandHandler<UpdateCommand.Command>>();
         this.removeHandler = Substitute.For<ICommandHandler<RemoveCommand.Command>>();
+        this.provider = Substitute.For<IScopedServiceProvider>();
         this.messageBox = Substitute.For<IMessageBox>();
 
+        this.provider.Create<IQueryHandler<GetCommands.Query, GetCommands.Result>>().Returns(_ => new ScopedService<IQueryHandler<GetCommands.Query, GetCommands.Result>>(null, this.getHandler));
+        this.provider.Create<ICommandHandler<AddCommand.Command>>().Returns(_ => new ScopedService<ICommandHandler<AddCommand.Command>>(null, this.addHandler));
+        this.provider.Create<ICommandHandler<UpdateCommand.Command>>().Returns(_ => new ScopedService<ICommandHandler<UpdateCommand.Command>>(null, this.updateHandler));
+        this.provider.Create<ICommandHandler<RemoveCommand.Command>>().Returns(_ => new ScopedService<ICommandHandler<RemoveCommand.Command>>(null, this.removeHandler));
 
-        this.viewModel = new TextCommandsTabViewModel(this.getHandler, this.addHandler, this.updateHandler, this.removeHandler, this.messageBox);
+        this.viewModel = new TextCommandsTabViewModel(this.provider, this.messageBox);
     }
 
     [Test]
