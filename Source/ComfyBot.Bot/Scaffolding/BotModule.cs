@@ -17,10 +17,10 @@ public class BotModule : IModule
 {
     public void RegisterServices(IServiceCollection services)
     {
-        services.AddAllImplementing(typeof(ICommandHandler), ServiceLifetime.Transient);
-        services.AddAllImplementing(typeof(IChatMessageHandler), ServiceLifetime.Transient);
+        services.AddAllImplementing(typeof(ICommandHandler), ServiceLifetime.Scoped);
+        services.AddAllImplementing(typeof(IChatMessageHandler), ServiceLifetime.Scoped);
         services.AddAllImplementing(typeof(IRewardRedeemHandler), ServiceLifetime.Transient);
-        services.AddAllImplementing(typeof(IReplacementStrategy), ServiceLifetime.Transient);
+        services.AddAllImplementing(typeof(IReplacementStrategy), ServiceLifetime.Scoped);
 
         services.AddTransient<ITimezoneLoader, TimezoneLoader>();
         services.AddTransient<ITimeLoader, TimeLoader>();
@@ -29,6 +29,7 @@ public class BotModule : IModule
         services.AddTransient<IMessageResponseLoader, MessageResponseLoader>();
 
         services.AddTransient<IWildcardReplacer, WildcardReplacer>();
+
         services.AddSingleton<IMessageSender, MessageSender>();
 
         services.AddTransient<IComfyBot, ChatBot.ChatBot>();

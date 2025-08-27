@@ -11,8 +11,8 @@ public class DataModule : IModule
 {
     public void RegisterServices(IServiceCollection services)
     {
-        services.AddDbContext<DataContext>(contextLifetime: ServiceLifetime.Transient, optionsLifetime: ServiceLifetime.Singleton);
-        services.AddTransient<IQueryableRepository, QueryableRepository>();
+        services.AddDbContext<DataContext>(contextLifetime: ServiceLifetime.Scoped, optionsLifetime: ServiceLifetime.Singleton);
+        services.AddScoped<IQueryableRepository, QueryableRepository>();
     }
 
     public void Configure(IHost host)

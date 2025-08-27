@@ -1,38 +1,28 @@
-﻿using System;
+﻿using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Features.TextCommands;
+using ComfyBot.Application.Shared;
+using ComfyBot.Application.Shared.Extensions;
+using ComfyBot.Application.Shared.Services;
+using ComfyBot.Application.Shared.Wrappers;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using ComfyBot.Application.Features.Shared.Contracts;
-using ComfyBot.Application.Features.TextCommands;
-using ComfyBot.Application.Shared;
-using ComfyBot.Application.Shared.Extensions;
-using ComfyBot.Application.Shared.Wrappers;
 
 namespace ComfyBot.Application.TextCommands;
 
 public class TextCommandsTabViewModel : InitializableTab
 {
-    private readonly IQueryHandler<GetCommands.Query, GetCommands.Result> getHandler;
-    private readonly ICommandHandler<AddCommand.Command> addHandler;
-    private readonly ICommandHandler<UpdateCommand.Command> updateHandler;
-    private readonly ICommandHandler<RemoveCommand.Command> removeHandler;
+    private readonly IScopedServiceProvider provider;
     private readonly IMessageBox messageBox;
     private string searchText;
 
-    public TextCommandsTabViewModel(
-        IQueryHandler<GetCommands.Query, GetCommands.Result> getHandler,
-        ICommandHandler<AddCommand.Command> addHandler,
-        ICommandHandler<UpdateCommand.Command> updateHandler,
-        ICommandHandler<RemoveCommand.Command> removeHandler,
-        IMessageBox messageBox)
+    public TextCommandsTabViewModel(IScopedServiceProvider provider, IMessageBox messageBox)
     {
-        this.getHandler = getHandler;
-        this.addHandler = addHandler;
-        this.updateHandler = updateHandler;
-        this.removeHandler = removeHandler;
+        this.provider = provider;
         this.messageBox = messageBox;
 
         this.AddTextCommandCommand = new DelegateCommand(this.AddTextCommand);
@@ -47,7 +37,8 @@ public class TextCommandsTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        GetCommands.Result result = this.getHandler.Handle(new GetCommands.Query()).Result;
+        using var getHandler = this.provider.Create<IQueryHandler<GetCommands.Query, GetCommands.Result>>();
+        GetCommands.Result result = getHandler.Service.Handle(new GetCommands.Query()).Result;
 
         foreach (GetCommands.TextCommandEntry entry in result.Entries)
         {
@@ -71,7 +62,8 @@ public class TextCommandsTabViewModel : InitializableTab
         Guid id = Guid.NewGuid();
         this.Commands.Add(new TextCommandModel { Id = id.ToString() });
 
-        this.addHandler.Handle(new AddCommand.Command(id));
+        using var addHandler = this.provider.Create<ICommandHandler<AddCommand.Command>>();
+        addHandler.Service.Handle(new AddCommand.Command(id));
     }
 
     private void OnCommandUpdate(object sender, PropertyChangedEventArgs e)
@@ -84,7 +76,8 @@ public class TextCommandsTabViewModel : InitializableTab
             model.Commands.ToStrings(),
             model.Replies.ToStrings());
 
-        this.updateHandler.Handle(command);
+        using var updateHandler = this.provider.Create<ICommandHandler<UpdateCommand.Command>>();
+        updateHandler.Service.Handle(command);
     }
 
     private void RemoveTextCommand(object parameter)
@@ -94,7 +87,8 @@ public class TextCommandsTabViewModel : InitializableTab
         if (this.messageBox.Show(GetDeletionMessage(model), "Delete command", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             this.Commands.Remove(model);
-            this.removeHandler.Handle(new RemoveCommand.Command(Guid.Parse(model.Id)));
+            using var removeHandler = this.provider.Create<ICommandHandler<RemoveCommand.Command>>();
+            removeHandler.Service.Handle(new RemoveCommand.Command(Guid.Parse(model.Id)));
         }
     }
 

@@ -6,29 +6,19 @@ using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Features.Variables;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.Shared.Extensions;
+using ComfyBot.Application.Shared.Services;
 using ComfyBot.Application.Shared.Wrappers;
 
 namespace ComfyBot.Application.Variables;
 
 public class VariablesTabViewModel : InitializableTab
 {
-    private readonly IQueryHandler<GetVariables.Query, GetVariables.Result> getHandler;
-    private readonly ICommandHandler<AddVariable.Command> addHandler;
-    private readonly ICommandHandler<UpdateVariable.Command> updateHandler;
-    private readonly ICommandHandler<RemoveVariable.Command> removeHandler;
+    private readonly IScopedServiceProvider provider;
     private readonly IMessageBox messageBox;
 
-    public VariablesTabViewModel(
-        IQueryHandler<GetVariables.Query, GetVariables.Result> getHandler,
-        ICommandHandler<AddVariable.Command> addHandler,
-        ICommandHandler<UpdateVariable.Command> updateHandler,
-        ICommandHandler<RemoveVariable.Command> removeHandler,
-        IMessageBox messageBox)
+    public VariablesTabViewModel(IScopedServiceProvider provider, IMessageBox messageBox)
     {
-        this.getHandler = getHandler;
-        this.addHandler = addHandler;
-        this.updateHandler = updateHandler;
-        this.removeHandler = removeHandler;
+        this.provider = provider;
         this.messageBox = messageBox;
 
         this.AddVariableCommand = new DelegateCommand(this.AddVariable);
@@ -43,7 +33,8 @@ public class VariablesTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        GetVariables.Result result = this.getHandler.Handle(new GetVariables.Query()).Result;
+        using var getHandler = this.provider.Create<IQueryHandler<GetVariables.Query, GetVariables.Result>>();
+        GetVariables.Result result = getHandler.Service.Handle(new GetVariables.Query()).Result;
 
         foreach (GetVariables.VariableEntry entry in result.Entries)
         {
@@ -69,7 +60,8 @@ public class VariablesTabViewModel : InitializableTab
             model.Name,
             model.Value);
 
-        this.updateHandler.Handle(command);
+        using var updateHandler = this.provider.Create<ICommandHandler<UpdateVariable.Command>>();
+        updateHandler.Service.Handle(command);
     }
 
     private void AddVariable()
@@ -77,7 +69,8 @@ public class VariablesTabViewModel : InitializableTab
         Guid id = Guid.NewGuid();
         this.Variables.Add(new VariableModel { Id = id.ToString() });
 
-        this.addHandler.Handle(new AddVariable.Command(id));
+        using var addHandler = this.provider.Create<ICommandHandler<AddVariable.Command>>();
+        addHandler.Service.Handle(new AddVariable.Command(id));
     }
 
     private void RemoveVariable(object parameter)
@@ -87,7 +80,8 @@ public class VariablesTabViewModel : InitializableTab
         if (this.messageBox.Show(GetDeletionMessage(model), "Delete variable", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             this.Variables.Remove(model);
-            this.removeHandler.Handle(new RemoveVariable.Command(Guid.Parse(model.Id)));
+            using var removeHandler = this.provider.Create<ICommandHandler<RemoveVariable.Command>>();
+            removeHandler.Service.Handle(new RemoveVariable.Command(Guid.Parse(model.Id)));
         }
     }
 

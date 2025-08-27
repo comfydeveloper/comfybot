@@ -94,7 +94,7 @@ public partial class App
 
             await AppHost!.StartAsync();
 
-            var startupForm = AppHost.Services.GetRequiredService<MainWindow>();
+            MainWindow startupForm = AppHost.Services.GetRequiredService<MainWindow>();
 
             IEnumerable<IInitializerJob> initializerJobs = AppHost.Services.GetServices<IInitializerJob>();
 

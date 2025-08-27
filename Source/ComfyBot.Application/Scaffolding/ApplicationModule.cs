@@ -1,6 +1,7 @@
 ﻿using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Main;
 using ComfyBot.Application.Responses;
+using ComfyBot.Application.Shared.Services;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
 using ComfyBot.Application.Variables;
@@ -15,6 +16,7 @@ public class ApplicationModule : IModule
     public void RegisterServices(IServiceCollection services)
     {
         services.AddTransient<IMessageBox, MessageBoxWrapper>();
+        services.AddSingleton<IScopedServiceProvider, ScopedServiceProvider>();
 
         services.AddAutoMapper(this.GetType().Assembly);
 
@@ -24,10 +26,10 @@ public class ApplicationModule : IModule
         services.AddTransient<TextCommandsTabViewModel>();
         services.AddTransient<VariablesTabViewModel>();
 
-        services.AddAllImplementing(typeof(ICommandHandler<>), ServiceLifetime.Transient);
-        services.AddAllImplementing(typeof(ICommandHandler<,>), ServiceLifetime.Transient);
-        services.AddAllImplementing(typeof(IQueryHandler<>), ServiceLifetime.Transient);
-        services.AddAllImplementing(typeof(IQueryHandler<,>), ServiceLifetime.Transient);
+        services.AddAllImplementing(typeof(ICommandHandler<>), ServiceLifetime.Scoped);
+        services.AddAllImplementing(typeof(ICommandHandler<,>), ServiceLifetime.Scoped);
+        services.AddAllImplementing(typeof(IQueryHandler<>), ServiceLifetime.Scoped);
+        services.AddAllImplementing(typeof(IQueryHandler<,>), ServiceLifetime.Scoped);
 
         services.AddTransient<MainWindow>();
     }

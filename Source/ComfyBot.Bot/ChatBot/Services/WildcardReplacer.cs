@@ -5,11 +5,12 @@ namespace ComfyBot.Bot.ChatBot.Services;
 
 public class WildcardReplacer : IWildcardReplacer
 {
-    private readonly List<IReplacementStrategy> replacementStrategies =
-    [
-        new NumberRangeStrategy(),
-        new VariableWordsStrategy()
-    ];
+    private readonly IEnumerable<IReplacementStrategy> replacementStrategies = [];
+
+    public WildcardReplacer(IEnumerable<IReplacementStrategy> replacementStrategies)
+    {
+        this.replacementStrategies = replacementStrategies;
+    }
 
     public string Replace(string original)
     {

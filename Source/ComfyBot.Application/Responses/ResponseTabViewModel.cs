@@ -1,39 +1,28 @@
 ﻿using ComfyBot.Application.Features.MessageResponses;
 using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Shared;
+using ComfyBot.Application.Shared.Extensions;
+using ComfyBot.Application.Shared.Services;
+using ComfyBot.Application.Shared.Wrappers;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows.Data;
-using ComfyBot.Application.Shared;
-using ComfyBot.Application.Shared.Extensions;
-using ComfyBot.Application.Shared.Wrappers;
 using System.Windows;
+using System.Windows.Data;
 
 namespace ComfyBot.Application.Responses;
 
 public class ResponseTabViewModel : InitializableTab
 {
-    private readonly IQueryHandler<GetResponses.Query, GetResponses.Result> getHandler;
-    private readonly ICommandHandler<AddResponse.Command> addHandler;
-    private readonly ICommandHandler<UpdateResponse.Command> updateHandler;
-    private readonly ICommandHandler<RemoveResponse.Command> removeHandler;
+    private readonly IScopedServiceProvider provider;
     private readonly IMessageBox messageBox;
-
     private string searchText;
 
-    public ResponseTabViewModel(
-        IQueryHandler<GetResponses.Query, GetResponses.Result> getHandler,
-        ICommandHandler<AddResponse.Command> addHandler,
-        ICommandHandler<UpdateResponse.Command> updateHandler,
-        ICommandHandler<RemoveResponse.Command> removeHandler,
-        IMessageBox messageBox)
+    public ResponseTabViewModel(IScopedServiceProvider provider, IMessageBox messageBox)
     {
-        this.getHandler = getHandler;
-        this.addHandler = addHandler;
-        this.updateHandler = updateHandler;
-        this.removeHandler = removeHandler;
+        this.provider = provider;
         this.messageBox = messageBox;
 
         this.AddResponseCommand = new DelegateCommand(this.AddResponse);
@@ -48,7 +37,8 @@ public class ResponseTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        GetResponses.Result result = this.getHandler.Handle(new GetResponses.Query()).Result;
+        using var getHandler = this.provider.Create<IQueryHandler<GetResponses.Query, GetResponses.Result>>();
+        GetResponses.Result result = getHandler.Service.Handle(new GetResponses.Query()).Result;
 
         foreach (GetResponses.MessageResponseEntry entry in result.Entries)
         {
@@ -78,7 +68,8 @@ public class ResponseTabViewModel : InitializableTab
         MessageResponseModel messageResponse = new() { Id = id.ToString() };
         this.Responses.Add(messageResponse);
 
-        this.addHandler.Handle(new AddResponse.Command(id));
+        using var addHandler = this.provider.Create<ICommandHandler<AddResponse.Command>>();
+        addHandler.Service.Handle(new AddResponse.Command(id));
     }
 
     private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
@@ -95,7 +86,8 @@ public class ResponseTabViewModel : InitializableTab
                                              model.AllKeywords.ToStrings(),
                                              model.Replies.ToStrings());
 
-        this.updateHandler.Handle(command);
+        using var updateHandler = this.provider.Create<ICommandHandler<UpdateResponse.Command>>();
+        updateHandler.Service.Handle(command);
     }
 
     private void RemoveResponse(object parameter)
@@ -105,7 +97,8 @@ public class ResponseTabViewModel : InitializableTab
         if (this.messageBox.Show(GetDeletionMessage(response), "Delete response", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             this.Responses.Remove(response);
-            this.removeHandler.Handle(new RemoveResponse.Command(Guid.Parse(response.Id)));
+            using var removeHandler = this.provider.Create<ICommandHandler<RemoveResponse.Command>>();
+            removeHandler.Service.Handle(new RemoveResponse.Command(Guid.Parse(response.Id)));
         }
     }
 

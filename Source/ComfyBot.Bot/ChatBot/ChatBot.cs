@@ -4,7 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Interfaces;
 
@@ -12,21 +14,18 @@ namespace ComfyBot.Bot.ChatBot;
 
 public class ChatBot : IComfyBot
 {
-    private readonly IEnumerable<ICommandHandler> commandHandlers;
-    private readonly IEnumerable<IChatMessageHandler> messageHandlers;
     private readonly ILogger<ChatBot> logger;
+    private readonly IServiceProvider serviceProvider;
 
     private readonly ITwitchClient twitchClient;
 
     public ChatBot(ITwitchClient twitchClient,
-                   IEnumerable<ICommandHandler> commandHandlers,
-                   IEnumerable<IChatMessageHandler> messageHandlers,
-                   ILogger<ChatBot> logger)
+                   ILogger<ChatBot> logger,
+                   IServiceProvider serviceProvider)
     {
         this.twitchClient = twitchClient;
-        this.commandHandlers = commandHandlers;
-        this.messageHandlers = messageHandlers;
         this.logger = logger;
+        this.serviceProvider = serviceProvider;
     }
 
     public void Run()
@@ -66,7 +65,10 @@ public class ChatBot : IComfyBot
     [ExcludeFromCodeCoverage]
     private void OnCommandReceived(object sender, OnChatCommandReceivedArgs e)
     {
-        foreach (ICommandHandler handler in this.commandHandlers)
+        using IServiceScope serviceScope = this.serviceProvider.CreateScope();
+        IEnumerable<ICommandHandler> commandHandlers = serviceScope.ServiceProvider.GetServices<ICommandHandler>();
+
+        foreach (ICommandHandler handler in commandHandlers)
         {
             try
             {
@@ -84,7 +86,10 @@ public class ChatBot : IComfyBot
     [ExcludeFromCodeCoverage]
     private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
     {
-        foreach (IChatMessageHandler handler in this.messageHandlers)
+        using IServiceScope serviceScope = this.serviceProvider.CreateScope();
+        IEnumerable<IChatMessageHandler> messageHandlers = serviceScope.ServiceProvider.GetServices<IChatMessageHandler>();
+
+        foreach (IChatMessageHandler handler in messageHandlers)
         {
             try
             {
