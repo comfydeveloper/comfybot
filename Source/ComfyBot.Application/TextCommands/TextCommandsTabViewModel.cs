@@ -63,7 +63,7 @@ public class TextCommandsTabViewModel : InitializableTab
             this.Commands.Add(model);
         }
 
-        this.Commands.RegisterCollectionItemChanged(this.OnResponseUpdate);
+        this.Commands.RegisterCollectionItemChanged(this.OnCommandUpdate);
     }
 
     private void AddTextCommand()
@@ -74,7 +74,7 @@ public class TextCommandsTabViewModel : InitializableTab
         this.addHandler.Handle(new AddCommand.Command(id));
     }
 
-    private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
+    private void OnCommandUpdate(object sender, PropertyChangedEventArgs e)
     {
         TextCommandModel model = (TextCommandModel)sender;
 

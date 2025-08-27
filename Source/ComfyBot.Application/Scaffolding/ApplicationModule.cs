@@ -3,6 +3,7 @@ using ComfyBot.Application.Main;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
+using ComfyBot.Application.Variables;
 using ComfyBot.Common.Scaffolding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +22,7 @@ public class ApplicationModule : IModule
         services.AddTransient<TabsViewModel>();
         services.AddTransient<ResponseTabViewModel>();
         services.AddTransient<TextCommandsTabViewModel>();
+        services.AddTransient<VariablesTabViewModel>();
 
         services.AddAllImplementing(typeof(ICommandHandler<>), ServiceLifetime.Transient);
         services.AddAllImplementing(typeof(ICommandHandler<,>), ServiceLifetime.Transient);

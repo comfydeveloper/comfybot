@@ -435,6 +435,77 @@
                     </Grid>
                 </ScrollViewer>
             </TabItem>
+            <!-- Variables Tab -->
+            <TabItem DataContext="{Binding Tabs.Variables}" IsSelected="{Binding IsSelected}">
+                <TabItem.Header>
+                    <DockPanel LastChildFill="False">
+                        <materialDesign:PackIcon Kind="ScatterPlotOutline"/>
+                        <TextBlock Text="Variables " Margin="5 0 0 0"/>
+                    </DockPanel>
+                </TabItem.Header>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="190" />
+                                <ColumnDefinition Width="2" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Name" FontWeight="Bold" />
+                            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 5" />
+                            <Label Grid.Column="2" Content="Value" FontWeight="Bold" />
+                        </Grid>
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Variables}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0 5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="190" />
+                                            <ColumnDefinition Width="2" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="30" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="5">
+                                            <TextBox Text="{Binding Name}" Height="30px" VerticalContentAlignment="Center" Padding="5 0" />
+                                        </StackPanel>
+                                        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 5" />
+                                        <StackPanel Grid.Column="2" Margin="5">
+                                            <TextBox Text="{Binding Value}"
+                                                     MinHeight="30px"
+                                                     VerticalContentAlignment="Center"
+                                                     Padding="5 0"
+                                                     TextWrapping="Wrap"
+                                                     />
+                                        </StackPanel>
+                                        <Border Grid.Column="3" Background="#d32f2f" Cursor="Hand" Margin="0 5" >
+                                            <Border.InputBindings>
+                                                <MouseBinding MouseAction="LeftClick" Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveVariableCommand}" CommandParameter="{Binding}"/>
+                                            </Border.InputBindings>
+                                            <materialDesign:PackIcon Kind="Trash" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFF" />
+                                        </Border>
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <DockPanel Grid.Row="2" LastChildFill="False">
+                            <Border VerticalAlignment="Center" Cursor="Hand" Background="Transparent" HorizontalAlignment="Left" Margin="5 0 0 0">
+                                <Border.InputBindings>
+                                    <MouseBinding MouseAction="LeftClick" Command="{Binding AddVariableCommand}" />
+                                </Border.InputBindings>
+                                <materialDesign:PackIcon Style="{StaticResource AddIconGreen}" Height="20" Width="20"/>
+                            </Border>
+                            <Label Content="Add a variable" />
+                        </DockPanel>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
         </TabControl>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
         <!-- Console -->

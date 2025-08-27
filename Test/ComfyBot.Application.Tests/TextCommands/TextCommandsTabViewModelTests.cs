@@ -5,6 +5,7 @@ using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Features.TextCommands;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
+using ComfyBot.Application.Variables;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
