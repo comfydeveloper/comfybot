@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ComfyBot.Application.Features.Shared;
+﻿using ComfyBot.Application.Features.Shared;
 using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
@@ -22,33 +21,23 @@ public sealed class GetVariables
 
     public class Result : ListDto<VariableEntry>;
 
-    internal class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
-            this.CreateMap<Variable, VariableEntry>(MemberList.Destination);
-        }
-    }
-
     internal class Handler : IQueryHandler<Query, Result>
     {
         private readonly IQueryableRepository repository;
-        private readonly IMapper mapper;
 
-        public Handler(IQueryableRepository repository,
-                       IMapper mapper)
+        public Handler(IQueryableRepository repository)
         {
             this.repository = repository;
-            this.mapper = mapper;
         }
 
         public async Task<Result> Handle(Query query)
         {
-            List<Variable> variables = await this.repository.Query<Variable>().ToListAsync();
+            List<VariableEntry> variables = await this.repository.Query<Variable>()
+                .Select(x => new VariableEntry(x.Id, x.Name, x.Value)).ToListAsync();
 
             return new Result
             {
-                Entries = variables.Select(this.mapper.Map<VariableEntry>).ToList()
+                Entries = variables
             };
         }
     }

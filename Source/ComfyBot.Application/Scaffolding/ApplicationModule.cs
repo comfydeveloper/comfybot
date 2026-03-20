@@ -18,8 +18,6 @@ public class ApplicationModule : IModule
         services.AddTransient<IMessageBox, MessageBoxWrapper>();
         services.AddSingleton<IScopedServiceProvider, ScopedServiceProvider>();
 
-        services.AddAutoMapper(this.GetType().Assembly);
-
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<TabsViewModel>();
         services.AddTransient<ResponseTabViewModel>();

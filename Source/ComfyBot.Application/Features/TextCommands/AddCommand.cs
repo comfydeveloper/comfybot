@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ComfyBot.Application.Features.Shared.Contracts;
+﻿using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System;
@@ -11,29 +10,27 @@ public sealed class AddCommand
 {
     public record Command(Guid Id);
 
-    internal class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
-            this.CreateMap<Command, TextCommand>(MemberList.Source);
-        }
-    }
-
     internal class Handler : ICommandHandler<Command>
     {
         private readonly IQueryableRepository repository;
-        private readonly IMapper mapper;
 
-        public Handler(IQueryableRepository repository,
-                       IMapper mapper)
+        public Handler(IQueryableRepository repository)
         {
             this.repository = repository;
-            this.mapper = mapper;
         }
 
         public async Task Handle(Command command)
         {
-            TextCommand newCommand = this.mapper.Map<TextCommand>(command);
+            TextCommand newCommand = new()
+            {
+                Id = command.Id,
+                CreatedAt = DateTime.Now,
+                Replies = [],
+                Commands = [],
+                LastUsedAt = null,
+                UseCount = 0,
+                TimeoutInSeconds = 0
+            };
 
             this.repository.Add(newCommand);
             await this.repository.SaveChanges();

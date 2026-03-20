@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ComfyBot.Application.Features.Shared;
+﻿using ComfyBot.Application.Features.Shared;
 using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
@@ -23,24 +22,13 @@ public sealed class GetCommands
 
     public class Result : ListDto<TextCommandEntry>;
 
-    internal class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
-            this.CreateMap<TextCommand, TextCommandEntry>(MemberList.Destination);
-        }
-    }
-
     internal class Handler : IQueryHandler<Query, Result>
     {
         private readonly IQueryableRepository repository;
-        private readonly IMapper mapper;
 
-        public Handler(IQueryableRepository repository,
-                       IMapper mapper)
+        public Handler(IQueryableRepository repository)
         {
             this.repository = repository;
-            this.mapper = mapper;
         }
 
         public async Task<Result> Handle(Query query)
@@ -49,7 +37,11 @@ public sealed class GetCommands
 
             return new Result
             {
-                Entries = textCommands.Select(this.mapper.Map<TextCommandEntry>).ToList()
+                Entries = textCommands.Select(tc => new TextCommandEntry(
+                    tc.Id,
+                    tc.TimeoutInSeconds,
+                    tc.Commands.ToArray(),
+                    tc.Replies.ToArray())).ToList()
             };
         }
     }

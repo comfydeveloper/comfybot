@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ComfyBot.Application.Features.Shared;
+﻿using ComfyBot.Application.Features.Shared;
 using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
@@ -28,24 +27,13 @@ public sealed class GetResponses
 
     public class Result : ListDto<MessageResponseEntry>;
 
-    internal class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
-            this.CreateMap<MessageResponse, MessageResponseEntry>(MemberList.Destination);
-        }
-    }
-
     internal class Handler : IQueryHandler<Query, Result>
     {
         private readonly IQueryableRepository repository;
-        private readonly IMapper mapper;
 
-        public Handler(IQueryableRepository repository,
-                       IMapper mapper)
+        public Handler(IQueryableRepository repository)
         {
             this.repository = repository;
-            this.mapper = mapper;
         }
 
         public async Task<Result> Handle(Query query)
@@ -54,7 +42,16 @@ public sealed class GetResponses
 
             return new Result
             {
-                Entries = messageResponses.Select(this.mapper.Map<MessageResponseEntry>).ToList()
+                Entries = messageResponses.Select(mr => new MessageResponseEntry(
+                    mr.Id,
+                    mr.TimeoutInSeconds,
+                    mr.AlwaysReply,
+                    mr.Priority,
+                    mr.Users.ToArray(),
+                    mr.ExactKeywords.ToArray(),
+                    mr.LooseKeywords.ToArray(),
+                    mr.AllKeywords.ToArray(),
+                    mr.Replies.ToArray())).ToList()
             };
         }
     }
