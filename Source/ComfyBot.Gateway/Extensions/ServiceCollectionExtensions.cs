@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
             services.AddSignalR()
                 .AddStackExchangeRedis(gatewaySettings.RedisConnectionString, options =>
                 {
-                    options.Configuration.ChannelPrefix = "ComfyBot.Gateway";
+                    options.Configuration.ChannelPrefix = StackExchange.Redis.RedisChannel.Literal("ComfyBot.Gateway");
                 });
         }
         else
