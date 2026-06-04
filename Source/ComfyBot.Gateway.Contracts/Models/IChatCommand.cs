@@ -6,7 +6,7 @@ public interface IChatCommand
 
     string ArgumentsAsString { get; }
 
-    IChatMessage ChatMessage { get; }
+    ChatMessage ChatMessage { get; }
 
     string CommandText { get; }
 

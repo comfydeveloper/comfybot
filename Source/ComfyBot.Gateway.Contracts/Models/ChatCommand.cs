@@ -8,7 +8,7 @@ public class ChatCommand : IChatCommand
 
     public string ArgumentsAsString { get; set; } = string.Empty;
 
-    public IChatMessage ChatMessage { get; set; } = new ChatMessage();
+    public ChatMessage ChatMessage { get; set; } = new ChatMessage();
 
     public string CommandText { get; set; } = string.Empty;
 

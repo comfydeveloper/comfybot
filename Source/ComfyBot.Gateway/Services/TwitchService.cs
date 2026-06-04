@@ -71,6 +71,12 @@ public class TwitchService : ITwitchService
     {
         try
         {
+            // Skip command messages - they will be handled by HandleCommandReceived
+            if (e.ChatMessage.Message.StartsWith('!'))
+            {
+                return;
+            }
+
             DateTime timestamp = DateTime.UtcNow;
             MessageReceivedEvent messageEvent = new()
             {
