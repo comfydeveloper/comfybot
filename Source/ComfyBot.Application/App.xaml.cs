@@ -105,7 +105,7 @@ public partial class App
             }
 
             IComfyBot comfyBot = AppHost.Services.GetService<IComfyBot>();
-            comfyBot.Run();
+            await comfyBot.Run();
             IComfyPubSub service = AppHost.Services.GetService<IComfyPubSub>();
             service.Run();
 

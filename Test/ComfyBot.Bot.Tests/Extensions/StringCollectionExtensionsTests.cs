@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using ComfyBot.Bot.Extensions;
 using FluentAssertions;
 using NUnit.Framework;

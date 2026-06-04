@@ -1,4 +1,4 @@
-﻿using ComfyBot.Bot.ChatBot.Timezones;
+using ComfyBot.Bot.ChatBot.Timezones;
 using FluentAssertions;
 using NUnit.Framework;
 

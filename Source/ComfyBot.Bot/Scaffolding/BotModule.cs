@@ -4,7 +4,7 @@ using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Services.Strategies;
 using ComfyBot.Bot.ChatBot.Timezones;
-using ComfyBot.Bot.Initialization;
+using ComfyBot.Bot.Gateway;
 using ComfyBot.Bot.PubSub;
 using ComfyBot.Bot.PubSub.RewardRedeems;
 using ComfyBot.Common.Scaffolding;
@@ -35,14 +35,9 @@ public class BotModule : IModule
         services.AddTransient<IComfyBot, ChatBot.ChatBot>();
         services.AddTransient<IComfyPubSub, ComfyPubSub>();
 
-        services.AddTransient<ITwitchClientFactory, TwitchClientFactory>();
-
-        services.AddSingleton(serviceProvider =>
-        {
-            ITwitchClientFactory factory = serviceProvider.GetRequiredService<ITwitchClientFactory>();
-
-            return factory.Create();
-        });
+        // Gateway client services
+        services.AddSingleton<IGatewayClient, GatewayClient>();
+        services.AddSingleton<IGatewayEventBridge, GatewayEventBridge>();
     }
 
     public void Configure(IHost applicationBuilder)

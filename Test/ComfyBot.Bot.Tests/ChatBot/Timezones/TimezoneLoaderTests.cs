@@ -1,4 +1,4 @@
-﻿using ComfyBot.Bot.ChatBot.Timezones;
+using ComfyBot.Bot.ChatBot.Timezones;
 using ComfyBot.Common.Http;
 using FluentAssertions;
 using NSubstitute;

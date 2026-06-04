@@ -1,4 +1,4 @@
-﻿using ComfyBot.Bot.Extensions;
+using ComfyBot.Bot.Extensions;
 using FluentAssertions;
 using NUnit.Framework;
 

@@ -1,4 +1,4 @@
-﻿using ComfyBot.Bot.ChatBot.Services;
+using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Services.Strategies;
 using FluentAssertions;
 using NUnit.Framework;

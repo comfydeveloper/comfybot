@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ComfyBot.Bot.ChatBot.Wrappers;
+namespace ComfyBot.Gateway.Contracts.Models;
 
 public interface IChatCommand
 {

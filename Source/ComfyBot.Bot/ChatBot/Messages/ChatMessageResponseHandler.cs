@@ -1,7 +1,7 @@
 ﻿using ComfyBot.Bot.ChatBot.Messages.Extensions;
 using ComfyBot.Bot.ChatBot.Services;
 using System.Linq;
-using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Gateway.Contracts.Models;
 using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;

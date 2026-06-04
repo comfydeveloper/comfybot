@@ -1,6 +1,6 @@
 ﻿using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Timezones;
-using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Gateway.Contracts.Models;
 using ComfyBot.Bot.Extensions;
 
 namespace ComfyBot.Bot.ChatBot.Commands;

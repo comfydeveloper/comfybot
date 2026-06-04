@@ -1,5 +1,5 @@
-﻿using ComfyBot.Bot.ChatBot.Wrappers;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using ComfyBot.Gateway.Contracts.Models;
 
 namespace ComfyBot.Bot.ChatBot.Messages;
 

@@ -1,4 +1,4 @@
-﻿namespace ComfyBot.Bot.ChatBot.Wrappers;
+namespace ComfyBot.Gateway.Contracts.Models;
 
 public interface IChatMessage
 {

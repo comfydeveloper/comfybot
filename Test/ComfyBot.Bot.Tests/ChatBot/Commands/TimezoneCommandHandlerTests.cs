@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Timezones;
-using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Gateway.Contracts.Models;
 using NSubstitute;
 using NUnit.Framework;
 

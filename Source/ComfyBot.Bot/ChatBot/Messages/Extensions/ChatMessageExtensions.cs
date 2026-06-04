@@ -1,4 +1,4 @@
-﻿using ComfyBot.Bot.ChatBot.Wrappers;
+﻿using ComfyBot.Gateway.Contracts.Models;
 using System;
 using System.Linq;
 

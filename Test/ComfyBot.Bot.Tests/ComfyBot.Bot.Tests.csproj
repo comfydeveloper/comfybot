@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Source\ComfyBot.Bot\ComfyBot.Bot.csproj" />
+    <ProjectReference Include="..\..\Source\ComfyBot.Gateway.Contracts\ComfyBot.Gateway.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

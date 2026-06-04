@@ -56,5 +56,4 @@ Wildcards can be used in any text command and message response.
 - EF Core with SQLite
 - NUnit
 - NSubstitute
-- AutoMapper
 - FluentAssertions
