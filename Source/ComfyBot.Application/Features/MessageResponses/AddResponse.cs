@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System;
@@ -19,26 +20,35 @@ public sealed class AddResponse
             this.repository = repository;
         }
 
-        public async Task Handle(Command command)
+        public async Task<Outcome> Handle(Command command)
         {
-            MessageResponse messageResponse = new()
+            try
             {
-                Id = command.Id,
-                CreatedAt = DateTime.Now,
-                Users = [],
-                LooseKeywords = [],
-                AllKeywords = [],
-                ExactKeywords = [],
-                Replies = [],
-                LastUsedAt = null,
-                TimeoutInSeconds = 30,
-                UseCount = 0,
-                Priority = 0,
-                AlwaysReply = false
-            };
+                MessageResponse messageResponse = new()
+                {
+                    Id = command.Id,
+                    CreatedAt = DateTime.Now,
+                    Users = [],
+                    LooseKeywords = [],
+                    AllKeywords = [],
+                    ExactKeywords = [],
+                    Replies = [],
+                    LastUsedAt = null,
+                    TimeoutInSeconds = 30,
+                    UseCount = 0,
+                    Priority = 0,
+                    AlwaysReply = false
+                };
 
-            this.repository.Add(messageResponse);
-            await this.repository.SaveChanges();
+                this.repository.Add(messageResponse);
+                await this.repository.SaveChanges();
+
+                return Outcome.Success();
+            }
+            catch (Exception ex)
+            {
+                return Outcome.Failure(new DatabaseError(ex.Message));
+            }
         }
     }
 }

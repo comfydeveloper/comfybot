@@ -2,6 +2,7 @@
 using ComfyBot.Application.Features.MessageResponses;
 using ComfyBot.Application.Features.Shared.Contracts;
 using System.Linq;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared.Services;
 using ComfyBot.Application.Shared.Wrappers;
@@ -70,7 +71,8 @@ public class ResponseTabViewModelTests
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
         GetResponses.MessageResponseEntry[] entries = Enumerable.Repeat(CreateResponseEntry(), count).ToArray();
-        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetResponses.Result { Entries = entries.ToList()});
+        GetResponses.Result result = new() { Entries = entries.ToList() };
+        this.getHandler.Handle(default).ReturnsForAnyArgs(Outcome<GetResponses.Result>.Success(result));
 
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
@@ -87,7 +89,8 @@ public class ResponseTabViewModelTests
     public void UpdatingATextModelShouldUpdateEntity()
     {
         MessageResponseModel model = new () { Id = Guid.NewGuid().ToString() };
-        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetResponses.Result());
+        GetResponses.Result result = new();
+        this.getHandler.Handle(default).ReturnsForAnyArgs(Outcome<GetResponses.Result>.Success(result));
         this.viewModel.Responses.Add(model);
         this.viewModel.IsSelected = true;
 

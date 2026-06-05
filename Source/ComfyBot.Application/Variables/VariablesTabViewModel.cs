@@ -34,9 +34,14 @@ public class VariablesTabViewModel : InitializableTab
     protected override void Initialize()
     {
         using var getHandler = this.provider.Create<IQueryHandler<GetVariables.Query, GetVariables.Result>>();
-        GetVariables.Result result = getHandler.Service.Handle(new GetVariables.Query()).Result;
+        var outcome = getHandler.Service.Handle(new GetVariables.Query()).Result;
 
-        foreach (GetVariables.VariableEntry entry in result.Entries)
+        if (!outcome.IsSuccess)
+        {
+            return;
+        }
+
+        foreach (GetVariables.VariableEntry entry in outcome.Payload.Entries)
         {
             VariableModel model = new()
             {
@@ -61,7 +66,7 @@ public class VariablesTabViewModel : InitializableTab
             model.Value);
 
         using var updateHandler = this.provider.Create<ICommandHandler<UpdateVariable.Command>>();
-        updateHandler.Service.Handle(command);
+        updateHandler.Service.Handle(command).Wait();
     }
 
     private void AddVariable()
@@ -70,7 +75,7 @@ public class VariablesTabViewModel : InitializableTab
         this.Variables.Add(new VariableModel { Id = id.ToString() });
 
         using var addHandler = this.provider.Create<ICommandHandler<AddVariable.Command>>();
-        addHandler.Service.Handle(new AddVariable.Command(id));
+        addHandler.Service.Handle(new AddVariable.Command(id)).Wait();
     }
 
     private void RemoveVariable(object parameter)
@@ -81,7 +86,7 @@ public class VariablesTabViewModel : InitializableTab
         {
             this.Variables.Remove(model);
             using var removeHandler = this.provider.Create<ICommandHandler<RemoveVariable.Command>>();
-            removeHandler.Service.Handle(new RemoveVariable.Command(Guid.Parse(model.Id)));
+            removeHandler.Service.Handle(new RemoveVariable.Command(Guid.Parse(model.Id))).Wait();
         }
     }
 

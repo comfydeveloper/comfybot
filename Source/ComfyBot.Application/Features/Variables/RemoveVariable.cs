@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System;
@@ -20,13 +21,26 @@ public sealed class RemoveVariable
             this.repository = repository;
         }
 
-        public async Task Handle(Command command)
+        public async Task<Outcome> Handle(Command command)
         {
-            Variable variable = this.repository.Query<Variable>().First(x => x.Id == command.Id);
+            try
+            {
+                Variable variable = this.repository.Query<Variable>().FirstOrDefault(x => x.Id == command.Id);
 
-            this.repository.Remove(variable);
+                if (variable is null)
+                {
+                    return Outcome.Failure(new NotFoundError("Variable", command.Id.ToString()));
+                }
 
-            await this.repository.SaveChanges();
+                this.repository.Remove(variable);
+                await this.repository.SaveChanges();
+
+                return Outcome.Success();
+            }
+            catch (Exception ex)
+            {
+                return Outcome.Failure(new DatabaseError(ex.Message));
+            }
         }
     }
 }

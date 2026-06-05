@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System;
@@ -19,21 +20,30 @@ public sealed class AddCommand
             this.repository = repository;
         }
 
-        public async Task Handle(Command command)
+        public async Task<Outcome> Handle(Command command)
         {
-            TextCommand newCommand = new()
+            try
             {
-                Id = command.Id,
-                CreatedAt = DateTime.Now,
-                Replies = [],
-                Commands = [],
-                LastUsedAt = null,
-                UseCount = 0,
-                TimeoutInSeconds = 0
-            };
+                TextCommand newCommand = new()
+                {
+                    Id = command.Id,
+                    CreatedAt = DateTime.Now,
+                    Replies = [],
+                    Commands = [],
+                    LastUsedAt = null,
+                    UseCount = 0,
+                    TimeoutInSeconds = 0
+                };
 
-            this.repository.Add(newCommand);
-            await this.repository.SaveChanges();
+                this.repository.Add(newCommand);
+                await this.repository.SaveChanges();
+
+                return Outcome.Success();
+            }
+            catch (Exception ex)
+            {
+                return Outcome.Failure(new DatabaseError(ex.Message));
+            }
         }
     }
 }

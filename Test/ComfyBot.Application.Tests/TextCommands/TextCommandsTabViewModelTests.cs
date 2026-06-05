@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Features.TextCommands;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Application.Shared.Services;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
@@ -70,7 +71,8 @@ public class TextCommandsTabViewModelTests
     public void IsSelectedSetterShouldInitializeFromRepositoryOnce(int count)
     {
         GetCommands.TextCommandEntry[] entries = Enumerable.Repeat(CreateTextCommandEntry(), count).ToArray();
-        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetCommands.Result { Entries = entries.ToList() });
+        GetCommands.Result result = new() { Entries = entries.ToList() };
+        this.getHandler.Handle(default).ReturnsForAnyArgs(Outcome<GetCommands.Result>.Success(result));
 
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
@@ -82,7 +84,8 @@ public class TextCommandsTabViewModelTests
     public void UpdatingATextModelShouldUpdateEntity()
     {
         TextCommandModel model = new() { Id = Guid.NewGuid().ToString() };
-        this.getHandler.Handle(default).ReturnsForAnyArgs(new GetCommands.Result());
+        GetCommands.Result result = new();
+        this.getHandler.Handle(default).ReturnsForAnyArgs(Outcome<GetCommands.Result>.Success(result));
         this.viewModel.Commands.Add(model);
         this.viewModel.IsSelected = true;
 

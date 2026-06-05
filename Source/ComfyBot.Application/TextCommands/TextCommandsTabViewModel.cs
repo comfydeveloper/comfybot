@@ -38,9 +38,14 @@ public class TextCommandsTabViewModel : InitializableTab
     protected override void Initialize()
     {
         using var getHandler = this.provider.Create<IQueryHandler<GetCommands.Query, GetCommands.Result>>();
-        GetCommands.Result result = getHandler.Service.Handle(new GetCommands.Query()).Result;
+        var outcome = getHandler.Service.Handle(new GetCommands.Query()).Result;
 
-        foreach (GetCommands.TextCommandEntry entry in result.Entries)
+        if (!outcome.IsSuccess)
+        {
+            return;
+        }
+
+        foreach (GetCommands.TextCommandEntry entry in outcome.Payload.Entries)
         {
             TextCommandModel model = new()
             {
@@ -63,7 +68,7 @@ public class TextCommandsTabViewModel : InitializableTab
         this.Commands.Add(new TextCommandModel { Id = id.ToString() });
 
         using var addHandler = this.provider.Create<ICommandHandler<AddCommand.Command>>();
-        addHandler.Service.Handle(new AddCommand.Command(id));
+        addHandler.Service.Handle(new AddCommand.Command(id)).Wait();
     }
 
     private void OnCommandUpdate(object sender, PropertyChangedEventArgs e)
@@ -77,7 +82,7 @@ public class TextCommandsTabViewModel : InitializableTab
             model.Replies.ToStrings());
 
         using var updateHandler = this.provider.Create<ICommandHandler<UpdateCommand.Command>>();
-        updateHandler.Service.Handle(command);
+        updateHandler.Service.Handle(command).Wait();
     }
 
     private void RemoveTextCommand(object parameter)
@@ -88,7 +93,7 @@ public class TextCommandsTabViewModel : InitializableTab
         {
             this.Commands.Remove(model);
             using var removeHandler = this.provider.Create<ICommandHandler<RemoveCommand.Command>>();
-            removeHandler.Service.Handle(new RemoveCommand.Command(Guid.Parse(model.Id)));
+            removeHandler.Service.Handle(new RemoveCommand.Command(Guid.Parse(model.Id))).Wait();
         }
     }
 

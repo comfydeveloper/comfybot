@@ -38,9 +38,14 @@ public class ResponseTabViewModel : InitializableTab
     protected override void Initialize()
     {
         using var getHandler = this.provider.Create<IQueryHandler<GetResponses.Query, GetResponses.Result>>();
-        GetResponses.Result result = getHandler.Service.Handle(new GetResponses.Query()).Result;
+        var outcome = getHandler.Service.Handle(new GetResponses.Query()).Result;
 
-        foreach (GetResponses.MessageResponseEntry entry in result.Entries)
+        if (!outcome.IsSuccess)
+        {
+            return;
+        }
+
+        foreach (GetResponses.MessageResponseEntry entry in outcome.Payload.Entries)
         {
             MessageResponseModel model = new()
             {
@@ -69,7 +74,7 @@ public class ResponseTabViewModel : InitializableTab
         this.Responses.Add(messageResponse);
 
         using var addHandler = this.provider.Create<ICommandHandler<AddResponse.Command>>();
-        addHandler.Service.Handle(new AddResponse.Command(id));
+        addHandler.Service.Handle(new AddResponse.Command(id)).Wait();
     }
 
     private void OnResponseUpdate(object sender, PropertyChangedEventArgs e)
@@ -87,7 +92,7 @@ public class ResponseTabViewModel : InitializableTab
                                              model.Replies.ToStrings());
 
         using var updateHandler = this.provider.Create<ICommandHandler<UpdateResponse.Command>>();
-        updateHandler.Service.Handle(command);
+        updateHandler.Service.Handle(command).Wait();
     }
 
     private void RemoveResponse(object parameter)
@@ -98,7 +103,7 @@ public class ResponseTabViewModel : InitializableTab
         {
             this.Responses.Remove(response);
             using var removeHandler = this.provider.Create<ICommandHandler<RemoveResponse.Command>>();
-            removeHandler.Service.Handle(new RemoveResponse.Command(Guid.Parse(response.Id)));
+            removeHandler.Service.Handle(new RemoveResponse.Command(Guid.Parse(response.Id))).Wait();
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System;
@@ -21,20 +22,34 @@ public sealed class UpdateResponse
             this.repository = repository;
         }
 
-        public async Task Handle(Command command)
+        public async Task<Outcome> Handle(Command command)
         {
-            MessageResponse messageResponse = this.repository.Query<MessageResponse>().First(x => x.Id == command.Id);
+            try
+            {
+                MessageResponse messageResponse = this.repository.Query<MessageResponse>().FirstOrDefault(x => x.Id == command.Id);
 
-            messageResponse.TimeoutInSeconds = command.TimeoutInSeconds;
-            messageResponse.AlwaysReply = command.AlwaysReply;
-            messageResponse.Priority = command.Priority;
-            messageResponse.Users = new List<string>(command.Users);
-            messageResponse.ExactKeywords = new List<string>(command.ExactKeywords);
-            messageResponse.LooseKeywords = new List<string>(command.LooseKeywords);
-            messageResponse.AllKeywords = new List<string>(command.AllKeywords);
-            messageResponse.Replies = new List<string>(command.Replies);
+                if (messageResponse is null)
+                {
+                    return Outcome.Failure(new NotFoundError("MessageResponse", command.Id.ToString()));
+                }
 
-            await this.repository.SaveChanges();
+                messageResponse.TimeoutInSeconds = command.TimeoutInSeconds;
+                messageResponse.AlwaysReply = command.AlwaysReply;
+                messageResponse.Priority = command.Priority;
+                messageResponse.Users = new List<string>(command.Users);
+                messageResponse.ExactKeywords = new List<string>(command.ExactKeywords);
+                messageResponse.LooseKeywords = new List<string>(command.LooseKeywords);
+                messageResponse.AllKeywords = new List<string>(command.AllKeywords);
+                messageResponse.Replies = new List<string>(command.Replies);
+
+                await this.repository.SaveChanges();
+
+                return Outcome.Success();
+            }
+            catch (Exception ex)
+            {
+                return Outcome.Failure(new DatabaseError(ex.Message));
+            }
         }
     }
 }
