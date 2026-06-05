@@ -1,0 +1,40 @@
+<div class="variable-row" @key="Variable.Id">
+    <input type="text" 
+           class="variable-input name-input" 
+           value="@Variable.Name" 
+           @onchange="@(e => OnNameChanged(e.Value?.ToString() ?? ""))"
+           placeholder="Variable name" />
+    <textarea class="variable-input value-input" 
+              value="@Variable.Value" 
+              @onchange="@(e => OnValueChanged(e.Value?.ToString() ?? ""))"
+              placeholder="Variable value"></textarea>
+    <button @onclick="OnDelete" class="delete-btn-small">🗑️</button>
+</div>
+
+@code {
+    [Parameter]
+    public VariableModel Variable { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<VariableModel> OnVariableChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<VariableModel> OnVariableDeleted { get; set; }
+
+    private async Task OnNameChanged(string newName)
+    {
+        Variable.Name = newName;
+        await OnVariableChanged.InvokeAsync(Variable);
+    }
+
+    private async Task OnValueChanged(string newValue)
+    {
+        Variable.Value = newValue;
+        await OnVariableChanged.InvokeAsync(Variable);
+    }
+
+    private async Task OnDelete()
+    {
+        await OnVariableDeleted.InvokeAsync(Variable);
+    }
+}

@@ -1,12 +1,14 @@
 After each Todo, make sure the AGENT_PROJECT.md file is up to date.
 
-[] Refactor the .Application project's UI from a WPF implementation to a Blazor application. The /Features/ folder should remain untouched, but the UI should be built with Blazor instead of WPF. The application should then be runnable in a docker container. 
-The whole UI right now resides in the MainWindow.xaml file. Split this into separate pages (TextCommands, MessageResponses, Variables) and use a shared layout for the common UI elements (e.g. navigation, header, etc.). The Blazor application should be structured in a way that allows for easy addition of new pages/features in the future.Add a home/starting page which remains empty for now. In the MainWindow, there is a "Console" section. This one is obsolete/can be ignored, so do not migrate that to the new blazor UI.
+[] For all buttons in the application, there should be a shared button component for shared styling and behavior. Buttons should be functionally dumb and only render child content as a RenderFragment, provide an OnClick event callback, a priority parameter (enum with values Primary, Secondary, Tertiary) and a parameter to disable it.
+Add this in the folder ComfyBot.Application/Components/Atoms.
 
-[] Move away from an SQLite database and instead use a postgres database connection. For that, a postgres docker container is already available, so the application needs a configuration for the connection string. 
+[] Move from an SQLite database to a postgres database connection for the Data project (.Bot and .Application use this). For that, a postgres docker container is already available, so the application needs a configuration for the connection string. 
 
-[] Make the Gateway runnable as a docker container.
-
-[] The goal is as follows: the Gateway and the Application projects should be runnable using a shared docker-compose file. The file will connect both services. The .Application project will continue to use an SQLite database, so there needs to be a volume for it that points at a physical path on the host machine where the sqlite file is. The redis connection will be provided through a connection string.
+[] The goal is as follows: the Gateway and the Application projects should be runnable using a shared docker-compose file. The file will connect both services. The redis connection will be provided through a connection string. The postgres connection as well.
 The docker-compose file should contain all necessary application settings (e.g. connection strings, auth keys, etc.) as environment variables that can be overridden at runtime. No need for default values, only the setting names should be included as part of the structure of the file.
-At the end, the user should be able to run a single command to start both the Gateway and the Application after providing the necessary environment variables and volume mappings (redis will already be available).
+At the end, the user should be able to run a single command to start both the Gateway and the Application after providing the necessary environment variables.
+
+
+[] Introduce a variables.css file which contains css variables for shared values, such as primary colors, accent colors, font colors, etc.
+Ensure the variables are used in styles.

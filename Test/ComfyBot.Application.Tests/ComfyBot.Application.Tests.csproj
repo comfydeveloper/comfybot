@@ -16,4 +16,9 @@
     <ProjectReference Include="..\..\Source\ComfyBot.Application\ComfyBot.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Responses\" />
+    <Folder Include="TextCommands\" />
+  </ItemGroup>
+
 </Project>

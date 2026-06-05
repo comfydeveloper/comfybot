@@ -1,0 +1,106 @@
+@using ComfyBot.Application.Features.Shared.Contracts
+@using ComfyBot.Application.Features.TextCommands
+@using ComfyBot.Application.Patterns.Outcomes
+@using ComfyBot.Application.Shared.Extensions
+
+@page "/text-commands"
+
+@inject IQueryHandler<GetCommands.Query, GetCommands.Result> GetCommandsHandler
+@inject ICommandHandler<AddCommand.Command> AddCommandHandler
+@inject ICommandHandler<UpdateCommand.Command> UpdateCommandHandler
+@inject ICommandHandler<RemoveCommand.Command> RemoveCommandHandler
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Text Commands - ComfyBot</PageTitle>
+
+<h1>Text Commands</h1>
+
+<div class="search-box">
+    <input type="text" placeholder="Search commands..." @bind="searchText" @bind:event="oninput" />
+</div>
+
+<div class="commands-container">
+    @foreach (TextCommandModel command in filteredCommands)
+    {
+        <TextCommandItem @key="command.Id"
+                         Command="@command"
+                         OnCommandChanged="@HandleCommandChanged"
+                         OnCommandDeleted="@HandleCommandDeleted" />
+    }
+</div>
+
+<button @onclick="AddNewCommand" class="add-command-btn">Add a text command</button>
+
+@code {
+    private string searchText = "";
+    private readonly List<TextCommandModel> commands = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCommands();
+    }
+
+    private IEnumerable<TextCommandModel> filteredCommands =>
+        string.IsNullOrWhiteSpace(searchText)
+            ? commands
+            : commands.Where(c => c.Commands.Any(cmd => cmd.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                                  c.Replies.Any(r => r.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)));
+
+    private async Task LoadCommands()
+    {
+        Outcome<GetCommands.Result> outcome = await GetCommandsHandler.Handle(new GetCommands.Query());
+
+        if (!outcome.IsSuccess)
+        {
+            return;
+        }
+
+        commands.Clear();
+        foreach (GetCommands.TextCommandEntry entry in outcome.Payload.Entries)
+        {
+            TextCommandModel model = new()
+            {
+                Id = entry.Id.ToString(),
+                Timeout = entry.TimeoutInSeconds,
+            };
+
+            model.Commands.AddRange(entry.Commands.ToTextModels().OrderBy(m => m.Text));
+            model.Replies.AddRange(entry.Replies.ToTextModels().OrderBy(m => m.Text));
+
+            commands.Add(model);
+        }
+    }
+
+    private async Task AddNewCommand()
+    {
+        Guid id = Guid.CreateVersion7();
+        TextCommandModel model = new() { Id = id.ToString(), Timeout = 30 };
+        commands.Add(model);
+
+        await AddCommandHandler.Handle(new AddCommand.Command(id));
+        StateHasChanged();
+    }
+
+    private void HandleCommandChanged(TextCommandModel command)
+    {
+        UpdateCommand.Command updateCmd = new(
+            Guid.Parse(command.Id),
+            command.Timeout,
+            command.Commands.ToStrings(),
+            command.Replies.ToStrings());
+
+        _ = UpdateCommandHandler.Handle(updateCmd);
+    }
+
+    private async Task HandleCommandDeleted(TextCommandModel command)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Delete command with triggers: {string.Join(", ", command.Commands.Select(c => c.Text))}?"))
+        {
+            return;
+        }
+
+        commands.Remove(command);
+        await RemoveCommandHandler.Handle(new RemoveCommand.Command(Guid.Parse(command.Id)));
+        StateHasChanged();
+    }
+}

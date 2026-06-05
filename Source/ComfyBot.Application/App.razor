@@ -1,0 +1,19 @@
+@namespace ComfyBot.Application.Components
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ComfyBot</title>
+    <base href="/" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="icon" type="image/png" href="comfybot.ico" />
+    <HeadOutlet />
+</head>
+<body>
+    <Routes @rendermode="InteractiveServer" />
+    <script src="_framework/blazor.web.js"></script>
+</body>
+</html>

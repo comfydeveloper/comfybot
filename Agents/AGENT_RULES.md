@@ -1,5 +1,6 @@
 - Minimize token usage when explaining the process you are working on. 
 - Once finishing a task, ask if the user wants to continue with another task.
+- If you are unsure about something, do not make assumptions but instead ask for user input.
 - When asking the user for input, be specific about what you need. For example, if you need a list of items, ask for a list of items instead of just asking for input.
 - Use [Guid.CreateVersion7] for Guid creation
 - Use explicit types instead of var. Do not use var.

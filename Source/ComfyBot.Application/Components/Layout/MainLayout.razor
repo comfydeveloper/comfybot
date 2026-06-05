@@ -1,0 +1,38 @@
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <nav class="flex-column">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="text-commands">
+                    <span class="bi bi-chat-left-text-fill" aria-hidden="true"></span> Text Commands
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="responses">
+                    <span class="bi bi-chat-dots-fill" aria-hidden="true"></span> Responses
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="variables">
+                    <span class="bi bi-diagram-3-fill" aria-hidden="true"></span> Variables
+                </NavLink>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4">
+            <h1>ComfyBot</h1>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </div>
+</div>

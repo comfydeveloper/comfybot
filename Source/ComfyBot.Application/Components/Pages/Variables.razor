@@ -1,0 +1,95 @@
+@using ComfyBot.Application.Features.Shared.Contracts
+@using ComfyBot.Application.Features.Variables
+@using ComfyBot.Application.Patterns.Outcomes
+@page "/variables"
+@inject IQueryHandler<GetVariables.Query, GetVariables.Result> GetVariablesHandler
+@inject ICommandHandler<AddVariable.Command> AddVariableHandler
+@inject ICommandHandler<UpdateVariable.Command> UpdateVariableHandler
+@inject ICommandHandler<RemoveVariable.Command> RemoveVariableHandler
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Variables - ComfyBot</PageTitle>
+
+<h1>Variables</h1>
+
+<div class="variables-container">
+    <div class="variables-header">
+        <div class="header-column">Name</div>
+        <div class="header-column">Value</div>
+        <div class="header-column">Actions</div>
+    </div>
+
+    @foreach (VariableModel variable in variables)
+    {
+        <VariableItem @key="variable.Id"
+                      Variable="@variable"
+                      OnVariableChanged="@HandleVariableChanged"
+                      OnVariableDeleted="@HandleVariableDeleted" />
+    }
+</div>
+
+<button @onclick="AddNewVariable" class="add-variable-btn">+</button>
+
+@code {
+    private List<VariableModel> variables = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadVariables();
+    }
+
+    private async Task LoadVariables()
+    {
+        Outcome<GetVariables.Result> outcome = await GetVariablesHandler.Handle(new GetVariables.Query());
+
+        if (!outcome.IsSuccess)
+        {
+            return;
+        }
+
+        variables.Clear();
+        foreach (GetVariables.VariableEntry entry in outcome.Payload.Entries)
+        {
+            VariableModel model = new()
+            {
+                Id = entry.Id.ToString(),
+                Name = entry.Name,
+                Value = entry.Value
+            };
+
+            variables.Add(model);
+        }
+    }
+
+    private async Task AddNewVariable()
+    {
+        Guid id = Guid.CreateVersion7();
+        VariableModel model = new() { Id = id.ToString(), Name = "", Value = "" };
+        variables.Add(model);
+
+        await AddVariableHandler.Handle(new AddVariable.Command(id));
+        StateHasChanged();
+    }
+
+    private void HandleVariableChanged(VariableModel variable)
+    {
+        UpdateVariable.Command updateCmd = new(
+            Guid.Parse(variable.Id),
+            variable.Name,
+            variable.Value);
+
+        _ = UpdateVariableHandler.Handle(updateCmd);
+    }
+
+    private async Task HandleVariableDeleted(VariableModel variable)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Delete variable '{variable.Name}'?"))
+        {
+            return;
+        }
+
+        variables.Remove(variable);
+        await RemoveVariableHandler.Handle(new RemoveVariable.Command(Guid.Parse(variable.Id)));
+        StateHasChanged();
+    }
+}

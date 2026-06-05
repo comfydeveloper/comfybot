@@ -14,10 +14,10 @@ public class GatewayClient : IGatewayClient, IDisposable
 {
     private readonly ILogger<GatewayClient> logger;
     private readonly BotSettings settings;
-    private HubConnection? hubConnection;
+    private HubConnection hubConnection;
 
-    public event EventHandler<MessageReceivedEvent>? OnMessageReceived;
-    public event EventHandler<CommandReceivedEvent>? OnCommandReceived;
+    public event EventHandler<MessageReceivedEvent> OnMessageReceived;
+    public event EventHandler<CommandReceivedEvent> OnCommandReceived;
 
     public GatewayClient(IOptions<BotSettings> settings, ILogger<GatewayClient> logger)
     {

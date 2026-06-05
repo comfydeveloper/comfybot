@@ -6,8 +6,8 @@ namespace ComfyBot.Bot.Gateway;
 
 public interface IGatewayClient
 {
-    event EventHandler<MessageReceivedEvent>? OnMessageReceived;
-    event EventHandler<CommandReceivedEvent>? OnCommandReceived;
+    event EventHandler<MessageReceivedEvent> OnMessageReceived;
+    event EventHandler<CommandReceivedEvent> OnCommandReceived;
 
     Task ConnectAsync();
     Task DisconnectAsync();
