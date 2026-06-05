@@ -1,5 +1,6 @@
 ﻿using ComfyBot.Application.Features.MessageResponses;
 using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.Shared.Extensions;
 using ComfyBot.Application.Shared.Services;
@@ -37,8 +38,8 @@ public class ResponseTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        using var getHandler = this.provider.Create<IQueryHandler<GetResponses.Query, GetResponses.Result>>();
-        var outcome = getHandler.Service.Handle(new GetResponses.Query()).Result;
+        using ScopedService<IQueryHandler<GetResponses.Query, GetResponses.Result>> getHandler = this.provider.Create<IQueryHandler<GetResponses.Query, GetResponses.Result>>();
+        Outcome<GetResponses.Result> outcome = getHandler.Service.Handle(new GetResponses.Query()).Result;
 
         if (!outcome.IsSuccess)
         {
@@ -73,7 +74,7 @@ public class ResponseTabViewModel : InitializableTab
         MessageResponseModel messageResponse = new() { Id = id.ToString() };
         this.Responses.Add(messageResponse);
 
-        using var addHandler = this.provider.Create<ICommandHandler<AddResponse.Command>>();
+        using ScopedService<ICommandHandler<AddResponse.Command>> addHandler = this.provider.Create<ICommandHandler<AddResponse.Command>>();
         addHandler.Service.Handle(new AddResponse.Command(id)).Wait();
     }
 
@@ -91,7 +92,7 @@ public class ResponseTabViewModel : InitializableTab
                                              model.AllKeywords.ToStrings(),
                                              model.Replies.ToStrings());
 
-        using var updateHandler = this.provider.Create<ICommandHandler<UpdateResponse.Command>>();
+        using ScopedService<ICommandHandler<UpdateResponse.Command>> updateHandler = this.provider.Create<ICommandHandler<UpdateResponse.Command>>();
         updateHandler.Service.Handle(command).Wait();
     }
 
@@ -102,7 +103,7 @@ public class ResponseTabViewModel : InitializableTab
         if (this.messageBox.Show(GetDeletionMessage(response), "Delete response", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             this.Responses.Remove(response);
-            using var removeHandler = this.provider.Create<ICommandHandler<RemoveResponse.Command>>();
+            using ScopedService<ICommandHandler<RemoveResponse.Command>> removeHandler = this.provider.Create<ICommandHandler<RemoveResponse.Command>>();
             removeHandler.Service.Handle(new RemoveResponse.Command(Guid.Parse(response.Id))).Wait();
         }
     }

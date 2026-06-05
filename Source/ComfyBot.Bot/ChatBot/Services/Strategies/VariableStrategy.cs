@@ -1,8 +1,6 @@
 ﻿using ComfyBot.Bot.Extensions;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 

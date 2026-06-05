@@ -1,14 +1,13 @@
-﻿using Accessibility;
-using ComfyBot.Application.Features.MessageResponses;
+﻿using ComfyBot.Application.Features.MessageResponses;
 using ComfyBot.Application.Features.Shared.Contracts;
 using System.Linq;
 using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared.Services;
 using ComfyBot.Application.Shared.Wrappers;
-using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
+using Shouldly;
 using System;
 using System.Windows;
 
@@ -49,7 +48,7 @@ public class ResponseTabViewModelTests
     {
         this.viewModel.AddResponseCommand.Execute();
 
-        this.viewModel.Responses.Count.Should().Be(1);
+        this.viewModel.Responses.Count.ShouldBe(1);
     }
 
     [TestCase("00000000-0000-0000-0000-000000000000")]
@@ -62,7 +61,7 @@ public class ResponseTabViewModelTests
 
         this.viewModel.RemoveResponseCommand.Execute(model);
 
-        this.viewModel.Responses.Should().BeEmpty();
+        this.viewModel.Responses.ShouldBeEmpty();
         this.removeHandler.Received(1).Handle(Arg.Is<RemoveResponse.Command>(x => x.Id == Guid.Parse(id)));
     }
 
@@ -77,7 +76,7 @@ public class ResponseTabViewModelTests
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
 
-        this.viewModel.Responses.Count.Should().Be(count);
+        this.viewModel.Responses.Count.ShouldBe(count);
     }
 
     private static GetResponses.MessageResponseEntry CreateResponseEntry()

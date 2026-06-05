@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Features.Variables;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.Shared.Extensions;
 using ComfyBot.Application.Shared.Services;
@@ -33,8 +34,8 @@ public class VariablesTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        using var getHandler = this.provider.Create<IQueryHandler<GetVariables.Query, GetVariables.Result>>();
-        var outcome = getHandler.Service.Handle(new GetVariables.Query()).Result;
+        using ScopedService<IQueryHandler<GetVariables.Query, GetVariables.Result>> getHandler = this.provider.Create<IQueryHandler<GetVariables.Query, GetVariables.Result>>();
+        Outcome<GetVariables.Result> outcome = getHandler.Service.Handle(new GetVariables.Query()).Result;
 
         if (!outcome.IsSuccess)
         {
@@ -65,7 +66,7 @@ public class VariablesTabViewModel : InitializableTab
             model.Name,
             model.Value);
 
-        using var updateHandler = this.provider.Create<ICommandHandler<UpdateVariable.Command>>();
+        using ScopedService<ICommandHandler<UpdateVariable.Command>> updateHandler = this.provider.Create<ICommandHandler<UpdateVariable.Command>>();
         updateHandler.Service.Handle(command).Wait();
     }
 
@@ -74,7 +75,7 @@ public class VariablesTabViewModel : InitializableTab
         Guid id = Guid.NewGuid();
         this.Variables.Add(new VariableModel { Id = id.ToString() });
 
-        using var addHandler = this.provider.Create<ICommandHandler<AddVariable.Command>>();
+        using ScopedService<ICommandHandler<AddVariable.Command>> addHandler = this.provider.Create<ICommandHandler<AddVariable.Command>>();
         addHandler.Service.Handle(new AddVariable.Command(id)).Wait();
     }
 
@@ -85,7 +86,7 @@ public class VariablesTabViewModel : InitializableTab
         if (this.messageBox.Show(GetDeletionMessage(model), "Delete variable", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             this.Variables.Remove(model);
-            using var removeHandler = this.provider.Create<ICommandHandler<RemoveVariable.Command>>();
+            using ScopedService<ICommandHandler<RemoveVariable.Command>> removeHandler = this.provider.Create<ICommandHandler<RemoveVariable.Command>>();
             removeHandler.Service.Handle(new RemoveVariable.Command(Guid.Parse(model.Id))).Wait();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using ComfyBot.Application.Features.Shared.Contracts;
 using ComfyBot.Application.Features.TextCommands;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.Shared.Extensions;
 using ComfyBot.Application.Shared.Services;
@@ -37,8 +38,8 @@ public class TextCommandsTabViewModel : InitializableTab
 
     protected override void Initialize()
     {
-        using var getHandler = this.provider.Create<IQueryHandler<GetCommands.Query, GetCommands.Result>>();
-        var outcome = getHandler.Service.Handle(new GetCommands.Query()).Result;
+        using ScopedService<IQueryHandler<GetCommands.Query, GetCommands.Result>> getHandler = this.provider.Create<IQueryHandler<GetCommands.Query, GetCommands.Result>>();
+        Outcome<GetCommands.Result> outcome = getHandler.Service.Handle(new GetCommands.Query()).Result;
 
         if (!outcome.IsSuccess)
         {
@@ -67,7 +68,7 @@ public class TextCommandsTabViewModel : InitializableTab
         Guid id = Guid.NewGuid();
         this.Commands.Add(new TextCommandModel { Id = id.ToString() });
 
-        using var addHandler = this.provider.Create<ICommandHandler<AddCommand.Command>>();
+        using ScopedService<ICommandHandler<AddCommand.Command>> addHandler = this.provider.Create<ICommandHandler<AddCommand.Command>>();
         addHandler.Service.Handle(new AddCommand.Command(id)).Wait();
     }
 
@@ -81,7 +82,7 @@ public class TextCommandsTabViewModel : InitializableTab
             model.Commands.ToStrings(),
             model.Replies.ToStrings());
 
-        using var updateHandler = this.provider.Create<ICommandHandler<UpdateCommand.Command>>();
+        using ScopedService<ICommandHandler<UpdateCommand.Command>> updateHandler = this.provider.Create<ICommandHandler<UpdateCommand.Command>>();
         updateHandler.Service.Handle(command).Wait();
     }
 
@@ -92,7 +93,7 @@ public class TextCommandsTabViewModel : InitializableTab
         if (this.messageBox.Show(GetDeletionMessage(model), "Delete command", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
             this.Commands.Remove(model);
-            using var removeHandler = this.provider.Create<ICommandHandler<RemoveCommand.Command>>();
+            using ScopedService<ICommandHandler<RemoveCommand.Command>> removeHandler = this.provider.Create<ICommandHandler<RemoveCommand.Command>>();
             removeHandler.Service.Handle(new RemoveCommand.Command(Guid.Parse(model.Id))).Wait();
         }
     }

@@ -1,6 +1,6 @@
 ﻿using ComfyBot.Application.Shared;
-using FluentAssertions;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Application.Tests.Shared;
 
@@ -18,7 +18,7 @@ public class DelegateCommandTests
 
         bool result = this.command.CanExecute(new object());
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [TestCase(true)]
@@ -30,7 +30,7 @@ public class DelegateCommandTests
 
         bool result = this.command.CanExecute(parameter);
 
-        result.Should().Be(parameter);
+        result.ShouldBe(parameter);
     }
 
     [Test]
@@ -40,7 +40,7 @@ public class DelegateCommandTests
 
         this.command.Execute(new object());
 
-        this.actionHasBeenExecuted.Should().BeTrue();
+        this.actionHasBeenExecuted.ShouldBeTrue();
     }
 
     private void TestAction()

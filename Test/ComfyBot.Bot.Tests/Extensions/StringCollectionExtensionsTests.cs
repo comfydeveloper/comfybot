@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ComfyBot.Bot.Extensions;
-using FluentAssertions;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Bot.Tests.Extensions;
 
@@ -29,8 +29,8 @@ public class StringCollectionExtensionsTests
             }
         }
 
-        elementCount1.Should().BeInRange(35, 65);
-        elementCount2.Should().BeInRange(35, 65);
+        elementCount1.ShouldBeInRange(35, 65);
+        elementCount2.ShouldBeInRange(35, 65);
     }
 
     [TestCase("string1")]
@@ -41,6 +41,6 @@ public class StringCollectionExtensionsTests
 
         string result = collection.GetRandom();
 
-        result.Should().Be(text);
+        result.ShouldBe(text);
     }
 }

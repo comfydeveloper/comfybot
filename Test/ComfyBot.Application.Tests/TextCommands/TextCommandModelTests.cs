@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using ComfyBot.Application.Shared;
 using ComfyBot.Application.TextCommands;
-using FluentAssertions;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Application.Tests.TextCommands;
 
@@ -22,7 +22,7 @@ public class TextCommandModelTests
     {
         this.model.AddReplyCommand.Execute();
 
-        this.model.Replies.Count.Should().Be(1);
+        this.model.Replies.Count.ShouldBe(1);
     }
 
     [Test]
@@ -33,7 +33,7 @@ public class TextCommandModelTests
 
         this.model.RemoveReplyCommand.Execute(textModel);
 
-        this.model.Replies.Should().BeEmpty();
+        this.model.Replies.ShouldBeEmpty();
     }
 
     [TestCase(null, false)]
@@ -41,19 +41,12 @@ public class TextCommandModelTests
     [TestCase("a", true)]
     public void ChangeToAddedListElementShouldInvokePropertyChangeEvent(string text, bool expected)
     {
-        bool result = false;
-        void TestMethod(object sender, PropertyChangedEventArgs e)
-        {
-            result = true;
-        }
-
-        this.model.PropertyChanged += TestMethod;
         TextModel textModel = new();
         this.model.Replies.Add(textModel);
 
         textModel.Text = text;
 
-        this.model.Replies.Count.Should().Be(1);
+        this.model.Replies.Count.ShouldBe(1);
     }
 
     [Test]
@@ -61,7 +54,7 @@ public class TextCommandModelTests
     {
         this.model.AddTextCommand.Execute();
 
-        this.model.Commands.Count.Should().Be(1);
+        this.model.Commands.Count.ShouldBe(1);
     }
 
     [Test]
@@ -72,7 +65,7 @@ public class TextCommandModelTests
 
         this.model.RemoveTextCommand.Execute(textModel);
 
-        this.model.Commands.Should().BeEmpty();
+        this.model.Commands.ShouldBeEmpty();
     }
 
     [TestCase(null, false)]
@@ -92,7 +85,7 @@ public class TextCommandModelTests
 
         textModel.Text = text;
 
-        result.Should().Be(expected);
+        result.ShouldBe(expected);
     }
 
     [TestCase(1)]
@@ -101,7 +94,7 @@ public class TextCommandModelTests
     {
         this.model.Timeout = timeout;
 
-        this.model.Timeout.Should().Be(timeout);
+        this.model.Timeout.ShouldBe(timeout);
     }
 
     [Test]
@@ -117,6 +110,6 @@ public class TextCommandModelTests
 
         this.model.Timeout = 1;
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 }

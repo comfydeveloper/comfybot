@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using ComfyBot.Application.Responses;
 using ComfyBot.Application.Shared;
-using FluentAssertions;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Application.Tests.Responses;
 
@@ -22,7 +22,7 @@ public class MessageResponseModelTests
     {
         this.model.AddReplyCommand.Execute();
 
-        this.model.Replies.Count.Should().Be(1);
+        this.model.Replies.Count.ShouldBe(1);
     }
 
     [Test]
@@ -30,7 +30,7 @@ public class MessageResponseModelTests
     {
         this.model.AddLooseKeywordCommand.Execute();
 
-        this.model.LooseKeywords.Count.Should().Be(1);
+        this.model.LooseKeywords.Count.ShouldBe(1);
     }
 
     [Test]
@@ -38,7 +38,7 @@ public class MessageResponseModelTests
     {
         this.model.AddExactKeywordCommand.Execute();
 
-        this.model.ExactKeywords.Count.Should().Be(1);
+        this.model.ExactKeywords.Count.ShouldBe(1);
     }
 
     [Test]
@@ -46,7 +46,7 @@ public class MessageResponseModelTests
     {
         this.model.AddAllKeywordCommand.Execute();
 
-        this.model.AllKeywords.Count.Should().Be(1);
+        this.model.AllKeywords.Count.ShouldBe(1);
     }
 
     [Test]
@@ -54,7 +54,7 @@ public class MessageResponseModelTests
     {
         this.model.AddUserCommand.Execute();
 
-        this.model.Users.Count.Should().Be(1);
+        this.model.Users.Count.ShouldBe(1);
     }
 
     [Test]
@@ -65,7 +65,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveUserCommand.Execute(textModel);
 
-        this.model.Users.Should().BeEmpty();
+        this.model.Users.ShouldBeEmpty();
     }
 
     [Test]
@@ -76,7 +76,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveAllKeywordCommand.Execute(textModel);
 
-        this.model.AllKeywords.Should().BeEmpty();
+        this.model.AllKeywords.ShouldBeEmpty();
     }
 
     [Test]
@@ -87,7 +87,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveLooseKeywordCommand.Execute(textModel);
 
-        this.model.LooseKeywords.Should().BeEmpty();
+        this.model.LooseKeywords.ShouldBeEmpty();
     }
 
     [Test]
@@ -98,7 +98,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveExactKeywordCommand.Execute(textModel);
 
-        this.model.ExactKeywords.Should().BeEmpty();
+        this.model.ExactKeywords.ShouldBeEmpty();
     }
 
     [Test]
@@ -109,7 +109,7 @@ public class MessageResponseModelTests
 
         this.model.RemoveReplyCommand.Execute(textModel);
 
-        this.model.Replies.Should().BeEmpty();
+        this.model.Replies.ShouldBeEmpty();
     }
 
     [TestCase(null, false)]
@@ -129,7 +129,7 @@ public class MessageResponseModelTests
 
         textModel.Text = text;
 
-        result.Should().Be(expected);
+        result.ShouldBe(expected);
     }
 
     [TestCase(1)]
@@ -138,7 +138,7 @@ public class MessageResponseModelTests
     {
         this.model.TimeoutInSeconds = timeout;
 
-        this.model.TimeoutInSeconds.Should().Be(timeout);
+        this.model.TimeoutInSeconds.ShouldBe(timeout);
     }
 
     [Test]
@@ -154,7 +154,7 @@ public class MessageResponseModelTests
 
         this.model.TimeoutInSeconds = 1;
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [TestCase(1)]
@@ -163,7 +163,7 @@ public class MessageResponseModelTests
     {
         this.model.Priority = priority;
 
-        this.model.Priority.Should().Be(priority);
+        this.model.Priority.ShouldBe(priority);
     }
 
     [Test]
@@ -179,6 +179,6 @@ public class MessageResponseModelTests
 
         this.model.TimeoutInSeconds = 1;
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 }

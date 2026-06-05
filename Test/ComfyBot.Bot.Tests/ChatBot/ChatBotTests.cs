@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using NUnit.Framework;
-using System;
 using System.Threading.Tasks;
 
 namespace ComfyBot.Bot.Tests.ChatBot;

@@ -3,9 +3,9 @@ using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Gateway.Contracts.Models;
 using ComfyBot.Data.Models;
-using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Commands;
 
@@ -55,8 +55,8 @@ public class TextCommandReplyLoaderTests
 
         bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        result.Should().BeTrue();
-        resultText.Should().Be(replyText);
+        result.ShouldBeTrue();
+        resultText.ShouldBe(replyText);
     }
 
     [TestCase("message1 {{user}}", "userName1", "message1 userName1")]
@@ -71,8 +71,8 @@ public class TextCommandReplyLoaderTests
 
         bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        result.Should().BeTrue();
-        resultText.Should().Be(expectedReply);
+        result.ShouldBeTrue();
+        resultText.ShouldBe(expectedReply);
     }
 
     [TestCase("parameters1", "text with {{parameters}}", "text with parameters1")]
@@ -87,7 +87,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be(expected);
+        resultText.ShouldBe(expected);
     }
 
     [Test]
@@ -102,7 +102,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be("reply with parameters");
+        resultText.ShouldBe("reply with parameters");
     }
 
     [Test]
@@ -117,7 +117,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be("reply");
+        resultText.ShouldBe("reply");
     }
 
     [Test]
@@ -131,7 +131,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be("reply");
+        resultText.ShouldBe("reply");
     }
 
     [TestCase("text with {{parameter2}} {{parameter1}}", "parameter", "parameter", "text with parameter parameter")]
@@ -146,7 +146,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be(expected);
+        resultText.ShouldBe(expected);
     }
 
     [TestCase("command1", "command2")]
@@ -158,8 +158,8 @@ public class TextCommandReplyLoaderTests
 
         bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        result.Should().BeFalse();
-        resultText.Should().BeNull();
+        result.ShouldBeFalse();
+        resultText.ShouldBeNull();
     }
 
     [TestCase(10)]
@@ -171,8 +171,8 @@ public class TextCommandReplyLoaderTests
 
         bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string response);
 
-        response.Should().BeNull();
-        result.Should().BeFalse();
+        response.ShouldBeNull();
+        result.ShouldBeFalse();
     }
 
     [Test]

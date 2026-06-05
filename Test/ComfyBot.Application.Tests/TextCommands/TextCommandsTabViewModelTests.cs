@@ -7,9 +7,9 @@ using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Application.Shared.Services;
 using ComfyBot.Application.Shared.Wrappers;
 using ComfyBot.Application.TextCommands;
-using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Application.Tests.TextCommands;
 
@@ -62,7 +62,7 @@ public class TextCommandsTabViewModelTests
 
         this.viewModel.RemoveTextCommandCommand.Execute(model);
 
-        this.viewModel.Commands.Should().BeEmpty();
+        this.viewModel.Commands.ShouldBeEmpty();
         this.removeHandler.Received(1).Handle(Arg.Is<RemoveCommand.Command>(x => x.Id == Guid.Parse(id)));
     }
 
@@ -77,7 +77,7 @@ public class TextCommandsTabViewModelTests
         this.viewModel.IsSelected = true;
         this.viewModel.IsSelected = true;
 
-        this.viewModel.Commands.Count.Should().Be(count);
+        this.viewModel.Commands.Count.ShouldBe(count);
     }
 
     [Test]
