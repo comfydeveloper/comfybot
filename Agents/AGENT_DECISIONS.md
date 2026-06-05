@@ -1,0 +1,1 @@
+This file will be a compiled list of technical decisions being made during the development of the project, including the reasoning. This will be a living document that will be updated as the project progresses.
