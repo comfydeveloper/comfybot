@@ -1,9 +1,9 @@
 After each Todo, make sure the AGENT_PROJECT.md file is up to date.
 
-[] Upgrade the Gateway's TwitchLib dependency to the latest version and refactor the Twitch connection/message handling logic to match the new TwitchLib API. Expect breaking changes.
-
 [] Refactor the .Application project's UI from a WPF implementation to a Blazor application. The /Features/ folder should remain untouched, but the UI should be built with Blazor instead of WPF. The application should then be runnable in a docker container. 
-The whole UI right now resides in the MainWindow.xaml file. Split this into separate pages (TextCommands, MessageResponses, Variables) and use a shared layout for the common UI elements (e.g. navigation, header, etc.). The Blazor application should be structured in a way that allows for easy addition of new pages/features in the future.
+The whole UI right now resides in the MainWindow.xaml file. Split this into separate pages (TextCommands, MessageResponses, Variables) and use a shared layout for the common UI elements (e.g. navigation, header, etc.). The Blazor application should be structured in a way that allows for easy addition of new pages/features in the future.Add a home/starting page which remains empty for now. In the MainWindow, there is a "Console" section. This one is obsolete/can be ignored, so do not migrate that to the new blazor UI.
+
+[] Move away from an SQLite database and instead use a postgres database connection. For that, a postgres docker container is already available, so the application needs a configuration for the connection string. 
 
 [] Make the Gateway runnable as a docker container.
 

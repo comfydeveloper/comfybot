@@ -19,12 +19,15 @@ public class TextCommandReplyLoaderTests
 
     private TextCommandReplyLoader replyLoader;
 
+    private ChatMessage chatMessage;
+
     [SetUp]
     public void Setup()
     {
         this.wildcardReplacer = Substitute.For<IWildcardReplacer>();
         this.chatCommand = Substitute.For<IChatCommand>();
-        this.chatCommand.ChatMessage.Returns(Substitute.For<IChatMessage>());
+        this.chatMessage = new ChatMessage();
+        this.chatCommand.ChatMessage.Returns(this.chatMessage);
         this.StubWildcardReplacer();
 
         this.textCommand = new TextCommand
@@ -62,7 +65,7 @@ public class TextCommandReplyLoaderTests
     {
         this.chatCommand.ArgumentsAsList.Returns([]);
         this.chatCommand.CommandText.Returns("commandOld");
-        this.chatCommand.ChatMessage.UserName.Returns(userName);
+        this.chatMessage.UserName = userName;
         this.textCommand.Commands.Add("commandOld");
         this.textCommand.Replies.Add(replyText);
 
