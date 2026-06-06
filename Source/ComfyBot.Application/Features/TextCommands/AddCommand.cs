@@ -27,7 +27,7 @@ public sealed class AddCommand
                 TextCommand newCommand = new()
                 {
                     Id = command.Id,
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
                     Replies = [],
                     Commands = [],
                     LastUsedAt = null,

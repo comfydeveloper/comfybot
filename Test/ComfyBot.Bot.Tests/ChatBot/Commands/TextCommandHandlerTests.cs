@@ -70,11 +70,11 @@ public class TextCommandHandlerTests
         {
             Replies = [],
             Commands = [],
-            LastUsedAt = DateTime.Now,
+            LastUsedAt = DateTime.UtcNow,
             UseCount = 0,
             TimeoutInSeconds = 0,
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow
         };
     }
 }

@@ -109,13 +109,13 @@ public class ChatMessageResponseHandlerTests
         return new MessageResponse
         {
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTime.UtcNow,
             Users = [],
             LooseKeywords = [],
             AllKeywords = [],
             ExactKeywords = [],
             Replies = [],
-            LastUsedAt = DateTime.Now,
+            LastUsedAt = DateTime.UtcNow,
             TimeoutInSeconds = 0,
             UseCount = 0,
             Priority = priority,

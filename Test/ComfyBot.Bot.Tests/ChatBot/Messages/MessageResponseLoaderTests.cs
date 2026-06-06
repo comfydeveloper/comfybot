@@ -40,13 +40,13 @@ public class MessageResponseLoaderTests
             AllKeywords = [],
             ExactKeywords = [],
             Replies = [],
-            LastUsedAt = DateTime.Now,
+            LastUsedAt = DateTime.UtcNow,
             TimeoutInSeconds = 0,
             UseCount = 0,
             Priority = 0,
             AlwaysReply = false,
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow
         };
     }
 
@@ -54,7 +54,7 @@ public class MessageResponseLoaderTests
     [TestCase(20)]
     public void TryGetResponseShouldReturnFalseWhenTheResponseTimeoutHasNotRunOutYet(int timeout)
     {
-        this.messageResponse.LastUsedAt = DateTime.Now.AddSeconds(-timeout + 1);
+        this.messageResponse.LastUsedAt = DateTime.UtcNow.AddSeconds(-timeout + 1);
         this.messageResponse.TimeoutInSeconds = timeout;
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);

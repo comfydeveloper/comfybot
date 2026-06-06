@@ -27,7 +27,7 @@ public sealed class AddResponse
                 MessageResponse messageResponse = new()
                 {
                     Id = command.Id,
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
                     Users = [],
                     LooseKeywords = [],
                     AllKeywords = [],

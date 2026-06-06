@@ -34,11 +34,11 @@ public class TextCommandReplyLoaderTests
         {
             Replies = [],
             Commands = [],
-            LastUsedAt = DateTime.Now,
+            LastUsedAt = DateTime.UtcNow,
             UseCount = 0,
             TimeoutInSeconds = 0,
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow
         };
 
         this.replyLoader = new TextCommandReplyLoader(this.wildcardReplacer);
@@ -166,7 +166,7 @@ public class TextCommandReplyLoaderTests
     [TestCase(20)]
     public void TryGetResponseShouldReturnFalseWhenTheResponseTimeoutHasNotRunOutYet(int timeout)
     {
-        this.textCommand.LastUsedAt = DateTime.Now.AddSeconds(-timeout + 1);
+        this.textCommand.LastUsedAt = DateTime.UtcNow.AddSeconds(-timeout + 1);
         this.textCommand.TimeoutInSeconds = timeout;
 
         bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string response);

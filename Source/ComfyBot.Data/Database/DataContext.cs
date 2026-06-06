@@ -15,7 +15,7 @@ public class DataContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        options.UseSqlite(this.settings.DatabaseConnection);
+        options.UseNpgsql(this.settings.DatabaseConnection);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
