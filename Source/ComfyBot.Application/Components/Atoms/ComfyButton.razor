@@ -1,0 +1,30 @@
+@{
+    string buttonClass = Priority switch
+    {
+        ButtonPriority.Primary => "comfy-btn-primary",
+        ButtonPriority.Secondary => "comfy-btn-secondary",
+        ButtonPriority.Tertiary => "comfy-btn-tertiary",
+        _ => "comfy-btn-primary"
+    };
+
+    string disabledClass = IsDisabled ? "comfy-btn-disabled" : string.Empty;
+    string classAttribute = $"comfy-btn {buttonClass} {disabledClass}".Trim();
+}
+
+<button class="@classAttribute" @onclick="OnClick" disabled="@IsDisabled">
+    @ChildContent
+</button>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public ButtonPriority Priority { get; set; } = ButtonPriority.Primary;
+
+    [Parameter]
+    public bool IsDisabled { get; set; } = false;
+}

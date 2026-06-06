@@ -43,7 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Atoms\" />
     <Folder Include="Components\Molecules\" />
     <Folder Include="Components\Organisms\" />
     <Folder Include="Components\Root\" />

@@ -1,8 +1,5 @@
 After each Todo, make sure the AGENT_PROJECT.md file is up to date. Also remove the todo you completed from the list.
 
-[] For all buttons in the application, there should be a shared button component for shared styling and behavior. Buttons should be functionally dumb and only render child content as a RenderFragment, provide an OnClick event callback, a priority parameter (enum with values Primary, Secondary, Tertiary) and a parameter to disable it.
-Add this in the folder ComfyBot.Application/Components/Atoms.
-
 [] Move from an SQLite database to a postgres database connection for the Data project (.Bot and .Application use this). For that, a postgres docker container is already available, so the application needs a configuration for the connection string. 
 
 [] The goal is as follows: the Gateway and the Application projects should be runnable using a shared docker-compose file. The file will connect both services. The redis connection will be provided through a connection string. The postgres connection as well.

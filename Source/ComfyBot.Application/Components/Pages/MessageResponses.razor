@@ -1,3 +1,4 @@
+@using ComfyBot.Application.Components.Atoms
 @using ComfyBot.Application.Features.Shared.Contracts
 @using ComfyBot.Application.Features.MessageResponses
 @using ComfyBot.Application.Patterns.Outcomes
@@ -13,10 +14,6 @@
 
 <h1>Message Responses</h1>
 
-<div class="search-box">
-    <input type="text" placeholder="Search responses..." @bind="searchText" @bind:event="oninput" />
-</div>
-
 <div class="responses-container">
     @foreach (MessageResponseModel response in filteredResponses)
     {
@@ -27,7 +24,14 @@
     }
 </div>
 
-<button @onclick="AddNewResponse" class="add-response-btn">+ Add a response</button>
+<div class="sticky-footer">
+    <div class="search-box">
+        <input type="text" placeholder="Search responses..." @bind="searchText" @bind:event="oninput" />
+    </div>
+    <ComfyButton Priority="ButtonPriority.Primary" OnClick="@AddNewResponse">
+        New
+    </ComfyButton>
+</div>
 
 @code {
     private string searchText = "";

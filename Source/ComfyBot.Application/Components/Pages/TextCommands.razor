@@ -2,6 +2,7 @@
 @using ComfyBot.Application.Features.TextCommands
 @using ComfyBot.Application.Patterns.Outcomes
 @using ComfyBot.Application.Shared.Extensions
+@using ComfyBot.Application.Components.Atoms
 
 @page "/text-commands"
 
@@ -15,10 +16,6 @@
 
 <h1>Text Commands</h1>
 
-<div class="search-box">
-    <input type="text" placeholder="Search commands..." @bind="searchText" @bind:event="oninput" />
-</div>
-
 <div class="commands-container">
     @foreach (TextCommandModel command in filteredCommands)
     {
@@ -29,7 +26,14 @@
     }
 </div>
 
-<button @onclick="AddNewCommand" class="add-command-btn">Add a text command</button>
+<div class="sticky-footer">
+    <div class="search-box">
+        <input type="text" placeholder="Search commands..." @bind="searchText" @bind:event="oninput" />
+    </div>
+    <ComfyButton Priority="ButtonPriority.Primary" OnClick="@AddNewCommand">
+        New
+    </ComfyButton>
+</div>
 
 @code {
     private string searchText = "";

@@ -1,3 +1,4 @@
+@using ComfyBot.Application.Components.Atoms
 @using ComfyBot.Application.Features.Shared.Contracts
 @using ComfyBot.Application.Features.Variables
 @using ComfyBot.Application.Patterns.Outcomes
@@ -28,7 +29,9 @@
     }
 </div>
 
-<button @onclick="AddNewVariable" class="add-variable-btn">+</button>
+<ComfyButton Priority="ButtonPriority.Primary" OnClick="@AddNewVariable">
+    +
+</ComfyButton>
 
 @code {
     private readonly List<VariableModel> variables = [];

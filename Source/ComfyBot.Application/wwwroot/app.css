@@ -98,7 +98,7 @@ html, body {
 
 /* Search Box */
 .search-box {
-    margin: 20px 0;
+    margin: 0;
 }
 
 .search-box input {
@@ -110,12 +110,32 @@ html, body {
     border-radius: 4px;
 }
 
+/* Sticky Footer */
+.sticky-footer {
+    position: sticky;
+    bottom: 0;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    z-index: 100;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-footer .search-box {
+    flex: 1;
+}
+
 /* Commands Container */
 .commands-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
     margin: 20px 0;
+    padding-bottom: 120px;
+    min-height: calc(100vh - 300px);
 }
 
 .command-card {
@@ -164,6 +184,8 @@ html, body {
     flex-direction: column;
     gap: 20px;
     margin: 20px 0;
+    padding-bottom: 120px;
+    min-height: calc(100vh - 300px);
 }
 
 .response-card {
@@ -423,5 +445,61 @@ html, body {
     .response-card {
         grid-template-columns: 1fr;
     }
+
+    .sticky-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sticky-footer .search-box input {
+        max-width: 100%;
+    }
+}
+
+/* ComfyButton Component */
+.comfy-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s, opacity 0.2s;
+    outline: none;
+}
+
+.comfy-btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.comfy-btn-primary:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.comfy-btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.comfy-btn-secondary:hover:not(:disabled) {
+    background-color: #5a6268;
+}
+
+.comfy-btn-tertiary {
+    background-color: #e9ecef;
+    color: #333;
+    border: 1px solid #dee2e6;
+}
+
+.comfy-btn-tertiary:hover:not(:disabled) {
+    background-color: #dee2e6;
+    border-color: #adb5bd;
+}
+
+.comfy-btn-disabled,
+.comfy-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
