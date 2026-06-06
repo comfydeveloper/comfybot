@@ -81,7 +81,7 @@
         StateHasChanged();
     }
 
-    private void HandleCommandChanged(TextCommandModel command)
+    private async Task HandleCommandChanged(TextCommandModel command)
     {
         UpdateCommand.Command updateCmd = new(
             Guid.Parse(command.Id),
@@ -89,7 +89,7 @@
             command.Commands.ToStrings(),
             command.Replies.ToStrings());
 
-        _ = UpdateCommandHandler.Handle(updateCmd);
+        await UpdateCommandHandler.Handle(updateCmd);
     }
 
     private async Task HandleCommandDeleted(TextCommandModel command)

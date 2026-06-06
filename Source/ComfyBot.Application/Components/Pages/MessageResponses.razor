@@ -93,7 +93,7 @@
         StateHasChanged();
     }
 
-    private void HandleResponseChanged(MessageResponseModel response)
+    private async Task HandleResponseChanged(MessageResponseModel response)
     {
         UpdateResponse.Command updateCmd = new(
             Guid.Parse(response.Id),
@@ -106,7 +106,7 @@
             response.AllKeywords.ToStrings(),
             response.Replies.ToStrings());
 
-        _ = UpdateResponseHandler.Handle(updateCmd);
+        await UpdateResponseHandler.Handle(updateCmd);
     }
 
     private async Task HandleResponseDeleted(MessageResponseModel response)

@@ -1,6 +1,4 @@
-After each Todo, make sure the AGENT_PROJECT.md file is up to date.
-
-[] On the three main pages, there are methods that handle callbacks, such as HandleVariableChanged() on the Variables page. These methods are currently synchronous. Make them async and ensure the async handlers within them are awaited.
+After each Todo, make sure the AGENT_PROJECT.md file is up to date. Also remove the todo you completed from the list.
 
 [] Analyze and fix these nuget warnings in the .Application 
 PackageReference Microsoft.Extensions.Hosting will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.

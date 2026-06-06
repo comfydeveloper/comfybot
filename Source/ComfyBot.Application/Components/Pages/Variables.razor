@@ -71,14 +71,14 @@
         StateHasChanged();
     }
 
-    private void HandleVariableChanged(VariableModel variable)
+    private async Task HandleVariableChanged(VariableModel variable)
     {
         UpdateVariable.Command updateCmd = new(
             Guid.Parse(variable.Id),
             variable.Name,
             variable.Value);
 
-        _ = UpdateVariableHandler.Handle(updateCmd);
+        await UpdateVariableHandler.Handle(updateCmd);
     }
 
     private async Task HandleVariableDeleted(VariableModel variable)
