@@ -45,7 +45,7 @@
                                    r.LooseKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
                                    r.AllKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
                                    r.ExactKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
-                                   r.Replies.Any(r => r.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)));
+                                   r.Replies.Any(reply => reply.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)));
 
     private async Task LoadResponses()
     {

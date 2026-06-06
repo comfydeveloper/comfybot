@@ -4,7 +4,7 @@
         <div class="tags">
             @foreach (TextModel txt in Command.Commands)
             {
-                <div class="tag" @key="txt.Text">
+                <div class="tag" @key="txt">
                     <input type="text" 
                            value="@txt.Text" 
                            @onchange="@(e => OnCommandTextChanged(txt, e.Value?.ToString() ?? ""))" />
@@ -26,7 +26,7 @@
         <div class="tags">
             @foreach (TextModel reply in Command.Replies)
             {
-                <div class="tag" @key="reply.Text">
+                <div class="tag" @key="reply">
                     <input type="text" 
                            value="@reply.Text" 
                            @onchange="@(e => OnReplyTextChanged(reply, e.Value?.ToString() ?? ""))" />

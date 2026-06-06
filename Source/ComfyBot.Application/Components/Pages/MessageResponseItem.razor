@@ -4,7 +4,7 @@
         <div class="tags">
             @foreach (TextModel user in Response.Users)
             {
-                <div class="tag" @key="user.Text">
+                <div class="tag" @key="user">
                     <input type="text" 
                            value="@user.Text" 
                            @onchange="@(e => OnUserChanged(user, e.Value?.ToString() ?? ""))" />
@@ -27,7 +27,7 @@
         <div class="tags">
             @foreach (TextModel keyword in Response.LooseKeywords)
             {
-                <div class="tag" @key="keyword.Text">
+                <div class="tag" @key="keyword">
                     <input type="text" 
                            value="@keyword.Text" 
                            @onchange="@(e => OnLooseKeywordChanged(keyword, e.Value?.ToString() ?? ""))" />
@@ -41,7 +41,7 @@
         <div class="tags">
             @foreach (TextModel keyword in Response.AllKeywords)
             {
-                <div class="tag" @key="keyword.Text">
+                <div class="tag" @key="keyword">
                     <input type="text" 
                            value="@keyword.Text" 
                            @onchange="@(e => OnAllKeywordChanged(keyword, e.Value?.ToString() ?? ""))" />
@@ -55,7 +55,7 @@
         <div class="tags">
             @foreach (TextModel keyword in Response.ExactKeywords)
             {
-                <div class="tag" @key="keyword.Text">
+                <div class="tag" @key="keyword">
                     <input type="text" 
                            value="@keyword.Text" 
                            @onchange="@(e => OnExactKeywordChanged(keyword, e.Value?.ToString() ?? ""))" />
@@ -82,7 +82,7 @@
         <div class="tags">
             @foreach (TextModel reply in Response.Replies)
             {
-                <div class="tag" @key="reply.Text">
+                <div class="tag" @key="reply">
                     <input type="text" 
                            value="@reply.Text" 
                            @onchange="@(e => OnReplyChanged(reply, e.Value?.ToString() ?? ""))" />

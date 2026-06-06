@@ -31,7 +31,7 @@
 <button @onclick="AddNewVariable" class="add-variable-btn">+</button>
 
 @code {
-    private List<VariableModel> variables = [];
+    private readonly List<VariableModel> variables = [];
 
     protected override async Task OnInitializedAsync()
     {

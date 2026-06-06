@@ -1,5 +1,12 @@
 After each Todo, make sure the AGENT_PROJECT.md file is up to date.
 
+[] On the three main pages, there are methods that handle callbacks, such as HandleVariableChanged() on the Variables page. These methods are currently synchronous. Make them async and ensure the async handlers within them are awaited.
+
+[] Analyze and fix these nuget warnings in the .Application 
+PackageReference Microsoft.Extensions.Hosting will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+PackageReference Microsoft.Extensions.DependencyInjection will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+PackageReference Microsoft.AspNetCore.Components.Web will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.
+
 [] For all buttons in the application, there should be a shared button component for shared styling and behavior. Buttons should be functionally dumb and only render child content as a RenderFragment, provide an OnClick event callback, a priority parameter (enum with values Primary, Secondary, Tertiary) and a parameter to disable it.
 Add this in the folder ComfyBot.Application/Components/Atoms.
 

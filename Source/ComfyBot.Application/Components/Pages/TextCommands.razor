@@ -43,8 +43,8 @@
     private IEnumerable<TextCommandModel> filteredCommands =>
         string.IsNullOrWhiteSpace(searchText)
             ? commands
-            : commands.Where(c => c.Commands.Any(cmd => cmd.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
-                                  c.Replies.Any(r => r.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)));
+            : commands.Where(c => c.Commands.Any(cmd => cmd.Text?.Contains(searchText, StringComparison.OrdinalIgnoreCase) == true) ||
+                                  c.Replies.Any(reply => reply.Text?.Contains(searchText, StringComparison.OrdinalIgnoreCase) == true));
 
     private async Task LoadCommands()
     {

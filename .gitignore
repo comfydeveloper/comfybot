@@ -297,3 +297,5 @@ Source/ComfyBot.Application/.env
 # Environment files (local configuration)
 .env
 **/.env
+*.sqlite-shm
+*.sqlite-wal
