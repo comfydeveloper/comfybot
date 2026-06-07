@@ -10,6 +10,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ComfyBot.Bot.Tests.TestHelpers;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 
@@ -45,7 +46,7 @@ public class ChatMessageResponseHandlerTests
         MessageResponse messageResponse1 = CreateMessageResponse();
         MessageResponse messageResponse2 = CreateMessageResponse();
         this.chatMessage.Text.Returns("message");
-        this.repository.Query<MessageResponse>().Returns(new[] { messageResponse1, messageResponse2, messageResponse2 }.AsQueryable());
+        this.repository.Query<MessageResponse>().Returns(new TestAsyncEnumerable<MessageResponse>(new[] { messageResponse1, messageResponse2, messageResponse2 }));
         this.responseLoader.TryGetResponse(messageResponse1, this.chatMessage, out Arg.Any<string>()).Returns(false);
         this.responseLoader.TryGetResponse(messageResponse2, this.chatMessage, out Arg.Any<string>()).Returns(true);
 
@@ -64,7 +65,7 @@ public class ChatMessageResponseHandlerTests
         MessageResponse messageResponse1 = CreateMessageResponse(priority: 2);
         MessageResponse messageResponse2 = CreateMessageResponse(priority: 1);
         this.chatMessage.Text.Returns("message");
-        this.repository.Query<MessageResponse>().Returns(new[] { messageResponse1, messageResponse2 }.AsQueryable());
+        this.repository.Query<MessageResponse>().Returns(new TestAsyncEnumerable<MessageResponse>(new[] { messageResponse1, messageResponse2 }));
         this.responseLoader.TryGetResponse(messageResponse1, this.chatMessage, out Arg.Any<string>()).Returns(x =>
         {
             x[2] = response1;

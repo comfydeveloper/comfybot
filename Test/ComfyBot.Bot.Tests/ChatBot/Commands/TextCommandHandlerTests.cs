@@ -7,6 +7,9 @@ using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ComfyBot.Bot.Tests.TestHelpers;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Commands;
 
@@ -35,11 +38,11 @@ public class TextCommandHandlerTests
 
     [TestCase("channel1", "reply1")]
     [TestCase("channel2", "reply2")]
-    public void HandleShouldSendLoadedReply(string channel, string reply)
+    public async Task HandleShouldSendLoadedReply(string channel, string reply)
     {
         TextCommand command1 = CreateCommand();
         TextCommand command2 = CreateCommand();
-        this.repository.Query<TextCommand>().Returns(new[] { command1, command2 }.AsQueryable());
+        this.repository.Query<TextCommand>().Returns(new TestAsyncEnumerable<TextCommand>(new[] { command1, command2 }));
         this.replyLoader.TryGetReply(command1, this.chatCommand, out Arg.Any<string>()).Returns(false);
         this.replyLoader.TryGetReply(command2, this.chatCommand, out Arg.Any<string>()).Returns(x =>
         {
@@ -47,19 +50,19 @@ public class TextCommandHandlerTests
             return true;
         });
 
-        this.handler.Handle(this.chatCommand);
+        await this.handler.Handle(this.chatCommand);
 
         this.messageSender.Received(1).Send(reply);
     }
 
     [Test]
-    public void HandleShouldSendNothingIfNoReplyFound()
+    public async Task HandleShouldSendNothingIfNoReplyFound()
     {
         TextCommand command = CreateCommand();
-        this.repository.Query<TextCommand>().Returns(new[] { command }.AsQueryable());
+        this.repository.Query<TextCommand>().Returns(new TestAsyncEnumerable<TextCommand>(new[] { command }));
         this.replyLoader.TryGetReply(command, this.chatCommand, out Arg.Any<string>()).Returns(false);
 
-        this.handler.Handle(this.chatCommand);
+        await this.handler.Handle(this.chatCommand);
 
         this.messageSender.DidNotReceive().Send(Arg.Any<string>());
     }

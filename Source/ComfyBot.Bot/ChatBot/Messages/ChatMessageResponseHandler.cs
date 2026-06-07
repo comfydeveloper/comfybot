@@ -5,6 +5,7 @@ using ComfyBot.Gateway.Contracts.Models;
 using ComfyBot.Bot.Scaffolding;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
@@ -36,13 +37,14 @@ public class ChatMessageResponseHandler : IChatMessageHandler
             return;
         }
 
-        MessageResponse[] messageResponses = this.repository.Query<MessageResponse>().OrderBy(r => r.Priority).ToArray();
+        MessageResponse[] messageResponses = await this.repository.Query<MessageResponse>().OrderBy(r => r.Priority).ToArrayAsync();
 
         foreach (MessageResponse messageResponse in messageResponses)
         {
             if (this.responseLoader.TryGetResponse(messageResponse, message, out string response))
             {
                 messageResponse.UpdateLastUsage();
+
                 await this.repository.SaveChanges();
 
                 int waitTime = Random.Shared.Next(2500, 11000);

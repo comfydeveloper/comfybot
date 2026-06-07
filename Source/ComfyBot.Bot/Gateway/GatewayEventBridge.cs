@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Gateway.Contracts.Events;
@@ -38,20 +39,27 @@ public class GatewayEventBridge : IGatewayEventBridge
 
     private void OnMessageReceived(object sender, MessageReceivedEvent messageEvent)
     {
+        // Fire and forget pattern - don't block SignalR event
+        _ = this.HandleMessageAsync(messageEvent);
+    }
+
+    private async Task HandleMessageAsync(MessageReceivedEvent messageEvent)
+    {
         this.logger.LogInformation("GatewayEventBridge: Received message event from Gateway. User: {User}, Text: {Text}",
             messageEvent.Message.UserName, messageEvent.Message.Text);
 
+        // Create scope that will live for the duration of async operations
         using IServiceScope serviceScope = this.serviceProvider.CreateScope();
         IEnumerable<IChatMessageHandler> messageHandlers = serviceScope.ServiceProvider.GetServices<IChatMessageHandler>();
 
-        this.logger.LogInformation("GatewayEventBridge: Found {Count} message handlers", messageHandlers.Count());
+        this.logger.LogDebug("GatewayEventBridge: Found {Count} message handlers", messageHandlers.Count());
 
         foreach (IChatMessageHandler handler in messageHandlers)
         {
             try
             {
                 this.logger.LogDebug("GatewayEventBridge: Invoking handler {HandlerType}", handler.GetType().Name);
-                handler.Handle(messageEvent.Message);
+                await handler.Handle(messageEvent.Message);
             }
             catch (Exception ex)
             {
@@ -62,20 +70,26 @@ public class GatewayEventBridge : IGatewayEventBridge
 
     private void OnCommandReceived(object sender, CommandReceivedEvent commandEvent)
     {
+        // Fire and forget pattern - don't block SignalR event
+        _ = this.HandleCommandAsync(commandEvent);
+    }
+
+    private async Task HandleCommandAsync(CommandReceivedEvent commandEvent)
+    {
         this.logger.LogInformation("GatewayEventBridge: Received command event from Gateway. User: {User}, Command: {Command}",
             commandEvent.Command.ChatMessage.UserName, commandEvent.Command.CommandText);
 
         using IServiceScope serviceScope = this.serviceProvider.CreateScope();
         IEnumerable<ICommandHandler> commandHandlers = serviceScope.ServiceProvider.GetServices<ICommandHandler>();
 
-        this.logger.LogInformation("GatewayEventBridge: Found {Count} command handlers", commandHandlers.Count());
+        this.logger.LogDebug("GatewayEventBridge: Found {Count} command handlers", commandHandlers.Count());
 
         foreach (ICommandHandler handler in commandHandlers)
         {
             try
             {
                 this.logger.LogDebug("GatewayEventBridge: Invoking handler {HandlerType}", handler.GetType().Name);
-                handler.Handle(commandEvent.Command);
+                await handler.Handle(commandEvent.Command);
             }
             catch (Exception ex)
             {
