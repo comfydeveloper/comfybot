@@ -1,7 +1,7 @@
 # Comfybot
 
-A simple self-hosted twitch chat bot.
-This is a small learning side-project. If you look for a place to learn or to find ideas for your own first bot, feel free to check out my code!
+A self-hosted twitch chat bot.
+This is a learning side-project. If you look for a place to learn or to find ideas for your own first bot, feel free to check out my code!
 
 ## Features
 
@@ -46,14 +46,23 @@ Wildcards can be used in any text command and message response.
 | {{user}}   | Hello {{user}}!               | Hello Username!    | Returns the name of the user who wrote the message. |
 
 
+## Architecture
+There are three main components in the solution architecture:
+- **ComfyBot.Gateway**: The gateway service is responsible for connecting to Twitch chat, receiving messages, and distributing them to the other services. This has been built so other applications can listen to the same incoming chat stream.
+- **ComfyBot.Application**: The UI that manages message responses, commands and variables.
+- **ComfyBot.Bot**: The bot service that interacts with the Gateway and responds to incoming chat messages. It runs as part of the .Application project.
 
+## Tech stack and libraries
 
-## Technologies
-
-- NET 8.0
-- WPF
+- NET 10
+- Blazor
+- SignalR (For connections to the Gateway)
+- Redis
 - TwitchLib
-- EF Core with SQLite
+- EF Core with Postgres
 - NUnit
 - NSubstitute
-- FluentAssertions
+- Shoudly
+
+## Deployment
+The bot can be deployed using Docker Compose. Both the Gateway and Application services have their own Dockerfiles, and a shared `docker-compose.yml` file is provided at the project root.
