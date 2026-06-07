@@ -27,7 +27,7 @@ public class GatewayClient : IGatewayClient, IDisposable
 
     public async Task ConnectAsync()
     {
-        string gatewayUrl = this.settings.GatewayUrl ?? "http://localhost:5125";
+        string gatewayUrl = this.settings.GatewayUrl;
 
         this.hubConnection = new HubConnectionBuilder()
             .WithUrl($"{gatewayUrl}/chat")
@@ -74,15 +74,32 @@ public class GatewayClient : IGatewayClient, IDisposable
             return Task.CompletedTask;
         };
 
-        try
+        const int maxRetries = 30;
+        const int retryDelaySeconds = 2;
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++)
         {
-            await this.hubConnection.StartAsync();
-            this.logger.LogInformation("Connected to Gateway at {GatewayUrl}", gatewayUrl);
-        }
-        catch (Exception ex)
-        {
-            this.logger.LogError(ex, "Failed to connect to Gateway at {GatewayUrl}", gatewayUrl);
-            throw;
+            try
+            {
+                await this.hubConnection.StartAsync();
+                this.logger.LogInformation("Connected to Gateway at {GatewayUrl}", gatewayUrl);
+                return;
+            }
+            catch (Exception ex)
+            {
+                if (attempt < maxRetries)
+                {
+                    this.logger.LogWarning(ex, "Failed to connect to Gateway (attempt {Attempt}/{MaxRetries}). Retrying in {DelaySeconds}s...", 
+                        attempt, maxRetries, retryDelaySeconds);
+                    await Task.Delay(TimeSpan.FromSeconds(retryDelaySeconds));
+                }
+                else
+                {
+                    this.logger.LogError(ex, "Failed to connect to Gateway at {GatewayUrl} after {MaxRetries} attempts", 
+                        gatewayUrl, maxRetries);
+                    throw;
+                }
+            }
         }
     }
 
@@ -99,7 +116,7 @@ public class GatewayClient : IGatewayClient, IDisposable
 
     public async Task<bool> SendMessageAsync(string message)
     {
-        if (this.hubConnection == null || this.hubConnection.State != HubConnectionState.Connected)
+        if (this.hubConnection is not { State: HubConnectionState.Connected })
         {
             this.logger.LogWarning("Cannot send message: not connected to Gateway");
             return false;

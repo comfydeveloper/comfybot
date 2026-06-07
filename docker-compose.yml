@@ -1,0 +1,48 @@
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Source/ComfyBot.Gateway/Dockerfile
+    container_name: comfybot_gateway
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Gateway__TwitchChannel: ${GATEWAY_TWITCH_CHANNEL}
+      Gateway__TwitchUser: ${GATEWAY_TWITCH_USER}
+      Gateway__TwitchAuthKey: ${GATEWAY_TWITCH_AUTH_KEY}
+      Gateway__RedisConnectionString: ${REDIS_CONNECTION:-redis-shared:6379}
+    ports:
+      - "5010:5010"
+    networks:
+      - redis_network
+      - comfybot_network
+
+  application:
+    build:
+      context: .
+      dockerfile: Source/ComfyBot.Application/Dockerfile
+    container_name: comfybot_application
+    depends_on:
+      gateway:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Data__DatabaseConnection: "Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      Bot__IgnoredUsers: ${BOT_IGNORED_USERS:-Streamelements}
+      Bot__GatewayUrl: ${BOT_GATEWAY_URL:-http://gateway:5010}
+    ports:
+      - "5000:5000"
+    networks:
+      - postgres_network
+      - comfybot_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  postgres_network:
+    external: true
+  redis_network:
+    external: true
+  comfybot_network:
+    driver: bridge

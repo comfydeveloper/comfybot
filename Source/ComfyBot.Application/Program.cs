@@ -18,6 +18,8 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
+using DotNetEnv;
+using System.IO;
 
 namespace ComfyBot.Application;
 
@@ -35,7 +37,6 @@ public class Program
         try
         {
             Log.Debug("Starting ComfyBot Application");
-            DotNetEnv.Env.Load();
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

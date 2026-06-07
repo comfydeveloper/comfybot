@@ -1,0 +1,22 @@
+name: postgres
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-shared
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "6000:5432"
+    networks:
+      - network
+
+volumes:
+  postgres_data:
+
+networks:
+  network:
+    driver: bridge

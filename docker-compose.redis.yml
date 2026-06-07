@@ -1,0 +1,19 @@
+name: redis
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis-shared
+    ports:
+      - "5500:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - network
+
+volumes:
+  redis_data:
+  
+networks:
+  network:
+    driver: bridge
