@@ -1,14 +1,6 @@
 ﻿namespace ComfyBot.Application.Shared;
 
-public class TextModel : NotifyingModel
+public class TextModel
 {
-    private string text;
-
-    public string Text
-    {
-        get => this.text;
-        set {
-            this.text = value;
-            this.OnPropertyChanged(); }
-    }
+    public string Text { get; set; } = string.Empty;
 }

@@ -1,0 +1,134 @@
+@using ComfyBot.Application.Components.Atoms
+@using ComfyBot.Application.Features.Shared.Contracts
+@using ComfyBot.Application.Features.MessageResponses
+@using ComfyBot.Application.Patterns.Outcomes
+@using ComfyBot.Application.Shared.Extensions
+@page "/responses"
+@inject IQueryHandler<GetResponses.Query, GetResponses.Result> GetResponsesHandler
+@inject ICommandHandler<AddResponse.Command> AddResponseHandler
+@inject ICommandHandler<UpdateResponse.Command> UpdateResponseHandler
+@inject ICommandHandler<RemoveResponse.Command> RemoveResponseHandler
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Message Responses - ComfyBot</PageTitle>
+
+<h1>Message Responses</h1>
+
+<div class="responses-container">
+    @foreach (MessageResponseModel response in filteredResponses)
+    {
+        <MessageResponseItem @key="response.Id"
+                             Response="@response"
+                             OnResponseChanged="@HandleResponseChanged"
+                             OnResponseDeleted="@HandleResponseDeleted" />
+    }
+</div>
+
+<div class="sticky-footer">
+    <div class="search-box">
+        <input type="text" placeholder="Search responses..." @bind="searchText" @bind:event="oninput" />
+    </div>
+    <ComfyButton Priority="ButtonPriority.Primary" OnClick="@AddNewResponse">
+        New
+    </ComfyButton>
+</div>
+
+@code {
+    private string searchText = "";
+    private List<MessageResponseModel> responses = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadResponses();
+    }
+
+    private IEnumerable<MessageResponseModel> filteredResponses =>
+        string.IsNullOrWhiteSpace(searchText)
+            ? responses
+            : responses.Where(r => r.Users.Any(u => u.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                                   r.LooseKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                                   r.AllKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                                   r.ExactKeywords.Any(k => k.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                                   r.Replies.Any(reply => reply.Text.Contains(searchText, StringComparison.OrdinalIgnoreCase)));
+
+    private async Task LoadResponses()
+    {
+        Outcome<GetResponses.Result> outcome = await GetResponsesHandler.Handle(new GetResponses.Query());
+
+        if (!outcome.IsSuccess)
+        {
+            return;
+        }
+
+        responses.Clear();
+        foreach (GetResponses.MessageResponseEntry entry in outcome.Payload.Entries)
+        {
+            MessageResponseModel model = new()
+            {
+                Id = entry.Id.ToString(),
+                ReplyAlways = entry.AlwaysReply,
+                TimeoutInSeconds = entry.TimeoutInSeconds,
+                Priority = entry.Priority,
+            };
+
+            model.Users.AddRange(entry.Users.ToTextModels().OrderBy(m => m.Text));
+            model.LooseKeywords.AddRange(entry.LooseKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.AllKeywords.AddRange(entry.AllKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.ExactKeywords.AddRange(entry.ExactKeywords.ToTextModels().OrderBy(m => m.Text));
+            model.Replies.AddRange(entry.Replies.ToTextModels().OrderBy(m => m.Text));
+
+            responses.Add(model);
+        }
+    }
+
+    private async Task AddNewResponse()
+    {
+        Guid id = Guid.CreateVersion7();
+        MessageResponseModel model = new() 
+        { 
+            Id = id.ToString(),
+            TimeoutInSeconds = 30,
+            Priority = 0,
+            ReplyAlways = false
+        };
+        responses.Add(model);
+
+        await AddResponseHandler.Handle(new AddResponse.Command(id));
+        StateHasChanged();
+    }
+
+    private async Task HandleResponseChanged(MessageResponseModel response)
+    {
+        UpdateResponse.Command updateCmd = new(
+            Guid.Parse(response.Id),
+            response.TimeoutInSeconds,
+            response.ReplyAlways,
+            response.Priority,
+            response.Users.ToStrings(),
+            response.ExactKeywords.ToStrings(),
+            response.LooseKeywords.ToStrings(),
+            response.AllKeywords.ToStrings(),
+            response.Replies.ToStrings());
+
+        await UpdateResponseHandler.Handle(updateCmd);
+    }
+
+    private async Task HandleResponseDeleted(MessageResponseModel response)
+    {
+        String triggers = String.Join(", ",
+            response.Users.Select(u => u.Text)
+                .Concat(response.LooseKeywords.Select(k => k.Text))
+                .Concat(response.AllKeywords.Select(k => k.Text))
+                .Concat(response.ExactKeywords.Select(k => k.Text))
+                .Take(5));
+
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Delete response with triggers: {triggers}?"))
+        {
+            return;
+        }
+
+        responses.Remove(response);
+        await RemoveResponseHandler.Handle(new RemoveResponse.Command(Guid.Parse(response.Id)));
+        StateHasChanged();
+    }
+}

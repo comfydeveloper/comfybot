@@ -1,5 +1,6 @@
 ﻿using ComfyBot.Application.Features.Shared;
 using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -36,23 +37,32 @@ public sealed class GetResponses
             this.repository = repository;
         }
 
-        public async Task<Result> Handle(Query query)
+        public async Task<Outcome<Result>> Handle(Query query)
         {
-            List<MessageResponse> messageResponses = await this.repository.Query<MessageResponse>().ToListAsync();
-
-            return new Result
+            try
             {
-                Entries = messageResponses.Select(mr => new MessageResponseEntry(
-                    mr.Id,
-                    mr.TimeoutInSeconds,
-                    mr.AlwaysReply,
-                    mr.Priority,
-                    mr.Users.ToArray(),
-                    mr.ExactKeywords.ToArray(),
-                    mr.LooseKeywords.ToArray(),
-                    mr.AllKeywords.ToArray(),
-                    mr.Replies.ToArray())).ToList()
-            };
+                List<MessageResponse> messageResponses = await this.repository.Query<MessageResponse>().ToListAsync();
+
+                Result result = new()
+                {
+                    Entries = messageResponses.Select(mr => new MessageResponseEntry(
+                        mr.Id,
+                        mr.TimeoutInSeconds,
+                        mr.AlwaysReply,
+                        mr.Priority,
+                        mr.Users.ToArray(),
+                        mr.ExactKeywords.ToArray(),
+                        mr.LooseKeywords.ToArray(),
+                        mr.AllKeywords.ToArray(),
+                        mr.Replies.ToArray())).ToList()
+                };
+
+                return Outcome<Result>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return Outcome<Result>.Failure(new DatabaseError(ex.Message));
+            }
         }
     }
 }

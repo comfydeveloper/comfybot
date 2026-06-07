@@ -1,0 +1,232 @@
+<div class="response-card">
+    <div class="response-section">
+        <h3>This person</h3>
+        <div class="tags">
+            @foreach (TextModel user in Response.Users)
+            {
+                <div class="tag" @key="user">
+                    <input type="text" 
+                           value="@user.Text" 
+                           @onchange="@(e => OnUserChanged(user, e.Value?.ToString() ?? ""))" />
+                    <span class="remove-btn" @onclick="() => OnRemoveUser(user)">×</span>
+                </div>
+            }
+        </div>
+        <button @onclick="OnAddUser" class="add-btn">+ Add user</button>
+    </div>
+
+    <div class="response-section keywords-section">
+        <label>
+            <input type="checkbox" 
+                   checked="@Response.ReplyAlways" 
+                   @onchange="@(e => OnReplyAlwaysChanged(e.Value is bool b && b))" />
+            Says anything
+        </label>
+
+        <h4>Says any of these</h4>
+        <div class="tags">
+            @foreach (TextModel keyword in Response.LooseKeywords)
+            {
+                <div class="tag" @key="keyword">
+                    <input type="text" 
+                           value="@keyword.Text" 
+                           @onchange="@(e => OnLooseKeywordChanged(keyword, e.Value?.ToString() ?? ""))" />
+                    <span class="remove-btn" @onclick="() => OnRemoveLooseKeyword(keyword)">×</span>
+                </div>
+            }
+        </div>
+        <button @onclick="OnAddLooseKeyword" class="add-btn">+ Add keyword</button>
+
+        <h4>Says all of these</h4>
+        <div class="tags">
+            @foreach (TextModel keyword in Response.AllKeywords)
+            {
+                <div class="tag" @key="keyword">
+                    <input type="text" 
+                           value="@keyword.Text" 
+                           @onchange="@(e => OnAllKeywordChanged(keyword, e.Value?.ToString() ?? ""))" />
+                    <span class="remove-btn" @onclick="() => OnRemoveAllKeyword(keyword)">×</span>
+                </div>
+            }
+        </div>
+        <button @onclick="OnAddAllKeyword" class="add-btn">+ Add keyword</button>
+
+        <h4>Says exactly one of these</h4>
+        <div class="tags">
+            @foreach (TextModel keyword in Response.ExactKeywords)
+            {
+                <div class="tag" @key="keyword">
+                    <input type="text" 
+                           value="@keyword.Text" 
+                           @onchange="@(e => OnExactKeywordChanged(keyword, e.Value?.ToString() ?? ""))" />
+                    <span class="remove-btn" @onclick="() => OnRemoveExactKeyword(keyword)">×</span>
+                </div>
+            }
+        </div>
+        <button @onclick="OnAddExactKeyword" class="add-btn">+ Add keyword</button>
+    </div>
+
+    <div class="response-section">
+        <label>
+            Reply every
+            <input type="number" 
+                   value="@Response.TimeoutInSeconds" 
+                   @onchange="@(e => OnTimeoutChanged(int.TryParse(e.Value?.ToString(), out var t) ? t : 30))" 
+                   min="1" />
+            seconds with priority of
+            <input type="number" 
+                   value="@Response.Priority" 
+                   @onchange="@(e => OnPriorityChanged(int.TryParse(e.Value?.ToString(), out var p) ? p : 0))" 
+                   min="0" />
+        </label>
+        <div class="tags">
+            @foreach (TextModel reply in Response.Replies)
+            {
+                <div class="tag" @key="reply">
+                    <input type="text" 
+                           value="@reply.Text" 
+                           @onchange="@(e => OnReplyChanged(reply, e.Value?.ToString() ?? ""))" />
+                    <span class="remove-btn" @onclick="() => OnRemoveReply(reply)">×</span>
+                </div>
+            }
+        </div>
+        <button @onclick="OnAddReply" class="add-btn">Add reply</button>
+    </div>
+
+    <button @onclick="OnDelete" class="delete-btn">🗑️</button>
+</div>
+
+@code {
+    [Parameter]
+    public MessageResponseModel Response { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<MessageResponseModel> OnResponseChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<MessageResponseModel> OnResponseDeleted { get; set; }
+
+    private async Task NotifyChange()
+    {
+        await OnResponseChanged.InvokeAsync(Response);
+    }
+
+    // User management
+    private async Task OnUserChanged(TextModel user, string newText)
+    {
+        user.Text = newText;
+        await NotifyChange();
+    }
+
+    private async Task OnAddUser()
+    {
+        Response.Users.Add(new TextModel { Text = "" });
+        await NotifyChange();
+    }
+
+    private async Task OnRemoveUser(TextModel user)
+    {
+        Response.Users.Remove(user);
+        await NotifyChange();
+    }
+
+    // Loose keywords
+    private async Task OnLooseKeywordChanged(TextModel keyword, string newText)
+    {
+        keyword.Text = newText;
+        await NotifyChange();
+    }
+
+    private async Task OnAddLooseKeyword()
+    {
+        Response.LooseKeywords.Add(new TextModel { Text = "" });
+        await NotifyChange();
+    }
+
+    private async Task OnRemoveLooseKeyword(TextModel keyword)
+    {
+        Response.LooseKeywords.Remove(keyword);
+        await NotifyChange();
+    }
+
+    // All keywords
+    private async Task OnAllKeywordChanged(TextModel keyword, string newText)
+    {
+        keyword.Text = newText;
+        await NotifyChange();
+    }
+
+    private async Task OnAddAllKeyword()
+    {
+        Response.AllKeywords.Add(new TextModel { Text = "" });
+        await NotifyChange();
+    }
+
+    private async Task OnRemoveAllKeyword(TextModel keyword)
+    {
+        Response.AllKeywords.Remove(keyword);
+        await NotifyChange();
+    }
+
+    // Exact keywords
+    private async Task OnExactKeywordChanged(TextModel keyword, string newText)
+    {
+        keyword.Text = newText;
+        await NotifyChange();
+    }
+
+    private async Task OnAddExactKeyword()
+    {
+        Response.ExactKeywords.Add(new TextModel { Text = "" });
+        await NotifyChange();
+    }
+
+    private async Task OnRemoveExactKeyword(TextModel keyword)
+    {
+        Response.ExactKeywords.Remove(keyword);
+        await NotifyChange();
+    }
+
+    // Replies
+    private async Task OnReplyChanged(TextModel reply, string newText)
+    {
+        reply.Text = newText;
+        await NotifyChange();
+    }
+
+    private async Task OnAddReply()
+    {
+        Response.Replies.Add(new TextModel { Text = "" });
+        await NotifyChange();
+    }
+
+    private async Task OnRemoveReply(TextModel reply)
+    {
+        Response.Replies.Remove(reply);
+        await NotifyChange();
+    }
+
+    // Settings
+    private async Task OnReplyAlwaysChanged(bool newValue)
+    {
+        Response.ReplyAlways = newValue;
+        await NotifyChange();
+    }
+
+    private async Task OnTimeoutChanged(int newTimeout)
+    {
+        Response.TimeoutInSeconds = newTimeout;
+        await NotifyChange();
+    }
+
+    private async Task OnPriorityChanged(int newPriority)
+    {
+        Response.Priority = newPriority;
+        await NotifyChange();
+    }
+
+    private async Task OnDelete()
+    {
+        await OnResponseDeleted.InvokeAsync(Response);
+    }
+}

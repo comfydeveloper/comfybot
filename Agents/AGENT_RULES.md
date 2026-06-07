@@ -1,0 +1,9 @@
+- Minimize token usage when explaining the process you are working on. 
+- Once finishing a task, ask if the user wants to continue with another task.
+- If you are unsure about something, do not make assumptions but instead ask for user input.
+- When asking the user for input, be specific about what you need. For example, if you need a list of items, ask for a list of items instead of just asking for input.
+- Use [Guid.CreateVersion7] for Guid creation
+- Use explicit types instead of var. Do not use var.
+- Every new feature should have at least one integration test that tests the happy path and reasonable edge cases. See existing tests for examples.
+- Add unit tests only for individual classes for more complex logic, such as data transformation, string parsing, etc.
+- Use collection expressions when possible (e.g. [1, 2, 3] instead of new List<int> { 1, 2, 3 })

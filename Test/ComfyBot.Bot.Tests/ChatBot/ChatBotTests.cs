@@ -1,48 +1,42 @@
-﻿using ComfyBot.Bot.Scaffolding;
+using ComfyBot.Bot.Gateway;
+using ComfyBot.Bot.Scaffolding;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using TwitchLib.Client.Interfaces;
+using System.Threading.Tasks;
 
 namespace ComfyBot.Bot.Tests.ChatBot;
 
 [TestFixture]
 public class ChatBotTests
 {
-    private ITwitchClient client;
-
+    private IGatewayClient gatewayClient;
+    private IGatewayEventBridge eventBridge;
     private BotSettings settings;
     private Bot.ChatBot.ChatBot chatBot;
-    private IServiceProvider serviceProvider;
 
     [SetUp]
     public void Setup()
     {
-        this.client = Substitute.For<ITwitchClient>();
+        this.gatewayClient = Substitute.For<IGatewayClient>();
+        this.eventBridge = Substitute.For<IGatewayEventBridge>();
 
-        this.serviceProvider = Substitute.For<IServiceProvider>();
-
-        var logger = Substitute.For<ILogger<Bot.ChatBot.ChatBot>>();
+        ILogger<Bot.ChatBot.ChatBot> logger = Substitute.For<ILogger<Bot.ChatBot.ChatBot>>();
 
         this.settings = new BotSettings();
         IOptions<BotSettings> options = Substitute.For<IOptions<BotSettings>>();
         options.Value.Returns(this.settings);
 
-        this.chatBot = new Bot.ChatBot.ChatBot(this.client, logger, this.serviceProvider);
+        this.chatBot = new Bot.ChatBot.ChatBot(this.gatewayClient, this.eventBridge, logger);
     }
 
-    [TestCase("user1", "password1", "channel1")]
-    [TestCase("user2", "password2", "channel2")]
-    public void RunShouldInitializeClient(string username, string password, string channel)
+    [Test]
+    public async Task RunShouldRegisterHandlersAndConnectToGateway()
     {
-        this.settings.User = username;
-        this.settings.AuthKey = password;
-        this.settings.Channel = channel;
+        await this.chatBot.Run();
 
-        this.chatBot.Run();
-
-        this.client.Received().Connect();
+        this.eventBridge.Received().RegisterHandlers();
+        await this.gatewayClient.Received().ConnectAsync();
     }
 }

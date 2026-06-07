@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ComfyBot.Bot.ChatBot.Services;
-using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Gateway.Contracts.Models;
 using ComfyBot.Bot.Extensions;
 using ComfyBot.Data.Models;
 
@@ -42,7 +42,7 @@ public class MessageResponseLoader : IMessageResponseLoader
 
     private static bool HasOngoingTimeout(MessageResponse response)
     {
-        return response.LastUsedAt.HasValue && response.LastUsedAt > DateTime.Now.AddSeconds(-response.TimeoutInSeconds);
+        return response.LastUsedAt.HasValue && response.LastUsedAt > DateTime.UtcNow.AddSeconds(-response.TimeoutInSeconds);
     }
 
     private static bool MatchesLooseKeyword(MessageResponse response, IChatMessage message)

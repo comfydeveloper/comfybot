@@ -1,7 +1,7 @@
-﻿using ComfyBot.Bot.ChatBot.Services;
+using ComfyBot.Bot.ChatBot.Services;
 using ComfyBot.Bot.ChatBot.Services.Strategies;
-using FluentAssertions;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Services;
 
@@ -22,7 +22,7 @@ public class WildcardReplacerTests
 
         string result = this.replacer.Replace(original);
 
-        result.Should().Match(s => s == "test2 and test3" || s == "test1 and test3");
+        result.ShouldBeOneOf("test2 and test3", "test1 and test3");
     }
 
     [Test]
@@ -33,6 +33,6 @@ public class WildcardReplacerTests
         string result = this.replacer.Replace(original);
 
         int resultNumber = int.Parse(result);
-        resultNumber.Should().BeInRange(1, 9);
+        resultNumber.ShouldBeInRange(1, 9);
     }
 }

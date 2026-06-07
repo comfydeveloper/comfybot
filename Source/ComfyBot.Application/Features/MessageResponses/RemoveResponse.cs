@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System;
@@ -20,13 +21,26 @@ public sealed class RemoveResponse
             this.repository = repository;
         }
 
-        public async Task Handle(Command command)
+        public async Task<Outcome> Handle(Command command)
         {
-            MessageResponse messageResponse = this.repository.Query<MessageResponse>().First(x => x.Id == command.Id);
-            
-            this.repository.Remove(messageResponse);
+            try
+            {
+                MessageResponse messageResponse = this.repository.Query<MessageResponse>().FirstOrDefault(x => x.Id == command.Id);
 
-            await this.repository.SaveChanges();
+                if (messageResponse is null)
+                {
+                    return Outcome.Failure(new NotFoundError("MessageResponse", command.Id.ToString()));
+                }
+
+                this.repository.Remove(messageResponse);
+                await this.repository.SaveChanges();
+
+                return Outcome.Success();
+            }
+            catch (Exception ex)
+            {
+                return Outcome.Failure(new DatabaseError(ex.Message));
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ComfyBot.Application.Features.Shared;
 using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -30,15 +31,24 @@ public sealed class GetVariables
             this.repository = repository;
         }
 
-        public async Task<Result> Handle(Query query)
+        public async Task<Outcome<Result>> Handle(Query query)
         {
-            List<VariableEntry> variables = await this.repository.Query<Variable>()
-                .Select(x => new VariableEntry(x.Id, x.Name, x.Value)).ToListAsync();
-
-            return new Result
+            try
             {
-                Entries = variables
-            };
+                List<VariableEntry> variables = await this.repository.Query<Variable>()
+                    .Select(x => new VariableEntry(x.Id, x.Name, x.Value)).ToListAsync();
+
+                Result result = new()
+                {
+                    Entries = variables
+                };
+
+                return Outcome<Result>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return Outcome<Result>.Failure(new DatabaseError(ex.Message));
+            }
         }
     }
 }

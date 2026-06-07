@@ -18,6 +18,6 @@ public class TextCommand : Entity
     public void UpdateLastUsage()
     {
         this.UseCount++;
-        this.LastUsedAt = DateTime.Now;
+        this.LastUsedAt = DateTime.UtcNow;
     }
 }

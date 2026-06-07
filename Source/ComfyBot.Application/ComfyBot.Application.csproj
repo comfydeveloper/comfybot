@@ -1,48 +1,33 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <StartupObject>ComfyBot.Application.App</StartupObject>
-    <ApplicationIcon>Comfybot.ico</ApplicationIcon>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="logs\**" />
     <EmbeddedResource Remove="logs\**" />
     <None Remove="logs\**" />
-    <Page Remove="logs\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Comfybot.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
-    <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+    <PackageReference Include="DotNetEnv" Version="3.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="Serilog" Version="4.0.2" />
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="Serilog" Version="4.3.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ComfyBot.Bot\ComfyBot.Bot.csproj" />
     <ProjectReference Include="..\ComfyBot.Common\ComfyBot.Common.csproj" />
     <ProjectReference Include="..\ComfyBot.Data\ComfyBot.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Shared\Wrappers\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +40,13 @@
     <None Update="appsettings.Development.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Molecules\" />
+    <Folder Include="Components\Organisms\" />
+    <Folder Include="Components\Root\" />
+    <Folder Include="Shared\Wrappers\" />
   </ItemGroup>
 
 </Project>

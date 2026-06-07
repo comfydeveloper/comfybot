@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System;
@@ -19,15 +20,24 @@ public sealed class AddVariable
             this.repository = repository;
         }
 
-        public async Task Handle(Command command)
+        public async Task<Outcome> Handle(Command command)
         {
-            Variable newVariable = new()
+            try
             {
-                Id = command.Id
-            };
+                Variable newVariable = new()
+                {
+                    Id = command.Id
+                };
 
-            this.repository.Add(newVariable);
-            await this.repository.SaveChanges();
+                this.repository.Add(newVariable);
+                await this.repository.SaveChanges();
+
+                return Outcome.Success();
+            }
+            catch (Exception ex)
+            {
+                return Outcome.Failure(new DatabaseError(ex.Message));
+            }
         }
     }
 }

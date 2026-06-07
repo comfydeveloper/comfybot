@@ -1,4 +1,5 @@
 ﻿using ComfyBot.Application.Features.Shared.Contracts;
+using ComfyBot.Application.Patterns.Outcomes;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
 using System;
@@ -21,15 +22,29 @@ public sealed class UpdateCommand
             this.repository = repository;
         }
 
-        public async Task Handle(Command command)
+        public async Task<Outcome> Handle(Command command)
         {
-            TextCommand textCommand = this.repository.Query<TextCommand>().First(x => x.Id == command.Id);
+            try
+            {
+                TextCommand textCommand = this.repository.Query<TextCommand>().FirstOrDefault(x => x.Id == command.Id);
 
-            textCommand.TimeoutInSeconds = command.TimeoutInSeconds;
-            textCommand.Commands = new List<string>(command.Commands);
-            textCommand.Replies = new List<string>(command.Replies);
+                if (textCommand is null)
+                {
+                    return Outcome.Failure(new NotFoundError("TextCommand", command.Id.ToString()));
+                }
 
-            await this.repository.SaveChanges();
+                textCommand.TimeoutInSeconds = command.TimeoutInSeconds;
+                textCommand.Commands = new List<string>(command.Commands);
+                textCommand.Replies = new List<string>(command.Replies);
+
+                await this.repository.SaveChanges();
+
+                return Outcome.Success();
+            }
+            catch (Exception ex)
+            {
+                return Outcome.Failure(new DatabaseError(ex.Message));
+            }
         }
     }
 }

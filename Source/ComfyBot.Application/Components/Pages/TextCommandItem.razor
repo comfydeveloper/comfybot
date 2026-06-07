@@ -1,0 +1,99 @@
+<div class="command-card">
+    <div class="command-section">
+        <h3>Use this command</h3>
+        <div class="tags">
+            @foreach (TextModel txt in Command.Commands)
+            {
+                <div class="tag" @key="txt">
+                    <input type="text" 
+                           value="@txt.Text" 
+                           @onchange="@(e => OnCommandTextChanged(txt, e.Value?.ToString() ?? ""))" />
+                    <span class="remove-btn" @onclick="() => OnRemoveCommandText(txt)">×</span>
+                </div>
+            }
+        </div>
+        <button @onclick="OnAddCommandText" class="add-btn">Add alias</button>
+    </div>
+
+    <div class="command-section">
+        <label>Reply every 
+            <input type="number" 
+                   value="@Command.Timeout" 
+                   @onchange="@(e => OnTimeoutChanged(int.TryParse(e.Value?.ToString(), out var t) ? t : 30))" 
+                   min="1" /> 
+            seconds with
+        </label>
+        <div class="tags">
+            @foreach (TextModel reply in Command.Replies)
+            {
+                <div class="tag" @key="reply">
+                    <input type="text" 
+                           value="@reply.Text" 
+                           @onchange="@(e => OnReplyTextChanged(reply, e.Value?.ToString() ?? ""))" />
+                    <span class="remove-btn" @onclick="() => OnRemoveReply(reply)">×</span>
+                </div>
+            }
+        </div>
+        <button @onclick="OnAddReply" class="add-btn">Add reply</button>
+    </div>
+
+    <button @onclick="OnDelete" class="delete-btn">🗑️</button>
+</div>
+
+@code {
+    [Parameter]
+    public TextCommandModel Command { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<TextCommandModel> OnCommandChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<TextCommandModel> OnCommandDeleted { get; set; }
+
+    private async Task OnCommandTextChanged(TextModel textModel, string newText)
+    {
+        textModel.Text = newText;
+        await OnCommandChanged.InvokeAsync(Command);
+    }
+
+    private async Task OnReplyTextChanged(TextModel textModel, string newText)
+    {
+        textModel.Text = newText;
+        await OnCommandChanged.InvokeAsync(Command);
+    }
+
+    private async Task OnTimeoutChanged(int newTimeout)
+    {
+        Command.Timeout = newTimeout;
+        await OnCommandChanged.InvokeAsync(Command);
+    }
+
+    private async Task OnAddCommandText()
+    {
+        Command.Commands.Add(new TextModel { Text = "" });
+        await OnCommandChanged.InvokeAsync(Command);
+    }
+
+    private async Task OnRemoveCommandText(TextModel textModel)
+    {
+        Command.Commands.Remove(textModel);
+        await OnCommandChanged.InvokeAsync(Command);
+    }
+
+    private async Task OnAddReply()
+    {
+        Command.Replies.Add(new TextModel { Text = "" });
+        await OnCommandChanged.InvokeAsync(Command);
+    }
+
+    private async Task OnRemoveReply(TextModel textModel)
+    {
+        Command.Replies.Remove(textModel);
+        await OnCommandChanged.InvokeAsync(Command);
+    }
+
+    private async Task OnDelete()
+    {
+        await OnCommandDeleted.InvokeAsync(Command);
+    }
+}

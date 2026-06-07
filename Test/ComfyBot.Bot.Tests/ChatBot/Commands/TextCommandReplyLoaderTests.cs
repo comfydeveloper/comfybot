@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using ComfyBot.Bot.ChatBot.Commands;
 using ComfyBot.Bot.ChatBot.Services;
-using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Gateway.Contracts.Models;
 using ComfyBot.Data.Models;
-using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Commands;
 
@@ -19,23 +19,26 @@ public class TextCommandReplyLoaderTests
 
     private TextCommandReplyLoader replyLoader;
 
+    private ChatMessage chatMessage;
+
     [SetUp]
     public void Setup()
     {
         this.wildcardReplacer = Substitute.For<IWildcardReplacer>();
         this.chatCommand = Substitute.For<IChatCommand>();
-        this.chatCommand.ChatMessage.Returns(Substitute.For<IChatMessage>());
+        this.chatMessage = new ChatMessage();
+        this.chatCommand.ChatMessage.Returns(this.chatMessage);
         this.StubWildcardReplacer();
 
         this.textCommand = new TextCommand
         {
             Replies = [],
             Commands = [],
-            LastUsedAt = DateTime.Now,
+            LastUsedAt = DateTime.UtcNow,
             UseCount = 0,
             TimeoutInSeconds = 0,
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow
         };
 
         this.replyLoader = new TextCommandReplyLoader(this.wildcardReplacer);
@@ -52,8 +55,8 @@ public class TextCommandReplyLoaderTests
 
         bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        result.Should().BeTrue();
-        resultText.Should().Be(replyText);
+        result.ShouldBeTrue();
+        resultText.ShouldBe(replyText);
     }
 
     [TestCase("message1 {{user}}", "userName1", "message1 userName1")]
@@ -62,14 +65,14 @@ public class TextCommandReplyLoaderTests
     {
         this.chatCommand.ArgumentsAsList.Returns([]);
         this.chatCommand.CommandText.Returns("commandOld");
-        this.chatCommand.ChatMessage.UserName.Returns(userName);
+        this.chatMessage.UserName = userName;
         this.textCommand.Commands.Add("commandOld");
         this.textCommand.Replies.Add(replyText);
 
         bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        result.Should().BeTrue();
-        resultText.Should().Be(expectedReply);
+        result.ShouldBeTrue();
+        resultText.ShouldBe(expectedReply);
     }
 
     [TestCase("parameters1", "text with {{parameters}}", "text with parameters1")]
@@ -84,7 +87,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be(expected);
+        resultText.ShouldBe(expected);
     }
 
     [Test]
@@ -99,7 +102,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be("reply with parameters");
+        resultText.ShouldBe("reply with parameters");
     }
 
     [Test]
@@ -114,7 +117,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be("reply");
+        resultText.ShouldBe("reply");
     }
 
     [Test]
@@ -128,7 +131,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be("reply");
+        resultText.ShouldBe("reply");
     }
 
     [TestCase("text with {{parameter2}} {{parameter1}}", "parameter", "parameter", "text with parameter parameter")]
@@ -143,7 +146,7 @@ public class TextCommandReplyLoaderTests
 
         this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        resultText.Should().Be(expected);
+        resultText.ShouldBe(expected);
     }
 
     [TestCase("command1", "command2")]
@@ -155,21 +158,21 @@ public class TextCommandReplyLoaderTests
 
         bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string resultText);
 
-        result.Should().BeFalse();
-        resultText.Should().BeNull();
+        result.ShouldBeFalse();
+        resultText.ShouldBeNull();
     }
 
     [TestCase(10)]
     [TestCase(20)]
     public void TryGetResponseShouldReturnFalseWhenTheResponseTimeoutHasNotRunOutYet(int timeout)
     {
-        this.textCommand.LastUsedAt = DateTime.Now.AddSeconds(-timeout + 1);
+        this.textCommand.LastUsedAt = DateTime.UtcNow.AddSeconds(-timeout + 1);
         this.textCommand.TimeoutInSeconds = timeout;
 
         bool result = this.replyLoader.TryGetReply(this.textCommand, this.chatCommand, out string response);
 
-        response.Should().BeNull();
-        result.Should().BeFalse();
+        response.ShouldBeNull();
+        result.ShouldBeFalse();
     }
 
     [Test]

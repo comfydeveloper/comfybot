@@ -1,31 +1,10 @@
-﻿using ComfyBot.Application.Shared;
+﻿namespace ComfyBot.Application.Variables;
 
-namespace ComfyBot.Application.Variables;
-
-public class VariableModel : NotifyingModel
+public class VariableModel
 {
-    private string name;
-    private string value;
+    public string Id { get; set; } = string.Empty;
 
-    public string Id { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    public string Name
-    {
-        get => this.name;
-        set
-        {
-            this.name = value;
-            this.OnPropertyChanged();
-        }
-    }
-
-    public string Value
-    {
-        get => this.value;
-        set
-        {
-            this.value = value;
-            this.OnPropertyChanged();
-        }
-    }
+    public string Value { get; set; } = string.Empty;
 }

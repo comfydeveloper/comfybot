@@ -293,3 +293,9 @@ Source/ComfyBot.Application/appsettings.user.json
 Source/ComfyBot.Application/comfybot.sqlite
 /Source/ComfyBot.Application/logs
 Source/ComfyBot.Application/.env
+
+# Environment files (local configuration)
+.env
+**/.env
+*.sqlite-shm
+*.sqlite-wal

@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using ComfyBot.Bot.ChatBot.Messages;
 using ComfyBot.Bot.ChatBot.Services;
-using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Gateway.Contracts.Models;
 using ComfyBot.Data.Models;
-using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Bot.Tests.ChatBot.Messages;
 
@@ -40,13 +40,13 @@ public class MessageResponseLoaderTests
             AllKeywords = [],
             ExactKeywords = [],
             Replies = [],
-            LastUsedAt = DateTime.Now,
+            LastUsedAt = DateTime.UtcNow,
             TimeoutInSeconds = 0,
             UseCount = 0,
             Priority = 0,
             AlwaysReply = false,
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow
         };
     }
 
@@ -54,13 +54,13 @@ public class MessageResponseLoaderTests
     [TestCase(20)]
     public void TryGetResponseShouldReturnFalseWhenTheResponseTimeoutHasNotRunOutYet(int timeout)
     {
-        this.messageResponse.LastUsedAt = DateTime.Now.AddSeconds(-timeout + 1);
+        this.messageResponse.LastUsedAt = DateTime.UtcNow.AddSeconds(-timeout + 1);
         this.messageResponse.TimeoutInSeconds = timeout;
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        response.Should().BeNull();
-        result.Should().BeFalse();
+        response.ShouldBeNull();
+        result.ShouldBeFalse();
     }
 
     [TestCase("user1")]
@@ -72,8 +72,8 @@ public class MessageResponseLoaderTests
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        response.Should().BeNull();
-        result.Should().BeFalse();
+        response.ShouldBeNull();
+        result.ShouldBeFalse();
     }
 
     [TestCase("keyword1", "keyword2", "message with keyword1", true)]
@@ -87,8 +87,8 @@ public class MessageResponseLoaderTests
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        result.Should().Be(expected);
-        response.Should().Be(expected ? "response" : null);
+        result.ShouldBe(expected);
+        response.ShouldBe(expected ? "response" : null);
     }
 
     [TestCase("keyword1", "keyword2", "Keyword2 keyword1", true)]
@@ -102,8 +102,8 @@ public class MessageResponseLoaderTests
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        result.Should().Be(expected);
-        response.Should().Be(expected ? "response" : null);
+        result.ShouldBe(expected);
+        response.ShouldBe(expected ? "response" : null);
     }
 
     [Test]
@@ -114,8 +114,8 @@ public class MessageResponseLoaderTests
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        result.Should().BeTrue();
-        response.Should().NotBeNull();
+        result.ShouldBeTrue();
+        response.ShouldNotBeNull();
     }
 
     [TestCase("keyword1", "keyword2", "keyword1", true)]
@@ -129,8 +129,8 @@ public class MessageResponseLoaderTests
 
         bool result = this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        result.Should().Be(expected);
-        response.Should().Be(expected ? "response" : null);
+        result.ShouldBe(expected);
+        response.ShouldBe(expected ? "response" : null);
     }
 
     [Test]
@@ -159,7 +159,7 @@ public class MessageResponseLoaderTests
             }
         }
 
-        response1Count.Should().BeInRange(35, 65);
+        response1Count.ShouldBeInRange(35, 65);
     }
 
     [TestCase("response1 {{user}}", "username1", "response1 username1")]
@@ -173,7 +173,7 @@ public class MessageResponseLoaderTests
 
         this.loader.TryGetResponse(this.messageResponse, this.chatMessage, out string response);
 
-        response.Should().Be(expected);
+        response.ShouldBe(expected);
     }
 
     [Test]

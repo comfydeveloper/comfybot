@@ -1,8 +1,9 @@
 ﻿using ComfyBot.Bot.ChatBot.Services;
-using ComfyBot.Bot.ChatBot.Wrappers;
+using ComfyBot.Gateway.Contracts.Models;
 using ComfyBot.Data.Models;
 using ComfyBot.Data.Repositories;
-using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ComfyBot.Bot.ChatBot.Commands;
 
@@ -26,16 +27,16 @@ public class TextCommandHandler : CommandHandler
         return true;
     }
 
-    protected override void HandleInternal(IChatCommand chatCommand)
+    protected override async Task HandleInternal(IChatCommand chatCommand)
     {
-        IQueryable<TextCommand> textCommands = this.repository.Query<TextCommand>();
+        TextCommand[] textCommands = await this.repository.Query<TextCommand>().ToArrayAsync();
 
         foreach (TextCommand textCommand in textCommands)
         {
             if (this.replyLoader.TryGetReply(textCommand, chatCommand, out string reply))
             {
                 textCommand.UpdateLastUsage();
-                this.repository.SaveChanges();
+                await this.repository.SaveChanges();
 
                 this.messageSender.Send(reply);
                 return;

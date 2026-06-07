@@ -1,6 +1,6 @@
-﻿using ComfyBot.Bot.Extensions;
-using FluentAssertions;
+using ComfyBot.Bot.Extensions;
 using NUnit.Framework;
+using Shouldly;
 
 namespace ComfyBot.Bot.Tests.Extensions;
 
@@ -15,7 +15,7 @@ public class StringExtensionsTests
     {
         bool result = reply.CanHandleParameters(parameterCount);
 
-        result.Should().Be(expected);
+        result.ShouldBe(expected);
     }
 
     [Test]
@@ -23,7 +23,7 @@ public class StringExtensionsTests
     {
         bool result = "{{parameters}}".CanHandleParameters(1);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [TestCase("test-test", "test", "-test")]
@@ -32,6 +32,6 @@ public class StringExtensionsTests
     {
         string result = original.ReplaceFirst(keyword, "");
 
-        result.Should().Be(expected);
+        result.ShouldBe(expected);
     }
 }
