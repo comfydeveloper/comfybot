@@ -1,25 +1,27 @@
 @inherits LayoutComponentBase
 
+@inject NavigationManager Navigation
+
 <div class="page">
     <div class="sidebar">
         <nav class="flex-column">
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href="@Navigation.BaseUri" Match="NavLinkMatch.All">
                     <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
                 </NavLink>
             </div>
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="text-commands">
+                <NavLink class="nav-link" href="@Navigation.ToAbsoluteUri("text-commands")">
                     <span class="bi bi-chat-left-text-fill" aria-hidden="true"></span> Text Commands
                 </NavLink>
             </div>
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="responses">
+                <NavLink class="nav-link" href="@Navigation.ToAbsoluteUri("responses")">
                     <span class="bi bi-chat-dots-fill" aria-hidden="true"></span> Responses
                 </NavLink>
             </div>
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="variables">
+                <NavLink class="nav-link" href="@Navigation.ToAbsoluteUri("variables")">
                     <span class="bi bi-diagram-3-fill" aria-hidden="true"></span> Variables
                 </NavLink>
             </div>
