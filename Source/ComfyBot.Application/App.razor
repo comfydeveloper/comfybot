@@ -1,5 +1,9 @@
 @namespace ComfyBot.Application.Components
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
 @using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+@inject IWebHostEnvironment Env;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,10 +11,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ComfyBot</title>
-    <base href="/" />
+    <base href="@(Env.IsDevelopment() ? "/" : "/apps/comfybot/admin/")" />
     <link rel="stylesheet" href="app.css" />
     <link rel="icon" type="image/png" href="comfybot.ico" />
-    <HeadOutlet />
 </head>
 <body>
     <Routes @rendermode="InteractiveServer" />

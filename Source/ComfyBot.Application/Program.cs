@@ -62,6 +62,7 @@ public class Program
 
             if (!app.Environment.IsDevelopment())
             {
+                app.UsePathBase("/apps/comfybot/admin");
                 app.UseExceptionHandler("/Error", createScopeForErrors: true);
                 app.UseHsts();
             }
