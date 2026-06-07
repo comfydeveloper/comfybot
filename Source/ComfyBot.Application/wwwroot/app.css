@@ -1,5 +1,5 @@
 html, body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-family);
 }
 
 .page {
@@ -8,9 +8,9 @@ html, body {
 }
 
 .sidebar {
-    width: 250px;
-    background-color: #f7f7f7;
-    border-right: 1px solid #ddd;
+    width: var(--sidebar-width);
+    background-color: var(--light-bg);
+    border-right: var(--border-thin) solid var(--border-color);
     padding: 20px 0;
     overflow-y: auto;
 }
@@ -29,22 +29,22 @@ html, body {
     display: block;
     padding: 12px 20px;
     text-decoration: none;
-    color: #333;
-    font-size: 16px;
+    color: var(--light-text);
+    font-size: var(--font-size-large);
     border-left: 4px solid transparent;
-    transition: all 0.3s ease;
+    transition: all var(--transition-duration) var(--transition-timing);
 }
 
 .nav-link:hover {
-    background-color: #e0e0e0;
-    border-left-color: #007bff;
+    background-color: var(--light-hover);
+    border-left-color: var(--primary-color);
 }
 
 .nav-link.active {
-    background-color: #007bff;
-    color: white;
-    border-left-color: #0056b3;
-    font-weight: bold;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-left-color: var(--primary-dark);
+    font-weight: var(--font-weight-bold);
 }
 
 .main {
@@ -54,8 +54,8 @@ html, body {
 }
 
 .top-row {
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #ddd;
+    background-color: var(--light-bg);
+    border-bottom: var(--border-thin) solid var(--border-color);
     padding: 20px;
     display: flex;
     align-items: center;
@@ -63,8 +63,8 @@ html, body {
 
 .top-row h1 {
     margin: 0;
-    font-size: 28px;
-    color: #333;
+    font-size: var(--font-size-xl);
+    color: var(--light-text);
 }
 
 .content {
@@ -75,8 +75,8 @@ html, body {
 
 .bi {
     display: inline-block;
-    width: 18px;
-    height: 18px;
+    width: var(--icon-size);
+    height: var(--icon-size);
     margin-right: 8px;
     vertical-align: middle;
 }
@@ -105,23 +105,23 @@ html, body {
     width: 100%;
     max-width: 400px;
     padding: 12px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    font-size: var(--font-size-base);
+    border: var(--border-thin) solid var(--border-color);
+    border-radius: var(--border-radius);
 }
 
 /* Sticky Footer */
 .sticky-footer {
     position: sticky;
     bottom: 0;
-    background-color: #fff;
-    border-top: 1px solid #ddd;
+    background-color: var(--white);
+    border-top: var(--border-thin) solid var(--border-color);
     padding: 20px;
     display: flex;
     gap: 15px;
     align-items: center;
-    z-index: 100;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    z-index: var(--z-sticky);
+    box-shadow: var(--shadow-top);
 }
 
 .sticky-footer .search-box {
@@ -139,10 +139,10 @@ html, body {
 }
 
 .command-card {
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: var(--border-thin) solid var(--border-color);
+    border-radius: var(--border-radius);
     padding: 20px;
-    background-color: #fff;
+    background-color: var(--white);
     display: grid;
     grid-template-columns: 200px 1fr 50px;
     gap: 20px;
@@ -156,16 +156,16 @@ html, body {
 
 .command-section h3 {
     margin: 0 0 10px 0;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--light-text);
 }
 
 .command-section label {
     margin: 0 0 10px 0;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--light-text);
     display: flex;
     align-items: center;
     gap: 5px;
@@ -189,10 +189,10 @@ html, body {
 }
 
 .response-card {
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: var(--border-thin) solid var(--border-color);
+    border-radius: var(--border-radius);
     padding: 20px;
-    background-color: #fff;
+    background-color: var(--white);
     display: grid;
     grid-template-columns: 200px 400px 1fr 50px;
     gap: 20px;
@@ -207,9 +207,9 @@ html, body {
 .response-section h3,
 .response-section h4 {
     margin: 10px 0 8px 0;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--light-text);
 }
 
 .response-section h3 {
@@ -218,9 +218,9 @@ html, body {
 
 .response-section label {
     margin: 0 0 10px 0;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--light-text);
     display: flex;
     align-items: center;
     gap: 5px;
@@ -248,24 +248,24 @@ html, body {
     flex-direction: column;
     gap: 0;
     margin: 20px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
+    border: var(--border-thin) solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--white);
 }
 
 .variables-header {
     display: grid;
     grid-template-columns: 200px 1fr 100px;
     gap: 0;
-    border-bottom: 2px solid #ddd;
-    background-color: #f7f7f7;
-    font-weight: bold;
-    color: #333;
+    border-bottom: var(--border-medium) solid var(--border-color);
+    background-color: var(--light-bg);
+    font-weight: var(--font-weight-bold);
+    color: var(--light-text);
 }
 
 .header-column {
     padding: 15px;
-    border-right: 1px solid #ddd;
+    border-right: var(--border-thin) solid var(--border-color);
 }
 
 .header-column:last-child {
@@ -276,7 +276,7 @@ html, body {
     display: grid;
     grid-template-columns: 200px 1fr 100px;
     gap: 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: var(--border-thin) solid var(--light-border-thin);
     align-items: stretch;
 }
 
@@ -287,54 +287,54 @@ html, body {
 .variable-input {
     padding: 12px;
     border: none;
-    border-right: 1px solid #eee;
+    border-right: var(--border-thin) solid var(--light-border-thin);
     font-family: inherit;
-    font-size: 14px;
+    font-size: var(--font-size-base);
     outline: none;
     resize: none;
 }
 
 .name-input {
-    border-right: 1px solid #eee;
+    border-right: var(--border-thin) solid var(--light-border-thin);
 }
 
 .value-input {
     min-height: 50px;
-    border-right: 1px solid #eee;
+    border-right: var(--border-thin) solid var(--light-border-thin);
 }
 
 .variable-input:focus {
-    background-color: #f9f9f9;
+    background-color: var(--light-focus);
 }
 
 .delete-btn-small {
-    background-color: #d32f2f;
-    color: white;
+    background-color: var(--danger-color);
+    color: var(--white);
     border: none;
     padding: 0;
     cursor: pointer;
-    font-size: 18px;
-    transition: background-color 0.2s;
+    font-size: var(--delete-icon-size);
+    transition: background-color var(--transition-duration-short);
 }
 
 .delete-btn-small:hover {
-    background-color: #b71c1c;
+    background-color: var(--danger-dark);
 }
 
 .add-variable-btn {
     margin-top: 20px;
     padding: 12px 20px;
-    font-size: 16px;
-    background-color: #4caf50;
-    color: white;
+    font-size: var(--font-size-large);
+    background-color: var(--success-color);
+    color: var(--white);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color var(--transition-duration-short);
 }
 
 .add-variable-btn:hover {
-    background-color: #45a049;
+    background-color: var(--success-hover);
 }
 
 /* Tags */
@@ -365,54 +365,54 @@ html, body {
 
 .remove-btn {
     cursor: pointer;
-    color: #333;
-    font-weight: bold;
+    color: var(--light-text);
+    font-weight: var(--font-weight-bold);
     padding: 0 2px;
 }
 
 .remove-btn:hover {
-    color: #d32f2f;
+    color: var(--danger-color);
 }
 
 /* Buttons */
 .add-btn, .add-command-btn, .delete-btn {
     padding: 8px 12px;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 14px;
-    background-color: #4caf50;
-    color: white;
-    transition: background-color 0.2s;
+    font-size: var(--font-size-base);
+    background-color: var(--success-color);
+    color: var(--white);
+    transition: background-color var(--transition-duration-short);
 }
 
 .add-btn:hover, .add-command-btn:hover {
-    background-color: #45a049;
+    background-color: var(--success-hover);
 }
 
 .delete-btn {
-    background-color: #d32f2f;
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
+    background-color: var(--danger-color);
+    width: var(--delete-btn-size);
+    height: var(--delete-btn-size);
+    font-size: var(--delete-icon-size);
     align-self: center;
 }
 
 .delete-btn:hover {
-    background-color: #b71c1c;
+    background-color: var(--danger-dark);
 }
 
 .add-command-btn {
     margin-top: 20px;
     padding: 12px 20px;
-    font-size: 16px;
+    font-size: var(--font-size-large);
 }
 
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
         border-right: none;
-        border-bottom: 1px solid #ddd;
+        border-bottom: var(--border-thin) solid var(--border-color);
         padding: 10px 0;
     }
 
@@ -460,41 +460,41 @@ html, body {
 .comfy-btn {
     padding: 8px 16px;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--font-size-base);
     font-weight: 500;
-    transition: background-color 0.2s, opacity 0.2s;
+    transition: background-color var(--transition-duration-short), opacity var(--transition-duration-short);
     outline: none;
 }
 
 .comfy-btn-primary {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
 }
 
 .comfy-btn-primary:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: var(--primary-dark);
 }
 
 .comfy-btn-secondary {
-    background-color: #6c757d;
-    color: white;
+    background-color: var(--secondary-color);
+    color: var(--white);
 }
 
 .comfy-btn-secondary:hover:not(:disabled) {
-    background-color: #5a6268;
+    background-color: var(--secondary-dark);
 }
 
 .comfy-btn-tertiary {
-    background-color: #e9ecef;
-    color: #333;
-    border: 1px solid #dee2e6;
+    background-color: var(--tertiary-color);
+    color: var(--light-text);
+    border: var(--border-thin) solid var(--tertiary-dark);
 }
 
 .comfy-btn-tertiary:hover:not(:disabled) {
-    background-color: #dee2e6;
-    border-color: #adb5bd;
+    background-color: var(--tertiary-dark);
+    border-color: var(--tertiary-border);
 }
 
 .comfy-btn-disabled,

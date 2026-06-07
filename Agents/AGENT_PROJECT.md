@@ -1,16 +1,60 @@
 ﻿## Project Description
 
-ComfyBot is a self-hosted Twitch chat bot built with .NET, designed as a learning project for building chat automation systems. The bot provides customizable text commands, message responses, and variable management to enhance Twitch channel interactions. The project is organized into multiple layers: a **Bot Core** (ComfyBot.Bot) that handles Twitch chat integration and message processing, an **Application Layer** (ComfyBot.Application) for business logic, a **Data Layer** (ComfyBot.Data) for persistence, and a **Common Layer** (ComfyBot.Common) with shared utilities. The architecture is currently being modernized with the introduction of a **ChatGateway** service that acts as a centralized gateway, connecting to Twitch chat, distributing messages to SignalR clients, and maintaining message history in Redis.
+- **Purpose**: Self-hosted Twitch chat bot built with .NET; learning project for chat automation systems
+- **Core Features**: Customizable text commands, message responses, variable management
+- **Layered Architecture**:
+  - **Bot Core** (ComfyBot.Bot): Twitch chat integration and message processing
+  - **Application Layer** (ComfyBot.Application): Business logic (chat response management)
+  - **Data Layer** (ComfyBot.Data): Data persistence
+  - **Common Layer** (ComfyBot.Common): Shared utilities
+- **Modernization**: Gateway service acts as centralized hub
+- **Gateway Responsibilities**: Connects to Twitch chat, distributes messages via SignalR, maintains message history in Redis
 
 ## Current State
 
-The project is currently on the IntroduceChatGatewayInfrastructure branch, actively implementing a new gateway-based architecture to decouple message handling from direct chat bot logic. The ComfyBot.Gateway service serves as the central hub for Twitch chat connectivity, using Redis for message caching and SignalR for real-time client communication. All projects now target .NET 10 for consistency and to leverage the latest framework features. The existing bot components have been refactored with the Outcome pattern throughout the application layer, providing explicit error handling. The codebase includes comprehensive test coverage with separate test projects for Application, Data, and Bot layers, and uses dependency injection through custom modules for clean separation of concerns. The Data Layer has been migrated to use PostgreSQL as the primary database, replacing SQLite, with proper EF Core migrations set up for PostgreSQL compatibility.
+- **Target Framework**: .NET 10 across all projects
+- **Architecture**: Gateway-based pattern decouples message handling from bot logic
+- **Gateway Service** (ComfyBot.Gateway):
+  - Central hub for Twitch chat connectivity
+  - Uses Redis for message caching
+  - Uses SignalR for real-time client communication
+- **Code Patterns**:
+  - Outcome pattern throughout application layer for explicit error handling
+  - Dependency injection via custom modules
+  - Clean separation of concerns
+- **Testing**: Comprehensive test coverage with separate test projects (Application, Data, Bot layers)
+- **Data Layer**:
+  - PostgreSQL as primary database (replaced SQLite)
+  - Entity Framework Core with Npgsql provider
+  - EF Core migrations configured for PostgreSQL
+- **Frontend Styling**:
+  - `variables.css` file with CSS custom properties
+  - Design tokens for colors, typography, spacing
+  - `app.css` refactored to use CSS variables for consistency and maintainability
 
 ## Deployment and Infrastructure
 
-Both ComfyBot.Gateway and ComfyBot.Application are containerized with Dockerfiles and can be orchestrated using a shared `docker-compose.yml` file at the project root. The Docker Compose setup includes PostgreSQL for data persistence, Redis for message caching, and both application services. All configuration is managed through environment variables with no hardcoded values. Users can provide a `.env` file to override default settings at runtime. Complete setup instructions are available in `DOCKER_COMPOSE_SETUP.md`. Services communicate internally via container networking, allowing single-command startup: `docker-compose up -d` after configuring the `.env` file.
+- **Containerization**: Both ComfyBot.Gateway and ComfyBot.Application have Dockerfiles
+- **Orchestration**: Shared `docker-compose.yml` at project root
+- **Services in Docker Compose**:
+  - PostgreSQL: Data persistence
+  - Redis: Message caching
+  - ComfyBot.Gateway: Chat gateway service
+  - ComfyBot.Application: Main application service
+- **Configuration**: Environment variables only (no hardcoded values)
+- **Runtime Setup**:
+  - Optional `.env` file to override default settings
+  - Complete setup instructions in `DOCKER_COMPOSE_SETUP.md`
+  - Single-command startup: `docker-compose up -d`
+- **Communication**: Services communicate via container networking
 
 ## Database Configuration
 
-The Data Layer (ComfyBot.Data) uses Entity Framework Core with PostgreSQL provider (Npgsql.EntityFrameworkCore.PostgreSQL v8.0.1). Database connection strings are configured through the appsettings.json files with the format: `Host={host};Port={port};Database={database};Username={username};Password={password}`. The application supports environment-based configuration, with development settings defaulting to `localhost:5432` with `postgres:postgres` credentials. EF Core migrations are automatically applied on application startup. In containerized deployments, connection strings are injected via environment variables pointing to the PostgreSQL service running in Docker Compose.
+- **ORM**: Entity Framework Core
+- **Database Provider**: Npgsql.EntityFrameworkCore.PostgreSQL v8.0.1
+- **Connection String Format**: `Host={host};Port={port};Database={database};Username={username};Password={password}`
+- **Development Defaults**: see config files for local development settings
+- **Configuration Method**: appsettings.json files with environment-based overrides
+- **Migrations**: Automatically applied on application startup
+- **Containerized Deployments**: Connection strings injected via environment variables pointing to Docker Compose PostgreSQL service
 

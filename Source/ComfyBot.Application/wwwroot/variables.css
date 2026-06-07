@@ -1,0 +1,78 @@
+/* CSS Variables for ComfyBot Application */
+
+:root {
+    /* Primary Colors */
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --primary-light: #0069d9;
+
+    /* Secondary Colors */
+    --secondary-color: #6c757d;
+    --secondary-dark: #5a6268;
+    --secondary-light: #868e96;
+
+    /* Tertiary Colors */
+    --tertiary-color: #e9ecef;
+    --tertiary-dark: #dee2e6;
+    --tertiary-border: #adb5bd;
+
+    /* Success Colors */
+    --success-color: #4caf50;
+    --success-hover: #45a049;
+
+    /* Danger Colors */
+    --danger-color: #d32f2f;
+    --danger-dark: #b71c1c;
+
+    /* Neutral Colors */
+    --light-bg: #f7f7f7;
+    --light-text: #333;
+    --light-border: #ddd;
+    --light-border-thin: #eee;
+    --light-hover: #e0e0e0;
+    --light-focus: #f9f9f9;
+    --white: #fff;
+    --gray-text: #9e9e9e;
+
+    /* Border */
+    --border-color: #ddd;
+    --border-radius: 4px;
+    --border-thin: 1px;
+    --border-medium: 2px;
+
+    /* Typography */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-size-base: 14px;
+    --font-size-large: 16px;
+    --font-size-xl: 28px;
+    --font-weight-bold: bold;
+    --font-weight-normal: normal;
+
+    /* Spacing */
+    --spacing-xs: 3px;
+    --spacing-sm: 4px;
+    --spacing-md: 5px;
+    --spacing-base: 8px;
+    --spacing-lg: 12px;
+    --spacing-xl: 15px;
+    --spacing-2xl: 20px;
+
+    /* Sizing */
+    --sidebar-width: 250px;
+    --icon-size: 18px;
+    --input-height: 40px;
+    --tag-size-small: 20px;
+    --delete-btn-size: 50px;
+    --delete-icon-size: 18px;
+
+    /* Shadows */
+    --shadow-top: 0 -2px 8px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-duration: 0.3s;
+    --transition-timing: ease;
+    --transition-duration-short: 0.2s;
+
+    /* Z-index */
+    --z-sticky: 100;
+}
